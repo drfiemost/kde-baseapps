@@ -2457,9 +2457,6 @@ kdepim
 extragear/network
   Konqueror Choqok Plugin
 
-extragear/base
-  Nepomuk-Webminer Plugin
-
 playground/utils  
   Userscript (Grease Monkey) Support khtml_userscript
 -->
