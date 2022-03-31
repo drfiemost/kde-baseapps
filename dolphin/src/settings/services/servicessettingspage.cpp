@@ -29,7 +29,9 @@
 #include <KIcon>
 #include <KLocale>
 #include <KMessageBox>
+#ifdef ENABLE_KNEWSTUFF3
 #include <knewstuff3/knewstuffbutton.h>
+#endif
 #include <KService>
 #include <KServiceTypeTrader>
 #include <KStandardDirs>
@@ -79,7 +81,7 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     m_listView->setItemDelegate(delegate);
     m_listView->setVerticalScrollMode(QListView::ScrollPerPixel);
     connect(m_listView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(changed()));
-
+#ifdef ENABLE_KNEWSTUFF3
     KNS3::Button* downloadButton = new KNS3::Button(i18nc("@action:button", "Download New Services..."),
                                                     "servicemenu.knsrc",
                                                     this);
@@ -88,7 +90,7 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     topLayout->addWidget(label);
     topLayout->addWidget(m_listView);
     topLayout->addWidget(downloadButton);
-
+#endif
     m_enabledVcsPlugins = VersionControlSettings::enabledPlugins();
     qSort(m_enabledVcsPlugins);
 }
