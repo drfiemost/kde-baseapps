@@ -30,7 +30,6 @@
 #include <QMenu>
 
 // KDE
-#include <k3bookmarkdrag.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
@@ -455,10 +454,15 @@ void KonqSidebarBookmarkModule::slotCopyLocation()
 
     if ( !bookmark.isGroup() )
     {
-        qApp->clipboard()->setData( K3BookmarkDrag::newDrag(bookmark, 0),
-                                    QClipboard::Selection );
-        qApp->clipboard()->setData( K3BookmarkDrag::newDrag(bookmark, 0),
-                                    QClipboard::Clipboard );
+        KUrl::List urls;
+
+        urls.append( bookmark.url() );
+
+        QMimeData* mimedata = new QMimeData();
+        urls.populateMimeData(mimedata);
+
+        qApp->clipboard()->setMimeData( mimedata, QClipboard::Selection );
+        qApp->clipboard()->setMimeData( mimedata, QClipboard::Clipboard );
     }
 }
 
