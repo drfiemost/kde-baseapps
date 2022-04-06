@@ -25,7 +25,7 @@
 #include "konq_sidebartreetoplevelitem.h"
 #include <QtCore/QMap>
 #include <QtCore/QPoint>
-#include <Qt3Support/Q3StrList>
+#include <QStringList>
 
 //Added by qt3to4:
 #include <QPixmap>
@@ -181,7 +181,7 @@ private:
 
     Q3ListViewItem *m_currentBeforeDropItem; // The item that was current before the drag-enter event happened
     Q3ListViewItem *m_dropItem; // The item we are moving the mouse over (during a drag)
-    Q3StrList m_lstDropFormats;
+    QStringList m_lstDropFormats;
 
     QTimer *m_autoOpenTimer;
 

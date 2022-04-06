@@ -58,7 +58,7 @@ void KonqSidebarTreeTopLevelItem::itemSelected()
     tree()->enableActions(true, true, paste);
 }
 
-bool KonqSidebarTreeTopLevelItem::acceptsDrops( const Q3StrList & formats )
+bool KonqSidebarTreeTopLevelItem::acceptsDrops( const QStringList & formats )
 {
     return formats.contains("text/uri-list") &&
         ( m_bTopLevelGroup || !externalURL().isEmpty() );

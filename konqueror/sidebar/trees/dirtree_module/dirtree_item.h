@@ -42,7 +42,7 @@ public:
 
     virtual void paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment );
 
-    virtual bool acceptsDrops( const Q3StrList & formats );
+    virtual bool acceptsDrops( const QStringList & formats );
     virtual void drop( QDropEvent * ev );
     virtual bool populateMimeData( QMimeData* mimeData, bool move );
 

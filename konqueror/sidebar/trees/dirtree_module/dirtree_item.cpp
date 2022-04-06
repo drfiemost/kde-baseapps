@@ -139,7 +139,7 @@ QString KonqSidebarDirTreeItem::externalMimeType() const
         return QString();
 }
 
-bool KonqSidebarDirTreeItem::acceptsDrops( const Q3StrList & formats )
+bool KonqSidebarDirTreeItem::acceptsDrops( const QStringList & formats )
 {
     if ( formats.contains("text/uri-list") ) {
         // A directory ?

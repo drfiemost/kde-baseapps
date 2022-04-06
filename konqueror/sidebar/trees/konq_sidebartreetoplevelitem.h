@@ -52,7 +52,7 @@ public:
 
     void init();
 
-    virtual bool acceptsDrops( const Q3StrList & formats );
+    virtual bool acceptsDrops( const QStringList & formats );
     virtual void drop( QDropEvent * ev );
     virtual bool populateMimeData( QMimeData* mimeData, bool move );
     virtual void middleButtonClicked();
