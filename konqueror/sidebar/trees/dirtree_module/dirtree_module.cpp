@@ -136,7 +136,7 @@ void KonqSidebarDirTreeModule::addSubDir( KonqSidebarTreeItem *item )
 
 // Remove <key, item> from dict, taking into account that there maybe
 // other items with the same key.
-static void remove(Q3Dict<KonqSidebarTreeItem> &dict, const QString &key, KonqSidebarTreeItem *item)
+static void remove(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *item)
 {
     Q3PtrList<KonqSidebarTreeItem> *otherItems = 0;
     while(true) {
@@ -165,7 +165,7 @@ static void remove(Q3Dict<KonqSidebarTreeItem> &dict, const QString &key, KonqSi
 // Looks up key in dict and returns it in item, if there are multiple items
 // with the same key, additional items are returned in itemList which should
 // be deleted by the caller.
-static void lookupItems(Q3Dict<KonqSidebarTreeItem> &dict, const QString &key, KonqSidebarTreeItem *&item, Q3PtrList<KonqSidebarTreeItem> *&itemList)
+static void lookupItems(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *&item, Q3PtrList<KonqSidebarTreeItem> *&itemList)
 {
     itemList = 0;
     item = dict.take(key);
