@@ -134,7 +134,6 @@ KonqSidebarTree::KonqSidebarTree( KonqSidebarOldTreeModule *parent, QWidget *par
     setAcceptDrops( true );
     viewport()->setAcceptDrops( true );
     installEventFilter(this);
-    m_lstModules.setAutoDelete( true );
 
     setSelectionMode( Q3ListView::Single );
     setDragEnabled(true);
@@ -262,7 +261,9 @@ void KonqSidebarTree::setDropFormats(const QStringList &formats)
 
 void KonqSidebarTree::clearTree()
 {
-    m_lstModules.clear();
+    while (!m_lstModules.isEmpty())
+        delete m_lstModules.takeFirst();
+
     m_topLevelItems.clear();
     m_mapCurrentOpeningFolders.clear();
     m_currentBeforeDropItem = 0;
@@ -289,12 +290,12 @@ void KonqSidebarTree::followURL( const KUrl &url )
     }
 
     kDebug(1201) << url.url();
-    Q3PtrListIterator<KonqSidebarTreeTopLevelItem> topItem ( m_topLevelItems );
-    for (; topItem.current(); ++topItem )
+    for (QList<KonqSidebarTreeTopLevelItem*>::const_iterator topItem = m_topLevelItems.begin();
+         topItem != m_topLevelItems.end(); ++topItem )
     {
-        if ( topItem.current()->externalURL().isParentOf( url ) )
+        if ( (*topItem)->externalURL().isParentOf( url ) )
         {
-            topItem.current()->module()->followURL( url );
+            (*topItem)->module()->followURL( url );
             return; // done
         }
     }
