@@ -46,6 +46,7 @@ add_subdirectory( konqueror )
 add_subdirectory( kfind )
 macro_optional_add_subdirectory( plasma )
 add_subdirectory( konq-plugins )
+add_subdirectory( kcolorchooser )
 
 if ( Q_WS_MAC )
   add_subdirectory( kdepasswd )
