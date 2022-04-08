@@ -23,7 +23,6 @@
 #include <kio/paste.h>
 #include <konq_operations.h>
 #include <kprotocolinfo.h>
-#include <k3urldrag.h>
 #include <kconfiggroup.h>
 #include <kfileitem.h>
 #include <kmimetype.h>
@@ -64,6 +63,55 @@ bool KonqSidebarTreeTopLevelItem::acceptsDrops( const QStringList & formats )
         ( m_bTopLevelGroup || !externalURL().isEmpty() );
 }
 
+void decodePayload( const QByteArray& payload, KUrl::List &uris )
+{
+    int c=0;
+    const char* d = payload.data();
+    while (c < payload.size() && d[c]) {
+        int f = c;
+        // Find line end
+        while (c < payload.size() && d[c] && d[c]!='\r'
+                && d[c] != '\n')
+            c++;
+        QByteArray s(d+f, c-f+1);
+        if ( s[0] != '#' ) // non-comment?
+            uris.append(KUrl(s));
+        // Skip junk
+        while (c < payload.size() && d[c] &&
+                (d[c]=='\n' || d[c]=='\r'))
+            c++;
+    }
+}
+
+bool dropEventDecode( const QDropEvent *e, KUrl::List &uris )
+{
+    // x-kde4-urilist is the same format as text/uri-list, but contains
+    // KDE-aware urls, like media:/ and system:/, whereas text/uri-list is resolved to
+    // local files.
+    if ( e->mimeData()->hasFormat( "application/x-kde4-urilist" ) ) {
+        QByteArray payload = e->mimeData()->data( "application/x-kde4-urilist" );
+        if ( payload.size() ) {
+            decodePayload(payload, uris);
+            return !uris.isEmpty();
+        }
+    }
+
+    QByteArray payload = e->mimeData()->data("text/uri-list");
+    if (payload.size()) {
+        decodePayload(payload, uris);
+    }
+    for (KUrl url: uris)
+    {
+      if ( !url.isValid() )
+      {
+        uris.clear();
+        break;
+      }
+      uris.append( url );
+    }
+    return !uris.isEmpty();
+}
+
 void KonqSidebarTreeTopLevelItem::drop( QDropEvent * ev )
 {
     if ( m_bTopLevelGroup )
@@ -71,7 +119,7 @@ void KonqSidebarTreeTopLevelItem::drop( QDropEvent * ev )
         // When dropping something to "Network" or its subdirs, we want to create
         // a desktop link, not to move/copy/link - except for .desktop files :-}
         KUrl::List lst;
-        if ( K3URLDrag::decode( ev, lst ) && !lst.isEmpty() ) // Are they urls ?
+        if ( dropEventDecode( ev, lst ) ) // Are they urls ?
         {
             KUrl::List::Iterator it = lst.begin();
             for ( ; it != lst.end() ; it++ )
