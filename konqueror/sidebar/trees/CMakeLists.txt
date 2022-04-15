@@ -1,8 +1,13 @@
-# !?!?!? make a lib, or clean this up...
+include_directories(
+  ${CMAKE_CURRENT_SOURCE_DIR}/legacy
+)
+
 set(libkonq_sidebar_tree_SRCS 
 	${CMAKE_CURRENT_SOURCE_DIR}/konq_sidebartree.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/konq_sidebartreeitem.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/konq_sidebartreetoplevelitem.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listview.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listviewsearchline.cpp
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
