@@ -8,6 +8,7 @@ set(libkonq_sidebar_tree_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/konq_sidebartreetoplevelitem.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listviewsearchline.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3urldrag.cpp
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
@@ -22,7 +23,7 @@ set(konqsidebar_tree_PART_SRCS konqsidebar_oldtreemodule.cpp ${libkonq_sidebar_t
 
 kde4_add_plugin(konqsidebar_tree ${konqsidebar_tree_PART_SRCS})
 
-target_link_libraries(konqsidebar_tree ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KPARTS_LIBS} ${KDE4_KFILE_LIBS} konq konqsidebarplugin )
+target_link_libraries(konqsidebar_tree ${KDE4_KPARTS_LIBS} ${KDE4_KFILE_LIBS} konq konqsidebarplugin )
 
 install(TARGETS konqsidebar_tree DESTINATION ${PLUGIN_INSTALL_DIR} )
 
