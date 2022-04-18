@@ -1,29 +1,3 @@
-cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
-project(kdf)
-
-set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-if(NOT UNIX)
-  message(FATAL_ERROR "kdf is only supposed to be built on Unix platforms.")
-endif(NOT UNIX)
-
-if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_CURRENT_SOURCE_DIR})
-    find_package(KDE4)
-    include(KDE4Defaults)
-    include_directories(${KDE4_INCLUDES})
-
-    add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
-    add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-
-    # If definitions like -D_GNU_SOURCE are needed for these checks they
-    # should be added to _KDE4_PLATFORM_DEFINITIONS when it is originally
-    # defined outside this file.  Here we include these definitions in
-    # CMAKE_REQUIRED_DEFINITIONS so they will be included in the build of
-    # checks below.
-    set( CMAKE_REQUIRED_DEFINITIONS ${_KDE4_PLATFORM_DEFINITIONS} )
-endif()
 
 add_subdirectory(doc)
 add_subdirectory(pics)

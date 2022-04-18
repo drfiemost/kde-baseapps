@@ -53,6 +53,10 @@ add_subdirectory( konq-plugins )
 add_subdirectory( kcolorchooser )
 add_subdirectory( kcharselect )
 
+if(UNIX)
+  add_subdirectory( kdf )
+endif(UNIX)
+
 if ( Q_WS_MAC )
   add_subdirectory( kdepasswd )
 endif ( Q_WS_MAC )
