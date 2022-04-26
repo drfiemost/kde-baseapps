@@ -62,7 +62,6 @@ if ( Q_WS_MAC )
 endif ( Q_WS_MAC )
 
 if ( Q_WS_X11 )
-  macro_optional_add_subdirectory( nsplugins )
   add_subdirectory( kdepasswd )
 endif ( Q_WS_X11 )
 macro_optional_add_subdirectory( doc )
