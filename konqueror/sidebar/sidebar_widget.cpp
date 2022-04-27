@@ -333,6 +333,15 @@ void Sidebar_Widget::slotRemove()
     }
 }
 
+void Sidebar_Widget::slotToggleShowHiddenFolders()
+{
+    Q_ASSERT(currentButtonInfo().canToggleShowHiddenFolders);
+    bool newToggleState = !currentButtonInfo().showHiddenFolders;
+    m_moduleManager.setShowHiddenFolders(currentButtonInfo().file, newToggleState);
+    // TODO: update THAT button only.
+    QTimer::singleShot(0, this, SLOT(updateButtons()));
+}
+
 void Sidebar_Widget::slotMultipleViews()
 {
     m_singleWidgetMode = !m_singleWidgetMode;
@@ -411,7 +420,6 @@ void Sidebar_Widget::updateButtons()
             delete button.dock;
         }
         m_buttonBar->removeTab(i);
-
     }
     m_buttons.clear();
 
@@ -514,6 +522,8 @@ bool Sidebar_Widget::addButton(const QString &desktopFileName, int pos)
     {
         m_buttonBar->appendTab(SmallIcon(icon), lastbtn, name);
         ButtonInfo buttonInfo(config, desktopFileName, url, lib, name, icon);
+        buttonInfo.canToggleShowHiddenFolders = (configGroup.readEntry("X-KDE-KonqSidebarModule", QString()) == "konqsidebar_tree");
+        buttonInfo.showHiddenFolders = configGroup.readEntry("ShowHiddenFolders", false);
         m_buttons.insert(lastbtn, buttonInfo);
         KMultiTabBarTab *tab = m_buttonBar->tab(lastbtn);
         tab->installEventFilter(this);
@@ -550,6 +560,11 @@ bool Sidebar_Widget::eventFilter(QObject *obj, QEvent *ev)
                 buttonPopup->addAction(KIcon("edit-rename"), i18n("Set Name..."), this, SLOT(slotSetName())); // Item to open a dialog to change the name of the sidebar item (by Pupeno)
                 buttonPopup->addAction(KIcon("internet-web-browser"), i18n("Set URL..."), this, SLOT(slotSetURL()));
                 buttonPopup->addAction(KIcon("preferences-desktop-icons"), i18n("Set Icon..."), this, SLOT(slotSetIcon()));
+                if (currentButtonInfo().canToggleShowHiddenFolders) {
+                    QAction *toggleShowHiddenFolders = buttonPopup->addAction(i18n("Show Hidden Folders..."), this, SLOT(slotToggleShowHiddenFolders()));
+                    toggleShowHiddenFolders->setCheckable(true);
+                    toggleShowHiddenFolders->setChecked(currentButtonInfo().showHiddenFolders);
+                }
                 buttonPopup->addSeparator();
                 buttonPopup->addAction(KIcon("edit-delete"), i18n("Remove"), this, SLOT(slotRemove()));
                 buttonPopup->addSeparator();

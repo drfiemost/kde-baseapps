@@ -2,6 +2,7 @@
 Type=Link
 URL=~
 Icon=user-home
+ShowHiddenFolders=false
 Name=Home Folder
 Name[af]=Tuis Gids
 Name[ar]=المجلد المنزلي

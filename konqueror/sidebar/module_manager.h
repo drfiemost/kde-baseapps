@@ -59,6 +59,7 @@ public:
     void setModuleName(const QString& fileName, const QString& moduleName);
     void setModuleUrl(const QString& fileName, const KUrl& url);
     void setModuleIcon(const QString& fileName, const QString& icon);
+    void setShowHiddenFolders(const QString &fileName, const bool &newState);
 
     /// Find a unique filename for a new module, based on a template name
     /// like "dirtree%1.desktop".

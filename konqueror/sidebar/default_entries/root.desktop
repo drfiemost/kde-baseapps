@@ -2,6 +2,7 @@
 Type=Link
 URL=file:/
 Icon=folder-red
+ShowHiddenFolders=false
 Name=Root Folder
 Name[af]=Basis Gids
 Name[ar]=مجلد الجذر

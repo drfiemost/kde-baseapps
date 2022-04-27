@@ -42,17 +42,15 @@ class ButtonInfo
 {
 public:
     ButtonInfo()
-        : module(NULL), m_plugin(NULL)
     {
     }
     ButtonInfo(const KSharedConfig::Ptr& configFile_,
                const QString& file_,
                const QString &url_,const QString &lib,
                const QString &dispName_, const QString &iconName_)
-        : configFile(configFile_),
-          file(file_), dock(NULL),
-          module(NULL), m_plugin(NULL),
-          URL(url_), libName(lib), displayName(dispName_), iconName(iconName_)
+        : configFile(configFile_), file(file_),
+          URL(url_), libName(lib),
+          displayName(dispName_), iconName(iconName_)
     {
     }
 
@@ -63,12 +61,15 @@ public:
     KSharedConfig::Ptr configFile;
     QString file;
     QPointer<QWidget> dock;
-    KonqSidebarModule *module;
-    KonqSidebarPlugin* m_plugin;
+    KonqSidebarModule *module = nullptr;
+    KonqSidebarPlugin* m_plugin = nullptr;
     QString URL; // TODO remove
     QString libName;
     QString displayName;
     QString iconName;
+
+    bool canToggleShowHiddenFolders = false;
+    bool showHiddenFolders = false;
 };
 
 class Sidebar_Widget: public QWidget
@@ -110,6 +111,7 @@ protected Q_SLOTS:
     void slotSetName();
     void slotSetURL();
     void slotSetIcon();
+    void slotToggleShowHiddenFolders();
     void slotRemove();
 
     void slotUrlsDropped(const KUrl::List& urls);
