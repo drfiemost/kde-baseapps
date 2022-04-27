@@ -138,7 +138,7 @@ void KonqSidebarDirTreeModule::addSubDir( KonqSidebarTreeItem *item )
 // other items with the same key.
 static void remove(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *item)
 {
-    Q3PtrList<KonqSidebarTreeItem> *otherItems = 0;
+    QList<KonqSidebarTreeItem*> *otherItems = nullptr;
     while(true) {
         KonqSidebarTreeItem *takeItem = dict.take(key);
         if (!takeItem || (takeItem == item))
@@ -147,16 +147,18 @@ static void remove(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &ke
                 return;
 
             // Insert the otherItems back in
-            for(KonqSidebarTreeItem *otherItem; (otherItem = otherItems->take(0));)
+            QMutableListIterator<KonqSidebarTreeItem*> i(*otherItems);
+            while(KonqSidebarTreeItem *otherItem = i.next())
             {
                 dict.insert(key, otherItem);
+                i.remove();
             }
             delete otherItems;
             return;
         }
         // Not the item we are looking for
         if (!otherItems)
-            otherItems = new Q3PtrList<KonqSidebarTreeItem>();
+            otherItems = new QList<KonqSidebarTreeItem*>();
 
         otherItems->prepend(takeItem);
     }
@@ -165,9 +167,9 @@ static void remove(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &ke
 // Looks up key in dict and returns it in item, if there are multiple items
 // with the same key, additional items are returned in itemList which should
 // be deleted by the caller.
-static void lookupItems(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *&item, Q3PtrList<KonqSidebarTreeItem> *&itemList)
+static void lookupItems(QHash<QString, KonqSidebarTreeItem*> &dict, const QString &key, KonqSidebarTreeItem *&item, QList<KonqSidebarTreeItem*> *&itemList)
 {
-    itemList = 0;
+    itemList = nullptr;
     item = dict.take(key);
     if (!item)
         return;
@@ -181,14 +183,17 @@ static void lookupItems(QHash<QString, KonqSidebarTreeItem*> &dict, const QStrin
             // Insert itemList back in
             if (itemList)
             {
-                for(KonqSidebarTreeItem *otherItem = itemList->first(); otherItem; otherItem = itemList->next())
+                QListIterator<KonqSidebarTreeItem*> i(*itemList);
+                while(KonqSidebarTreeItem *otherItem = i.next())
+                {
                     dict.insert(key, otherItem);
+                }
             }
             dict.insert(key, item);
             return;
         }
         if (!itemList)
-            itemList = new Q3PtrList<KonqSidebarTreeItem>();
+            itemList = new QList<KonqSidebarTreeItem*>();
 
         itemList->prepend(takeItem);
     }
@@ -198,7 +203,7 @@ static void lookupItems(QHash<QString, KonqSidebarTreeItem*> &dict, const QStrin
 // other items with the same key.
 static void remove(QHash<KFileItem, KonqSidebarTreeItem*> &dict, const KFileItem &key, KonqSidebarTreeItem *item)
 {
-    Q3PtrList<KonqSidebarTreeItem> *otherItems = 0;
+    QList<KonqSidebarTreeItem*> *otherItems = nullptr;
     while(true) {
         KonqSidebarTreeItem *takeItem = dict.take(key);
         if (!takeItem || (takeItem == item))
@@ -207,16 +212,18 @@ static void remove(QHash<KFileItem, KonqSidebarTreeItem*> &dict, const KFileItem
                 return;
 
             // Insert the otherItems back in
-            for(KonqSidebarTreeItem *otherItem; (otherItem = otherItems->take(0));)
+            QMutableListIterator<KonqSidebarTreeItem*> i(*otherItems);
+            while(KonqSidebarTreeItem *otherItem = i.next())
             {
                 dict.insert(key, otherItem);
+                i.remove();
             }
             delete otherItems;
             return;
         }
         // Not the item we are looking for
         if (!otherItems)
-            otherItems = new Q3PtrList<KonqSidebarTreeItem>();
+            otherItems = new QList<KonqSidebarTreeItem*>();
 
         otherItems->prepend(takeItem);
     }
@@ -225,9 +232,9 @@ static void remove(QHash<KFileItem, KonqSidebarTreeItem*> &dict, const KFileItem
 // Looks up key in dict and returns it in item, if there are multiple items
 // with the same key, additional items are returned in itemList which should
 // be deleted by the caller.
-static void lookupItems(QHash<KFileItem, KonqSidebarTreeItem*> &dict, const KFileItem &key, KonqSidebarTreeItem *&item, Q3PtrList<KonqSidebarTreeItem> *&itemList)
+static void lookupItems(QHash<KFileItem, KonqSidebarTreeItem*> &dict, const KFileItem &key, KonqSidebarTreeItem *&item, QList<KonqSidebarTreeItem*> *&itemList)
 {
-    itemList = 0;
+    itemList = nullptr;
     item = dict.take(key);
     if (!item)
         return;
@@ -241,14 +248,17 @@ static void lookupItems(QHash<KFileItem, KonqSidebarTreeItem*> &dict, const KFil
             // Insert itemList back in
             if (itemList)
             {
-                for(KonqSidebarTreeItem *otherItem = itemList->first(); otherItem; otherItem = itemList->next())
+                QListIterator<KonqSidebarTreeItem*> i(*itemList);
+                while(KonqSidebarTreeItem *otherItem = i.next())
+                {
                     dict.insert(key, otherItem);
+                }
             }
             dict.insert(key, item);
             return;
         }
         if (!itemList)
-            itemList = new Q3PtrList<KonqSidebarTreeItem>();
+            itemList = new QList<KonqSidebarTreeItem*>();
 
         itemList->prepend(takeItem);
     }
@@ -334,7 +344,7 @@ void KonqSidebarDirTreeModule::listDirectory( KonqSidebarTreeItem *item )
     QString strUrl = item->externalURL().url( KUrl::RemoveTrailingSlash );
     KUrl url( strUrl );
 
-    Q3PtrList<KonqSidebarTreeItem> *itemList;
+    QList<KonqSidebarTreeItem*> *itemList;
     KonqSidebarTreeItem * openItem;
     lookupItems(m_dictSubDirs, strUrl, openItem, itemList);
 
@@ -343,7 +353,12 @@ void KonqSidebarDirTreeModule::listDirectory( KonqSidebarTreeItem *item )
         if (openItem->childCount())
             break;
 
-        openItem = itemList ? itemList->take(0) : 0;
+        if (itemList) {
+            QMutableListIterator<KonqSidebarTreeItem*> i(*itemList);
+            openItem = i.next();
+            i.remove();
+        } else
+            openItem = nullptr;
     }
     delete itemList;
 
@@ -402,14 +417,14 @@ void KonqSidebarDirTreeModule::slotNewItems( const KFileItemList& entries )
     dir.setFileName( "" );
     kDebug(1201) << this << "dir=" << dir.url( KUrl::RemoveTrailingSlash );
 
-    Q3PtrList<KonqSidebarTreeItem> *parentItemList;
+    QList<KonqSidebarTreeItem*> *parentItemList;
     KonqSidebarTreeItem * parentItem;
     lookupItems(m_dictSubDirs, dir.url( KUrl::RemoveTrailingSlash ), parentItem, parentItemList);
 
     if ( !parentItem )   // hack for dnssd://domain/type/service listed in dnssd:/type/ dir
     {
-    	dir.setHost( QString() );
-	lookupItems( m_dictSubDirs, dir.url( KUrl::RemoveTrailingSlash ), parentItem, parentItemList );
+        dir.setHost( QString() );
+        lookupItems( m_dictSubDirs, dir.url( KUrl::RemoveTrailingSlash ), parentItem, parentItemList );
     }
 
     if( !parentItem )
@@ -449,7 +464,13 @@ void KonqSidebarDirTreeModule::slotNewItems( const KFileItemList& entries )
             dirTreeItem->setText( 0, KIO::decodeFileName( fileItem.name() ) );
         }
 
-    } while ((parentItem = parentItemList ? parentItemList->take(0) : 0));
+        if (parentItemList) {
+            QMutableListIterator<KonqSidebarTreeItem*> i(*parentItemList);
+            parentItem = i.next();
+            i.remove();
+        } else
+            parentItem = nullptr;
+    } while (parentItem);
     delete parentItemList;
 }
 
@@ -464,7 +485,7 @@ void KonqSidebarDirTreeModule::slotRefreshItems( const QList<QPair<KFileItem, KF
         const KFileItem fileItem (entries.at(i).second);
         const KFileItem oldFileItem(entries.at(i).first);
 
-        Q3PtrList<KonqSidebarTreeItem> *itemList;
+        QList<KonqSidebarTreeItem*> *itemList;
         KonqSidebarTreeItem * item;
         lookupItems(m_ptrdictSubDirs, oldFileItem, item, itemList);
 
@@ -510,7 +531,13 @@ void KonqSidebarDirTreeModule::slotRefreshItems( const QList<QPair<KFileItem, KF
                 dirTreeItem->setText( 0, KIO::decodeFileName( fileItem.name() ) );
             }
 
-        } while ((item = itemList ? itemList->take(0) : 0));
+        if (itemList) {
+            QMutableListIterator<KonqSidebarTreeItem*> i(*itemList);
+            item = i.next();
+            i.remove();
+        } else
+            item = nullptr;
+        } while (item);
         delete itemList;
     }
 }
@@ -520,7 +547,7 @@ void KonqSidebarDirTreeModule::slotDeleteItem( const KFileItem &fileItem )
     kDebug(1201) << fileItem.url().url( KUrl::RemoveTrailingSlash );
 
     // All items are in m_ptrdictSubDirs, so look it up fast
-    Q3PtrList<KonqSidebarTreeItem> *itemList;
+    QList<KonqSidebarTreeItem*> *itemList;
     KonqSidebarTreeItem * item;
     lookupItems(m_dictSubDirs, fileItem.url().url( KUrl::RemoveTrailingSlash ), item, itemList);
     while(item)
@@ -528,7 +555,12 @@ void KonqSidebarDirTreeModule::slotDeleteItem( const KFileItem &fileItem )
         removeSubDir( item );
         delete item;
 
-        item = itemList ? itemList->take(0) : 0;
+        if (itemList) {
+            QMutableListIterator<KonqSidebarTreeItem*> i(*itemList);
+            item = i.next();
+            i.remove();
+        } else
+            item = nullptr;
     }
     delete itemList;
 }
@@ -540,7 +572,7 @@ void KonqSidebarDirTreeModule::slotRedirection( const KUrl & oldUrl, const KUrl 
     QString oldUrlStr = oldUrl.url( KUrl::RemoveTrailingSlash );
     QString newUrlStr = newUrl.url( KUrl::RemoveTrailingSlash );
 
-    Q3PtrList<KonqSidebarTreeItem> *itemList;
+    QList<KonqSidebarTreeItem*> *itemList;
     KonqSidebarTreeItem * item;
     lookupItems(m_dictSubDirs, oldUrlStr, item, itemList);
 
@@ -560,7 +592,13 @@ void KonqSidebarDirTreeModule::slotRedirection( const KUrl & oldUrl, const KUrl 
 
         kDebug(1201) << "Updating url of " << item << " to " << newUrlStr;
 
-    } while ((item = itemList ? itemList->take(0) : 0));
+        if (itemList) {
+            QMutableListIterator<KonqSidebarTreeItem*> i(*itemList);
+            item = i.next();
+            i.remove();
+        } else
+            item = nullptr;
+    } while (item);
     delete itemList;
 }
 
@@ -568,7 +606,7 @@ void KonqSidebarDirTreeModule::slotListingStopped( const KUrl & url )
 {
     //kDebug(1201) << url;
 
-    Q3PtrList<KonqSidebarTreeItem> *itemList;
+    QList<KonqSidebarTreeItem*> *itemList;
     KonqSidebarTreeItem * item;
     lookupItems(m_dictSubDirs, url.url( KUrl::RemoveTrailingSlash ), item, itemList);
 
@@ -581,7 +619,12 @@ void KonqSidebarDirTreeModule::slotListingStopped( const KUrl & url )
         }
         m_pTree->stopAnimation( item );
 
-        item = itemList ? itemList->take(0) : 0;
+        if (itemList) {
+            QMutableListIterator<KonqSidebarTreeItem*> i(*itemList);
+            item = i.next();
+            i.remove();
+        } else
+            item = nullptr;
     }
     delete itemList;
 
