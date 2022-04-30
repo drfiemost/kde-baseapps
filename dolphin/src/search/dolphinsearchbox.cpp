@@ -462,7 +462,7 @@ KUrl DolphinSearchBox::balooUrlForSearching() const
 #endif
 }
 
-void DolphinSearchBox::fromBalooSearchUrl(const KUrl& url)
+void DolphinSearchBox::fromBalooSearchUrl([[maybe_unused]] const KUrl& url)
 {
 #ifdef HAVE_BALOO
     const Baloo::Query query = Baloo::Query::fromSearchUrl(url);

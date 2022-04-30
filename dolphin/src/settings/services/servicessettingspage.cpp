@@ -64,7 +64,7 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     m_listView(0),
     m_enabledVcsPlugins()
 {
-    QVBoxLayout* topLayout = new QVBoxLayout(this);
+    [[maybe_unused]] QVBoxLayout* topLayout = new QVBoxLayout(this);
 
     QLabel* label = new QLabel(i18nc("@label:textbox",
                                      "Select which services should "
