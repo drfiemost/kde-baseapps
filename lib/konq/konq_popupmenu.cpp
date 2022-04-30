@@ -592,12 +592,6 @@ void KonqPopupMenuPrivate::addPlugins()
                 continue;
             }
 
-            // Old API (kdelibs-4.6.0 only)
-            KFileItemActionPlugin* plugin = service->createInstance<KFileItemActionPlugin>();
-            if (plugin) {
-                plugin->setParent(q);
-                q->addActions(plugin->actions(m_popupItemProperties, m_parentWidget));
-            }
             // New API (kdelibs >= 4.6.1)
             KAbstractFileItemActionPlugin* abstractPlugin = service->createInstance<KAbstractFileItemActionPlugin>();
             if (abstractPlugin) {
