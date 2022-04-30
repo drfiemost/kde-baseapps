@@ -45,6 +45,7 @@ class KItemSet
 public:
     KItemSet();
     KItemSet(const KItemSet& other);
+    KItemSet& operator=(const KItemSet&) = default;
 
     /**
      * Returns the number of items in the set.

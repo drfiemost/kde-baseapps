@@ -32,6 +32,7 @@ class LIBDOLPHINPRIVATE_EXPORT KItemListStyleOption
 public:
     KItemListStyleOption();
     KItemListStyleOption(const KItemListStyleOption& other);
+    KItemListStyleOption& operator=(const KItemListStyleOption&) = default;
     virtual ~KItemListStyleOption();
 
     QRect rect;
