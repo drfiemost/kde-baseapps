@@ -1,10 +1,14 @@
+cmake_minimum_required(VERSION 3.1)
 project(KDEBASE_APPS)
 
-cmake_minimum_required(VERSION 3.1)
-
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+        "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+    add_compile_options("$<$<CONFIG:DEBUG>:-Wall;-Wextra;-pedantic>")
+endif()
 
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules )
