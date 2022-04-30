@@ -40,6 +40,7 @@ public:
     QDateTime lastVisited;
 
     KonqHistoryEntry(const KonqHistoryEntry& e);
+    KonqHistoryEntry& operator=(const KonqHistoryEntry&) = default;
 
     // Necessary for QList (on Windows)
     bool operator==(const KonqHistoryEntry& entry) const;
