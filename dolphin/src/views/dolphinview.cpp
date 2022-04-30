@@ -80,7 +80,7 @@
 
 namespace {
     const int MaxModeEnum = DolphinView::CompactView;
-};
+}
 
 DolphinView::DolphinView(const KUrl& url, QWidget* parent) :
     QWidget(parent),
