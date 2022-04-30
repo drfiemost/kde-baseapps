@@ -408,6 +408,7 @@ void DolphinMainWindow::closeEvent(QCloseEvent* event)
             case KDialog::No:
                 // Close only the current tab
                 m_tabWidget->closeTab();
+                [[fallthrough]];
             default:
                 event->ignore();
                 return;
