@@ -310,7 +310,7 @@ void DolphinViewActionHandler::slotRename()
     m_currentView->renameSelectedItems();
 }
 
-void DolphinViewActionHandler::slotTrashActivated(Qt::MouseButtons, Qt::KeyboardModifiers modifiers)
+void DolphinViewActionHandler::slotTrashActivated(Qt::MouseButtons, Qt::KeyboardModifiers)
 {
     emit actionBeingHandled();
     m_currentView->trashSelectedItems();

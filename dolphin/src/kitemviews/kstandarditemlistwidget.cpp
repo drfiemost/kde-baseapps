@@ -118,7 +118,8 @@ QString KStandardItemListWidgetInformant::itemText(int index, const KItemListVie
     return view->model()->data(index).value("text").toString();
 }
 
-bool KStandardItemListWidgetInformant::itemIsLink(int index, const KItemListView* view) const
+bool KStandardItemListWidgetInformant::itemIsLink([[maybe_unused]] int index,
+                                                  [[maybe_unused]] const KItemListView* view) const
 {
     return false;
 }

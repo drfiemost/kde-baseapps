@@ -714,7 +714,7 @@ void KFileItemModelRolesUpdater::applyChangedBalooRoles(const QString& itemUrl)
 #endif
 }
 
-void KFileItemModelRolesUpdater::applyChangedBalooRolesJobFinished(KJob* kjob)
+void KFileItemModelRolesUpdater::applyChangedBalooRolesJobFinished([[maybe_unused]] KJob* kjob)
 {
 #ifdef HAVE_BALOO
     const KFileItem item = kjob->property("item").value<KFileItem>();
