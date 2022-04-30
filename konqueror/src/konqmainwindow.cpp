@@ -1717,32 +1717,32 @@ void KonqMainWindow::slotLinkView()
 
 void KonqMainWindow::slotReload( KonqView* reloadView, bool softReload )
 {
-  if ( !reloadView )
-    reloadView = m_currentView;
+    if ( !reloadView )
+        reloadView = m_currentView;
 
     if (!reloadView || (reloadView->url().isEmpty() && reloadView->locationBarURL().isEmpty()))
         return;
 
     if (reloadView->isModified()) {
         if (KMessageBox::warningContinueCancel( this,
-           i18n("This page contains changes that have not been submitted.\nReloading the page will discard these changes."),
-           i18nc("@title:window", "Discard Changes?"), KGuiItem(i18n("&Discard Changes"),"view-refresh"), KStandardGuiItem::cancel(), "discardchangesreload") != KMessageBox::Continue )
+            i18n("This page contains changes that have not been submitted.\nReloading the page will discard these changes."),
+            i18nc("@title:window", "Discard Changes?"), KGuiItem(i18n("&Discard Changes"),"view-refresh"), KStandardGuiItem::cancel(), "discardchangesreload") != KMessageBox::Continue )
             return;
     }
 
-  KonqOpenURLRequest req( reloadView->typedUrl() );
-  req.userRequestedReload = true;
-  if ( reloadView->prepareReload( req.args, req.browserArgs, softReload ) )
-  {
-      reloadView->lockHistory();
-      // Reuse current servicetype for local files, but not for remote files (it could have changed, e.g. over HTTP)
-      QString serviceType = reloadView->url().isLocalFile() ? reloadView->serviceType() : QString();
-      // By using locationBarURL instead of url, we preserve name filters (#54687)
-      KUrl reloadUrl = reloadView->locationBarURL();
-      if (reloadUrl.isEmpty()) // e.g. initial screen
-          reloadUrl = reloadView->url();
-      openUrl(reloadView, reloadUrl, serviceType, req);
-  }
+    KonqOpenURLRequest req( reloadView->typedUrl() );
+    req.userRequestedReload = true;
+    if ( reloadView->prepareReload( req.args, req.browserArgs, softReload ) )
+    {
+        reloadView->lockHistory();
+        // Reuse current servicetype for local files, but not for remote files (it could have changed, e.g. over HTTP)
+        QString serviceType = reloadView->url().isLocalFile() ? reloadView->serviceType() : QString();
+        // By using locationBarURL instead of url, we preserve name filters (#54687)
+        KUrl reloadUrl = reloadView->locationBarURL();
+        if (reloadUrl.isEmpty()) // e.g. initial screen
+            reloadUrl = reloadView->url();
+        openUrl(reloadView, reloadUrl, serviceType, req);
+    }
 }
 
 void KonqMainWindow::slotForceReload()
