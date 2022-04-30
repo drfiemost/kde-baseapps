@@ -23,8 +23,8 @@
 
 #include <QVector>
 
-Q_DECLARE_METATYPE(QVector<int>);
-Q_DECLARE_METATYPE(KItemRangeList);
+Q_DECLARE_METATYPE(QVector<int>)
+Q_DECLARE_METATYPE(KItemRangeList)
 
 class KItemRangeTest : public QObject
 {

@@ -23,7 +23,7 @@
 
 #include <QVector>
 
-Q_DECLARE_METATYPE(KItemRangeList);
+Q_DECLARE_METATYPE(KItemRangeList)
 
 /**
  * Converts a KItemRangeList to a KItemSet.

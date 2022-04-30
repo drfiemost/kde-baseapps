@@ -47,7 +47,7 @@ void myMessageOutput(QtMsgType type, const char* msg)
 
 namespace {
     const int DefaultTimeout = 5000;
-};
+}
 
 Q_DECLARE_METATYPE(KItemRange)
 Q_DECLARE_METATYPE(KItemRangeList)

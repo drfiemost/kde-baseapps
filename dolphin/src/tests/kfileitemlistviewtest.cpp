@@ -28,7 +28,7 @@
 
 namespace {
     const int DefaultTimeout = 2000;
-};
+}
 
 class KFileItemListViewTest : public QObject
 {
