@@ -5855,7 +5855,7 @@ static int current_memory_usage( int* limit )
                 int pagesize = sysconf (_SC_PAGE_SIZE);
                 if( pagesize < 0 )
                     pagesize = 4096;
-                if( limit != NULL )
+                if( limit != nullptr )
                     *limit = 16 * 1024 * 1024;
                 return usage * pagesize;
             }
@@ -5864,9 +5864,9 @@ static int current_memory_usage( int* limit )
     kWarning() << "Couldn't read VmSize from /proc/*/statm." ;
 #endif
 // Check malloc() usage - very imprecise, but better than nothing.
-    int usage_sum = 0;
+    size_t usage_sum = 0;
 #if defined(KDE_MALLINFO_STDLIB) || defined(KDE_MALLINFO_MALLOC)
-    struct mallinfo m = mallinfo();
+    struct mallinfo2 m = mallinfo2();
 #ifdef KDE_MALLINFO_FIELD_hblkhd
     usage_sum += m.hblkhd;
 #endif
@@ -5878,7 +5878,7 @@ static int current_memory_usage( int* limit )
 #endif
     // unlike /proc , this doesn't include things like size of dlopened modules,
     // and also doesn't include malloc overhead
-    if( limit != NULL )
+    if( limit != nullptr )
         *limit = 6 * 1024 * 1024;
 #endif
     return usage_sum;

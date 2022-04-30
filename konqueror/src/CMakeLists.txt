@@ -5,8 +5,8 @@ endif(KDE4_BUILD_TESTS)
 
 add_subdirectory( tests )
 
-check_symbol_exists(mallinfo        "malloc.h"                 KDE_MALLINFO_MALLOC)
-check_symbol_exists(mallinfo        "stdlib.h"                 KDE_MALLINFO_STDLIB)
+check_symbol_exists(mallinfo2       "malloc.h"                 KDE_MALLINFO_MALLOC)
+check_symbol_exists(mallinfo2       "stdlib.h"                 KDE_MALLINFO_STDLIB)
 # TODO KDE_MALLINFO_FIELD_hblkhd
 # TODO KDE_MALLINFO_FIELD_uordblks
 # TODO KDE_MALLINFO_FIELD_usmblks
