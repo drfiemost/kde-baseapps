@@ -166,7 +166,7 @@ KUrl::List FSView::selectedUrls()
 }
 
 bool FSView::getDirMetric(const QString& k,
-			  double& s, unsigned int& f, unsigned int& d)
+                          double& s, unsigned int& f, unsigned int& d)
 {
   QMap<QString, MetricEntry>::iterator it;
 
@@ -184,17 +184,17 @@ bool FSView::getDirMetric(const QString& k,
 }
 
 void FSView::setDirMetric(const QString& k,
-			  double s, unsigned int f, unsigned int d)
+                          double s, unsigned int f, unsigned int d)
 {
   if (0) kDebug(90100) << "setDirMetric '" << k << "': size "
-		   << s << ", files " << f << ", dirs " << d << endl;
+                   << s << ", files " << f << ", dirs " << d << endl;
   _dirMetric.insert(k, MetricEntry(s, f, d));
 }
 
 void FSView::requestUpdate(Inode* i)
 {
   if (0) kDebug(90100) << "FSView::requestUpdate(" << i->path()
-		   << ")" << endl;
+                   << ")" << endl;
 
   ScanDir* peer = i->dirPeer();
   if (!peer) return;
@@ -240,13 +240,13 @@ void FSView::scanFinished(ScanDir* d)
     break;
   case 3:
     if ((data == _chunkData1) ||
-	(data == _chunkData2)) _progress++;
+        (data == _chunkData2)) _progress++;
     if (data == _chunkData3) _chunkSize3--;
     break;
   case 4:
     if ((data == _chunkData1) ||
-	(data == _chunkData2) ||
-	(data == _chunkData3)) _progress++;
+        (data == _chunkData2) ||
+        (data == _chunkData3)) _progress++;
     break;
   default:
     break;
@@ -256,9 +256,9 @@ void FSView::scanFinished(ScanDir* d)
   _dirsFinished++;
 
   if (0) kDebug(90100) << "FSFiew::scanFinished: " << d->path()
-		   << ", Data " << data
-		   << ", Progress " << _progress << "/"
-		   << _progressSize << endl;
+                   << ", Data " << data
+                   << ", Progress " << _progress << "/"
+                   << _progressSize << endl;
 }
 
 void FSView::selected(TreeMapItem* i)
@@ -446,10 +446,10 @@ void FSView::doRedraw()
   if ((_progress>0) && (_progressSize>0) && _lastDir) {
     int percent = _progress * 100 / _progressSize;
     if (0) kDebug(90100) << "FSView::progress "
-		     << _progress << "/" << _progressSize
-		     << "= " << percent << "%, "
-		     << _dirsFinished << " dirs read, in "
-		     << _lastDir->path() << endl;
+                     << _progress << "/" << _progressSize
+                     << "= " << percent << "%, "
+                     << _dirsFinished << " dirs read, in "
+                     << _lastDir->path() << endl;
     emit progress(percent, _dirsFinished, _lastDir->path());
   }
 
@@ -475,12 +475,12 @@ void FSView::doUpdate()
     case 1:
       _chunkSize1 += _sm.scan(_chunkData1);
       if (_chunkSize1 > 100) {
-	_progressPhase = 2;
+        _progressPhase = 2;
 
-	/* Go to maximally 33% by scaling with 3 */
-	_progressSize = 3 * _chunkSize1;
+        /* Go to maximally 33% by scaling with 3 */
+        _progressSize = 3 * _chunkSize1;
 
-	if (1) kDebug(90100) << "Phase 2: CSize " << _chunkSize1;
+        if (1) kDebug(90100) << "Phase 2: CSize " << _chunkSize1;
       }
       break;
 
@@ -489,24 +489,24 @@ void FSView::doUpdate()
       _chunkSize2 += _sm.scan(_chunkData2);
       /* switch to Phase 3 if we reach 80 % of Phase 2 */
       if (_progress * 3 > _progressSize * 8/10) {
-	_progressPhase = 3;
+        _progressPhase = 3;
 
-	/* Goal: Keep percentage equal from phase 2 to 3 */
-	double percent = (double)_progress / _progressSize;
-	/* We scale by factor 2/3 aferwards */
-	percent = percent * 3/2;
+        /* Goal: Keep percentage equal from phase 2 to 3 */
+        double percent = (double)_progress / _progressSize;
+        /* We scale by factor 2/3 aferwards */
+        percent = percent * 3/2;
 
-	int todo = _chunkSize2 + (_progressSize/3 - _progress);
-	_progressSize = (int) ((double)todo / (1.0 - percent));
-	_progress = _progressSize - todo;
+        int todo = _chunkSize2 + (_progressSize/3 - _progress);
+        _progressSize = (int) ((double)todo / (1.0 - percent));
+        _progress = _progressSize - todo;
 
-	/* Go to maximally 66% by scaling with 1.5 */
-	_progressSize = _progressSize *3/2;
+        /* Go to maximally 66% by scaling with 1.5 */
+        _progressSize = _progressSize *3/2;
 
-	if (1) kDebug(90100) << "Phase 3: CSize " << _chunkSize2
-			 << ", Todo " << todo
-			 << ", Progress " << _progress
-			 << "/" << _progressSize << endl;
+        if (1) kDebug(90100) << "Phase 3: CSize " << _chunkSize2
+                         << ", Todo " << todo
+                         << ", Progress " << _progress
+                         << "/" << _progressSize << endl;
       }
       break;
 
@@ -515,18 +515,18 @@ void FSView::doUpdate()
       _chunkSize3 += _sm.scan(_chunkData3);
       /* switch to Phase 4 if we reach 80 % of Phase 3 */
       if (_progress * 3/2 > _progressSize * 8/10) {
-	_progressPhase = 4;
+        _progressPhase = 4;
 
-	/* Goal: Keep percentage equal from phase 2 to 3 */
-	double percent = (double)_progress / _progressSize;
-	int todo = _chunkSize3 + (_progressSize*2/3 - _progress);
-	_progressSize = (int)((double)todo / (1.0 - percent) + .5);
-	_progress = _progressSize - todo;
+        /* Goal: Keep percentage equal from phase 2 to 3 */
+        double percent = (double)_progress / _progressSize;
+        int todo = _chunkSize3 + (_progressSize*2/3 - _progress);
+        _progressSize = (int)((double)todo / (1.0 - percent) + .5);
+        _progress = _progressSize - todo;
 
-	if (1) kDebug(90100) << "Phase 4: CSize " << _chunkSize3
-			 << ", Todo " << todo
-			 << ", Progress " << _progress
-			 << "/" << _progressSize << endl;
+        if (1) kDebug(90100) << "Phase 4: CSize " << _chunkSize3
+                         << ", Todo " << todo
+                         << ", Progress " << _progress
+                         << "/" << _progressSize << endl;
       }
 
     default:
