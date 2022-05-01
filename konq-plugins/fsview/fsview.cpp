@@ -528,6 +528,7 @@ void FSView::doUpdate()
                          << ", Progress " << _progress
                          << "/" << _progressSize << endl;
       }
+      [[fallthrough]];
 
     default:
       _sm.scan(-1);
