@@ -34,7 +34,7 @@ class KonqNameAndUrlInputDialogPrivate;
  * @since 4.4
  * @author David Faure <faure@kde.org>
  *
- * @deprecated since 4.5, use KNameAndUrlInputDialog from kdelibs/kfile instead.
+ * @deprecated since 4.5, use KNameAndUrlInputDialog from knameandurlinputdialog.h instead.
  */
 class LIBKONQ_EXPORT_DEPRECATED KonqNameAndUrlInputDialog : public KDialog
 {
