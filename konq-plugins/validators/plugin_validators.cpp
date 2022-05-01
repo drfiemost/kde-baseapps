@@ -260,7 +260,9 @@ void PluginValidators::slotCompleted()
 {
   const bool byUri = canValidateByUri();
   const bool byUpload = canValidateByUpload();
+#ifdef HAVE_TIDY
   const bool locally = canValidateLocally();
+#endif
   m_validateHtmlUri->setEnabled(byUri);
   m_validateHtmlUpload->setEnabled(byUpload);
   m_validateCssUri->setEnabled(byUri);

@@ -256,7 +256,7 @@ QMenu *DOMTreeWindow::createDOMTreeViewContextMenu()
   return static_cast<QMenu *>(w);
 }
 
-void DOMTreeWindow::saveProperties(KConfigGroup &config)
+void DOMTreeWindow::saveProperties([[maybe_unused]] KConfigGroup &config)
 {
     // the 'config' object points to the session managed
     // config file.  anything you write here will be available
@@ -268,7 +268,7 @@ void DOMTreeWindow::saveProperties(KConfigGroup &config)
 #endif
 }
 
-void DOMTreeWindow::readProperties(const KConfigGroup &config)
+void DOMTreeWindow::readProperties([[maybe_unused]] const KConfigGroup &config)
 {
     // the 'config' object points to the session managed
     // config file.  this function is automatically called whenever
@@ -300,7 +300,7 @@ void DOMTreeWindow::dropEvent(QDropEvent *event)
     if (!urls.isEmpty())
     {
         // okay, we have a URI.. process it
-        const KUrl &url = urls.first();
+        [[maybe_unused]] const KUrl &url = urls.first();
 #if 0
         // load in the file
         load(url);
