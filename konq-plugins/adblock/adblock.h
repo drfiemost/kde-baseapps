@@ -87,8 +87,9 @@ public:
     AdElement();
     AdElement(const QString &url, const QString &category,
 	      const QString &type, bool blocked, const DOM::Node& node);
+    AdElement(const AdElement&);
 
-    AdElement &operator=(const AdElement &);
+    AdElement &operator=(const AdElement &) = default;
     bool operator==(const AdElement &e1);
 
     bool isBlocked() const;

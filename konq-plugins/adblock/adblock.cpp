@@ -306,16 +306,14 @@ AdElement::AdElement(const QString &url, const QString &category,
 		     const QString &type, bool blocked, const DOM::Node&node) :
   m_url(url), m_category(category), m_type(type), m_blocked(blocked),m_node( node ) {}
 
-AdElement &AdElement::operator=(const AdElement &obj)
+AdElement::AdElement(const AdElement &obj) :
+  m_url(obj.m_url),
+  m_category(obj.m_category),
+  m_type(obj.m_type),
+  m_blocked(obj.m_blocked),
+  m_blockedBy(obj.m_blockedBy),
+  m_node(obj.m_node)
 {
-  m_blocked = obj.m_blocked;
-  m_blockedBy = obj.m_blockedBy;
-  m_url = obj.m_url;
-  m_category = obj.m_category;
-  m_type = obj.m_type;
-  m_node = obj.m_node;
-
-  return *this;
 }
 
 bool AdElement::operator==(const AdElement &obj)
