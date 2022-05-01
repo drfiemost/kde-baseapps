@@ -1313,12 +1313,14 @@ QRect K3ListView::drawDropVisualizer(QPainter *p, Q3ListViewItem *parent,
             {
                 // Look for the last child (recursively)
                 it = after->firstChild();
-                if (it)
-                    while (it->nextSibling() || it->firstChild())
+                if (it) {
+                    while (it->nextSibling() || it->firstChild()) {
                         if ( it->nextSibling() )
                             it = it->nextSibling();
                         else
                             it = it->firstChild();
+                    }
+                }
             }
 
             insertmarker = itemRect (it ? it : after);
