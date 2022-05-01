@@ -341,7 +341,6 @@ void RelLinksPlugin::updateToolbar() {
 
     //kDebug(90210) << "Rellinks: Link nodes =" << linkNodes.length();
 
-    bool showBar = false;
     unsigned long nodeLength = linkNodes.length();
 
     for ( unsigned int i=0; i < nodeLength; i++ ) {
@@ -430,8 +429,6 @@ void RelLinksPlugin::updateToolbar() {
             }
 
         }
-
-        showBar = true;
     }
 }
 
