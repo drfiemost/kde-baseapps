@@ -6,7 +6,7 @@ MESSAGE(STATUS "akregator popupmenu plugin disabled. Doable via servicemenu or s
 #
 #kde4_add_plugin(akregatorkonqplugin ${akregatorkonqplugin_PART_SRCS})
 #
-#target_link_libraries(akregatorkonqplugin  ${KDE4_KDE3SUPPORT_LIBS} ${QT_QTXML_LIBRARY} konq
+#target_link_libraries(akregatorkonqplugin  ${KDE4_KDE3SUPPORT_LIBS} Qt4::QtXml konq
 #    ${KDE4_KHTML_LIBS} )
 #
 #install(TARGETS akregatorkonqplugin  DESTINATION ${PLUGIN_INSTALL_DIR} )

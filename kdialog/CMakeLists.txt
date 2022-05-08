@@ -13,7 +13,7 @@ target_link_libraries(kdialog ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS})
 if (Q_WS_X11)
   target_link_libraries(kdialog ${X11_X11_LIB})
   if (QT_QTDBUS_FOUND)
-    target_link_libraries(kdialog ${QT_QTDBUS_LIBRARY})
+    target_link_libraries(kdialog Qt4::QtDBus)
   endif (QT_QTDBUS_FOUND)
 endif (Q_WS_X11)
 

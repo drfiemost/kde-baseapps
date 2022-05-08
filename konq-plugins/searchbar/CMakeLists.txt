@@ -16,7 +16,7 @@ set(searchbarplugin_PART_SRCS
 
 kde4_add_plugin(searchbarplugin ${searchbarplugin_PART_SRCS})
 
-target_link_libraries(searchbarplugin ${KDE4_KPARTS_LIBS} ${QT_QTSCRIPT_LIBRARY} )
+target_link_libraries(searchbarplugin ${KDE4_KPARTS_LIBS} Qt4::QtScript)
 
 install(TARGETS searchbarplugin  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

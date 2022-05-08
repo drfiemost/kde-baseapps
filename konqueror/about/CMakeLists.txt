@@ -2,7 +2,7 @@ set(konq_aboutpage_PART_SRCS konq_aboutpage.cc)
 
 kde4_add_plugin(konq_aboutpage ${konq_aboutpage_PART_SRCS})
 
-target_link_libraries(konq_aboutpage ${KDE4_KHTML_LIBS} ${QT_QTGUI_LIBRARY})
+target_link_libraries(konq_aboutpage ${KDE4_KHTML_LIBS} Qt4::QtGui)
 
 install(TARGETS konq_aboutpage DESTINATION ${PLUGIN_INSTALL_DIR})
 

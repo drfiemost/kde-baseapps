@@ -10,5 +10,5 @@ target_link_libraries(konq_sidebartest ${KDE4_KPARTS_LIBS} konqsidebarplugin )
 ########### Unit tests ###############
 
 kde4_add_unit_test(sidebar-modulemanagertest modulemanagertest.cpp ../module_manager.cpp)
-target_link_libraries(sidebar-modulemanagertest ${KDE4_KIO_LIBS} ${KDE4_KDECORE_LIBS} ${QT_QTCORE_LIBRARY} ${QT_QTTEST_LIBRARY})
+target_link_libraries(sidebar-modulemanagertest ${KDE4_KIO_LIBS} ${KDE4_KDECORE_LIBS} Qt4::QtCore Qt4::QtTest)
 
