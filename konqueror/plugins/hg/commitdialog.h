@@ -34,7 +34,7 @@ class QLabel;
 namespace KTextEditor {
     class View;
     class Document;
-};
+}
 
 // TODO: Filter in HgStatusList.
 

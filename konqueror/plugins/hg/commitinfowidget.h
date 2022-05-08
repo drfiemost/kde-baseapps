@@ -27,7 +27,7 @@
 namespace KTextEditor {
     class View;
     class Document;
-};
+}
 
 class QListWidget;
 class QListWidgetItem;
