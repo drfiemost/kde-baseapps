@@ -52,11 +52,6 @@ KonqPopupMenuInformation & KonqPopupMenuInformation::operator=(const KonqPopupMe
     return *this;
 }
 
-void KonqPopupMenuInformation::setItems(const KFileItemList& items)
-{
-    d->setItems(items);
-}
-
 KFileItemList KonqPopupMenuInformation::items() const
 {
     return d->items();

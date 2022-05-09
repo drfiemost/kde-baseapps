@@ -34,11 +34,6 @@ KonqMenuActions::~KonqMenuActions()
     delete d;
 }
 
-void KonqMenuActions::setPopupMenuInfo(const KonqPopupMenuInformation& info)
-{
-    d->setItemListProperties(info.itemListProperties());
-}
-
 void KonqMenuActions::setItemListProperties(const KFileItemListProperties& itemListProperties)
 {
     d->setItemListProperties(itemListProperties);

@@ -61,12 +61,6 @@ public:
     KonqPopupMenuInformation & operator=(const KonqPopupMenuInformation& o);
 
     /**
-     * Sets the list of fileitems which the actions apply to.
-     * @deprecated use setItemListProperties
-     */
-    KDE_DEPRECATED void setItems(const KFileItemList& items);
-
-    /**
      * Sets a list of items and their properties
      * @since 4.3
      */

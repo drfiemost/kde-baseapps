@@ -56,13 +56,6 @@ public:
 
     /**
      * Sets all the data for the next instance of the popupmenu.
-     * @see KonqPopupMenuInformation
-     * @deprecated use setItemList+setParentWidget
-     */
-    KDE_DEPRECATED void setPopupMenuInfo(const KonqPopupMenuInformation& info);
-
-    /**
-     * Sets all the data for the next instance of the popupmenu.
      * @see KFileItemListProperties
      * @since 4.3
      */
