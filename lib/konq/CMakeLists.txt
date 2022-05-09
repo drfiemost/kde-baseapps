@@ -23,7 +23,6 @@ set(konq_LIB_SRCS
    kversioncontrolplugin.cpp  # used by dolphin and its version control plugins (deprecated)
    kversioncontrolplugin2.cpp # used by dolphin and its version control plugins
 
-   knewmenu.cpp # deprecated (functionality has moved to kdelibs)
    konq_popupmenuinformation.cpp # deprecated (functionality has moved to kdelibs)
    konq_menuactions.cpp     # deprecated (functionality has moved to kdelibs)
    konq_fileitemcapabilities.cpp # deprecated (functionality has moved to kdelibs)

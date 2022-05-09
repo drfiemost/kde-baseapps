@@ -27,7 +27,6 @@
 #include "kfileitemactionplugin.h"
 #include "kabstractfileitemactionplugin.h"
 #include "kpropertiesdialog.h"
-#include "knewmenu.h"
 #include "konq_operations.h"
 
 #include <klocale.h>
@@ -48,6 +47,7 @@
 #include <kauthorized.h>
 #include <kglobal.h>
 #include <kacceleratormanager.h>
+#include <knewfilemenu.h>
 
 #include <QFileInfo>
 
