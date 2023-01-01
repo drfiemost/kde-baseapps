@@ -18,9 +18,8 @@
 */
 
 #include "k3urldrag.h"
-#include <Qt3Support/Q3CString>
+#include <QByteArray>
 #include <Qt3Support/Q3StrIList>
-#include <Qt3Support/Q3ColorDrag>
 #include <QtGui/QFont>
 #include <unistd.h>
 
@@ -106,7 +105,7 @@ bool K3URLDrag::decode( const QMimeSource *e, KUrl::List &uris )
                 while (c < payload.size() && d[c] && d[c]!='\r'
                         && d[c] != '\n')
                     c++;
-                Q3CString s(d+f,c-f+1);
+                QByteArray s(d+f,c-f+1);
                 if ( s[0] != '#' ) // non-comment?
                     uris.append(stringToUrl(s));
                 // Skip junk
