@@ -37,7 +37,7 @@
 #include <KFileItemDelegate>
 #include <kfileitemlistproperties.h>
 #include <kfilepreviewgenerator.h>
-#include <knewmenu.h>
+#include <knewfilemenu.h>
 #include <KWindowSystem>
 #include <KMenu>
 

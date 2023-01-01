@@ -103,7 +103,7 @@
 #include <klocalizedstring.h>
 #include <kmenubar.h>
 #include <kmessagebox.h>
-#include <knewmenu.h>
+#include <knewfilemenu.h>
 #include <konq_popupmenu.h>
 #include "konqsettings.h"
 #include "konqanimatedlogo_p.h"
