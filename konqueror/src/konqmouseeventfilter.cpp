@@ -41,7 +41,7 @@ KonqMouseEventFilter* KonqMouseEventFilter::self()
 }
 
 KonqMouseEventFilter::KonqMouseEventFilter()
-    : QObject(0)
+    : QObject(nullptr)
 {
     reparseConfiguration();
     qApp->installEventFilter(this);
@@ -54,19 +54,17 @@ static KonqMainWindow* parentWindow(QWidget* w)
         w = w->parentWidget(); // yes this fails if the initial widget itself is a KonqFrame, but this can't happen
         frame = qobject_cast<KonqFrame *>(w);
     }
-    if (!frame) {
-        return nullptr;
-    }
-    if (auto view = frame->childView()) {
-        return view->mainWindow();
+    if (frame) {
+      if (auto view = frame->childView()) {
+          return view->mainWindow();
+      }
     }
     return nullptr;
 }
 
 bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
 {
-    const int type = e->type();
-    switch(type) {
+    switch(e->type()) {
     case QEvent::MouseButtonPress:
         switch (static_cast<QMouseEvent*>(e)->button()) {
         case Qt::RightButton:
@@ -91,10 +89,7 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
         }
         break;
     case QEvent::MouseButtonRelease:
-        if (!m_bBackRightClick) {
-            break;
-        }
-        if (static_cast<QMouseEvent*>(e)->button() == Qt::RightButton) {
+        if (m_bBackRightClick && (static_cast<QMouseEvent*>(e)->button() == Qt::RightButton)) {
             if (auto window = parentWindow(qobject_cast<QWidget*>(obj))) {
                 window->slotBack();
                 return true;
@@ -104,7 +99,7 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
     case QEvent::MouseMove:
     {
         QMouseEvent *ev = static_cast<QMouseEvent*>(e);
-        if (m_bBackRightClick && ev->buttons() & Qt::RightButton) {
+        if (m_bBackRightClick && (ev->buttons() & Qt::RightButton)) {
             qApp->removeEventFilter( this );
             QMouseEvent me( QEvent::MouseButtonPress, ev->pos(), Qt::RightButton, Qt::RightButton, Qt::NoModifier );
             QApplication::sendEvent( obj, &me );
@@ -116,8 +111,7 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
     }
     case QEvent::ContextMenu:
     {
-        QContextMenuEvent *ev = static_cast<QContextMenuEvent*>(e);
-        if (m_bBackRightClick && ev->reason() == QContextMenuEvent::Mouse) {
+        if (m_bBackRightClick && (static_cast<QContextMenuEvent*>(e)->reason() == QContextMenuEvent::Mouse)) {
             return true;
         }
         break;
