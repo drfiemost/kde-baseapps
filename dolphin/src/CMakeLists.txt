@@ -38,7 +38,7 @@ endif(LIBATTICA_FOUND)
 macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)
 configure_file(config-X11.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-X11.h )
 
-include_directories( ${KACTIVITIES_INCLUDE_DIRS} ${CMAKE_CURRENT_BINARY_DIR} )
+include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
 if(HAVE_BALOO)
   include_directories(${BALOO_INCLUDE_DIR} ${BALOO_WIDGETS_INCLUDE_DIR} ${KFILEMETADATA_INCLUDE_DIR})
@@ -275,13 +275,6 @@ if(HAVE_BALOO)
         ${BALOO_WIDGETS_LIBRARY}
     )
 endif()
-
-if (KActivities_FOUND)
-    target_link_libraries(
-        kdeinit_dolphin4
-        ${KACTIVITIES_LIBRARY}
-    )
-endif (KActivities_FOUND)
 
 install(TARGETS kdeinit_dolphin4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS dolphin4 ${INSTALL_TARGETS_DEFAULT_ARGS})

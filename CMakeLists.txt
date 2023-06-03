@@ -27,13 +27,6 @@ set_package_properties(ZLIB PROPERTIES DESCRIPTION "Support for gzip compressed 
                        PURPOSE "Required for building Konqueror"
                       )
 
-find_package(KActivities 6.1.0)
-set_package_properties(KActivities PROPERTIES DESCRIPTION "Interface library for the activity manager"
-                       URL "https://projects.kde.org/kactivities"
-                       TYPE RECOMMENDED
-                       PURPOSE "Needed for Dolphin integration with activities"
-                      )
-
 include(ConfigureChecks.cmake)
 configure_file (config-apps.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-apps.h )
 include_directories (${CMAKE_CURRENT_BINARY_DIR})
@@ -41,10 +34,6 @@ include_directories (${CMAKE_CURRENT_BINARY_DIR})
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 add_definitions (-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
 include_directories (${CMAKE_CURRENT_SOURCE_DIR}/lib/konq ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
-
-if ( KActivities_FOUND )
-  include_directories (${KACTIVITIES_INCLUDE_DIR})
-endif ( KActivities_FOUND )
 
 add_subdirectory( lib )
 add_subdirectory( dolphin )

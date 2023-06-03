@@ -33,12 +33,6 @@
 #include <views/dolphinview.h>
 #include <config-apps.h>
 
-#ifdef KActivities_FOUND
-namespace KActivities {
-    class ResourceInstance;
-}
-#endif
-
 class FilterBar;
 class KMessageWidget;
 class KUrl;
@@ -344,11 +338,6 @@ private:
 
     KUrl m_dropDestination;
     QScopedPointer<QDropEvent> m_dropEvent;
-
-#ifdef KActivities_FOUND
-private:
-    KActivities::ResourceInstance * m_activityResourceInstance;
-#endif
 };
 
 #endif // DOLPHINVIEWCONTAINER_H
