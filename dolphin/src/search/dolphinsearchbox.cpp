@@ -39,13 +39,6 @@
 #include <QToolButton>
 #include <QVBoxLayout>
 
-#include <config-baloo.h>
-#ifdef HAVE_BALOO
-    #include <baloo/query.h>
-    #include <baloo/term.h>
-    #include <baloo/indexerconfig.h>
-#endif
-
 DolphinSearchBox::DolphinSearchBox(QWidget* parent) :
     QWidget(parent),
     m_startedSearching(false),
@@ -106,10 +99,7 @@ void DolphinSearchBox::setSearchPath(const KUrl& url)
     m_everywhereButton->setVisible(showSearchFromButtons);
 
     bool hasFacetsSupport = false;
-#ifdef HAVE_BALOO
-    const Baloo::IndexerConfig searchInfo;
-    hasFacetsSupport = searchInfo.fileIndexingEnabled() && searchInfo.shouldBeIndexed(m_searchPath.toLocalFile());
-#endif
+
     m_facetsWidget->setEnabled(hasFacetsSupport);
 }
 
@@ -121,40 +111,29 @@ KUrl DolphinSearchBox::searchPath() const
 KUrl DolphinSearchBox::urlForSearching() const
 {
     KUrl url;
-    bool useBalooSearch = false;
-#ifdef HAVE_BALOO
-    const Baloo::IndexerConfig searchInfo;
-    useBalooSearch = searchInfo.fileIndexingEnabled() && searchInfo.shouldBeIndexed(m_searchPath.toLocalFile());
-#endif
-    if (useBalooSearch) {
-        url = balooUrlForSearching();
-    } else {
-        url.setProtocol("filenamesearch");
-        url.addQueryItem("search", m_searchInput->text());
-        if (m_contentButton->isChecked()) {
-            url.addQueryItem("checkContent", "yes");
-        }
-
-        QString encodedUrl;
-        if (m_everywhereButton->isChecked()) {
-            // It is very unlikely, that the majority of Dolphins target users
-            // mean "the whole harddisk" instead of "my home folder" when
-            // selecting the "Everywhere" button.
-            encodedUrl = QDir::homePath();
-        } else {
-            encodedUrl = m_searchPath.url();
-        }
-        url.addQueryItem("url", encodedUrl);
+    url.setProtocol("filenamesearch");
+    url.addQueryItem("search", m_searchInput->text());
+    if (m_contentButton->isChecked()) {
+        url.addQueryItem("checkContent", "yes");
     }
+
+    QString encodedUrl;
+    if (m_everywhereButton->isChecked()) {
+        // It is very unlikely, that the majority of Dolphins target users
+        // mean "the whole harddisk" instead of "my home folder" when
+        // selecting the "Everywhere" button.
+        encodedUrl = QDir::homePath();
+    } else {
+        encodedUrl = m_searchPath.url();
+    }
+    url.addQueryItem("url", encodedUrl);
 
     return url;
 }
 
 void DolphinSearchBox::fromSearchUrl(const KUrl& url)
 {
-    if (url.protocol() == "baloosearch") {
-        fromBalooSearchUrl(url);
-    } else if (url.protocol() == "filenamesearch") {
+    if (url.protocol() == "filenamesearch") {
         const QMap<QString, QString>& queryItems = url.queryItems();
         setText(queryItems.value("search"));
         setSearchPath(queryItems.value("url"));
@@ -425,83 +404,6 @@ void DolphinSearchBox::init()
     connect(m_startSearchTimer, SIGNAL(timeout()), this, SLOT(emitSearchRequest()));
 
     updateFacetsToggleButton();
-}
-
-KUrl DolphinSearchBox::balooUrlForSearching() const
-{
-#ifdef HAVE_BALOO
-    const QString text = m_searchInput->text();
-
-    Baloo::Query query;
-    query.addType("File");
-    query.addType(m_facetsWidget->facetType());
-
-    Baloo::Term term(Baloo::Term::And);
-
-    Baloo::Term ratingTerm = m_facetsWidget->ratingTerm();
-    if (ratingTerm.isValid()) {
-        term.addSubTerm(ratingTerm);
-    }
-
-    if (m_contentButton->isChecked()) {
-        query.setSearchString(text);
-    } else if (!text.isEmpty()) {
-        term.addSubTerm(Baloo::Term(QLatin1String("filename"), text));
-    }
-
-    if (m_fromHereButton->isChecked()) {
-        query.addCustomOption("includeFolder", m_searchPath.toLocalFile());
-    }
-
-    query.setTerm(term);
-
-    return query.toSearchUrl(i18nc("@title UDS_DISPLAY_NAME for a KIO directory listing. %1 is the query the user entered.",
-                                   "Query Results from '%1'", text));
-#else
-    return KUrl();
-#endif
-}
-
-void DolphinSearchBox::fromBalooSearchUrl([[maybe_unused]] const KUrl& url)
-{
-#ifdef HAVE_BALOO
-    const Baloo::Query query = Baloo::Query::fromSearchUrl(url);
-    const Baloo::Term term = query.term();
-
-    // Block all signals to avoid unnecessary "searchRequest" signals
-    // while we adjust the search text and the facet widget.
-    blockSignals(true);
-
-    const QVariantHash customOptions = query.customOptions();
-    if (customOptions.contains("includeFolder")) {
-        setSearchPath(customOptions.value("includeFolder").toString());
-    } else {
-        setSearchPath(QDir::homePath());
-    }
-
-    if (!query.searchString().isEmpty()) {
-        setText(query.searchString());
-    }
-
-    QStringList types = query.types();
-    types.removeOne("File"); // We are only interested in facet widget types
-    if (!types.isEmpty()) {
-        m_facetsWidget->setFacetType(types.first());
-    }
-
-    foreach (const Baloo::Term& subTerm, term.subTerms()) {
-        const QString property = subTerm.property();
-
-        if (property == QLatin1String("filename")) {
-            setText(subTerm.value().toString());
-        } else if (m_facetsWidget->isRatingTerm(subTerm)) {
-            m_facetsWidget->setRatingTerm(subTerm);
-        }
-    }
-
-    m_startSearchTimer->stop();
-    blockSignals(false);
-#endif
 }
 
 void DolphinSearchBox::updateFacetsToggleButton()

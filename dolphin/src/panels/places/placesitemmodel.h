@@ -20,8 +20,6 @@
 #ifndef PLACESITEMMODEL_H
 #define PLACESITEMMODEL_H
 
-#include <config-baloo.h>
-
 #include <kitemviews/kstandarditemmodel.h>
 
 #include <KUrl>
@@ -234,15 +232,6 @@ private:
      *         URL like e.g. "search:/documents" (see convertedUrl()).
      */
     static KUrl createSearchUrl(const KUrl& url);
-
-#ifdef HAVE_BALOO
-    /**
-     * Helper method for createSearchUrl()
-     * @return URL that can be listed by KIO and results in searching
-     *         for the given type
-     */
-    static KUrl searchUrlForType(const QString& type);
-#endif
 
 #ifdef PLACESITEMMODEL_DEBUG
     void showModelState();

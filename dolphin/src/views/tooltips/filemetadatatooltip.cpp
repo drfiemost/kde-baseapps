@@ -34,11 +34,7 @@
 #include <QTextLayout>
 #include <QTextLine>
 
-#ifndef HAVE_BALOO
 #include <KFileMetaDataWidget>
-#else
-#include <baloo/filemetadatawidget.h>
-#endif
 
 // For the blurred tooltip background
 #include <plasma/windoweffects.h>
@@ -70,11 +66,7 @@ FileMetaDataToolTip::FileMetaDataToolTip(QWidget* parent) :
     m_name->setMaximumWidth(fontMetrics.averageCharWidth() * 40);
 
     // Create widget for the meta data
-#ifndef HAVE_BALOO
     m_fileMetaDataWidget = new KFileMetaDataWidget(this);
-#else
-    m_fileMetaDataWidget = new Baloo::FileMetaDataWidget(this);
-#endif
     m_fileMetaDataWidget->setForegroundRole(QPalette::ToolTipText);
     m_fileMetaDataWidget->setReadOnly(true);
     connect(m_fileMetaDataWidget, SIGNAL(metaDataRequestFinished(KFileItemList)),

@@ -311,7 +311,7 @@ private slots:
 
 private:
     /**
-     * @return True if the URL protocol is a search URL (e. g. baloosearch:// or filenamesearch://).
+     * @return True if the URL protocol is a search URL (e. g. filenamesearch://).
      */
     bool isSearchUrl(const KUrl& url) const;
 

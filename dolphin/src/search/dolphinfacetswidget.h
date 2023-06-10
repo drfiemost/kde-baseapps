@@ -22,11 +22,6 @@
 
 #include <QWidget>
 
-#include <config-baloo.h>
-#ifdef HAVE_BALOO
-    #include <baloo/term.h>
-#endif
-
 class QButtonGroup;
 class QCheckBox;
 class QDate;
@@ -55,14 +50,6 @@ class DolphinFacetsWidget : public QWidget
 public:
     explicit DolphinFacetsWidget(QWidget* parent = 0);
     virtual ~DolphinFacetsWidget();
-
-#ifdef HAVE_BALOO
-    Baloo::Term ratingTerm() const;
-    QString facetType() const;
-
-    bool isRatingTerm(const Baloo::Term& term) const;
-    void setRatingTerm(const Baloo::Term& term);
-#endif
 
     void setFacetType(const QString& type);
 

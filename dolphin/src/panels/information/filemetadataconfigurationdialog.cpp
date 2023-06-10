@@ -19,11 +19,7 @@
 
 #include "filemetadataconfigurationdialog.h"
 
-#ifndef HAVE_BALOO
 #include <kfilemetadataconfigurationwidget.h>
-#else
-#include <baloo/filemetadataconfigwidget.h>
-#endif
 
 #include <KLocale>
 #include <QLabel>
@@ -44,12 +40,7 @@ FileMetaDataConfigurationDialog::FileMetaDataConfigurationDialog(QWidget* parent
                                           "be shown:"), this);
     m_descriptionLabel->setWordWrap(true);
 
-#ifndef HAVE_BALOO
     m_configWidget = new KFileMetaDataConfigurationWidget(this);
-#else
-    m_configWidget = new Baloo::FileMetaDataConfigWidget(this);
-#endif
-
 
     QWidget* mainWidget = new QWidget(this);
     QVBoxLayout* topLayout = new QVBoxLayout(mainWidget);

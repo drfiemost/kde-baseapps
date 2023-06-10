@@ -20,8 +20,6 @@
 
 #include "dolphinview.h"
 
-#include <config-baloo.h>
-
 #include <QAbstractItemView>
 #include <QApplication>
 #include <QBoxLayout>
@@ -73,10 +71,6 @@
 #include "viewproperties.h"
 #include "views/tooltips/tooltipmanager.h"
 #include "zoomlevelinfo.h"
-
-#ifdef HAVE_BALOO
-    #include <baloo/indexerconfig.h>
-#endif
 
 namespace {
     const int MaxModeEnum = DolphinView::CompactView;
@@ -871,10 +865,6 @@ void DolphinView::slotHeaderContextMenuRequested(const QPointF& pos)
     const QSet<QByteArray> visibleRolesSet = view->visibleRoles().toSet();
 
     bool indexingEnabled = false;
-#ifdef HAVE_BALOO
-    Baloo::IndexerConfig config;
-    indexingEnabled = config.fileIndexingEnabled();
-#endif
 
     QString groupName;
     QMenu* groupMenu = 0;

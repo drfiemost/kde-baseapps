@@ -20,8 +20,6 @@
 #ifndef KFILEITEMMODELROLESUPDATER_H
 #define KFILEITEMMODELROLESUPDATER_H
 
-#include <config-baloo.h>
-
 #include <KFileItem>
 #include <kitemviews/kitemmodelbase.h>
 
@@ -37,13 +35,6 @@ class KFileItemModel;
 class KJob;
 class QPixmap;
 class QTimer;
-
-#ifdef HAVE_BALOO
-    namespace Baloo
-    {
-        class FileMonitor;
-    }
-#endif
 
 /**
  * @brief Resolves expensive roles asynchronously and applies them to the KFileItemModel.
@@ -200,9 +191,6 @@ private slots:
      */
     void resolveRecentlyChangedItems();
 
-    void applyChangedBalooRoles(const QString& file);
-    void applyChangedBalooRolesJobFinished(KJob* job);
-
     void slotDirectoryContentsCountReceived(const QString& path, int count);
 
 private:
@@ -330,10 +318,6 @@ private:
     QSet<KFileItem> m_changedItems;
 
     KDirectoryContentsCounter* m_directoryContentsCounter;
-
-#ifdef HAVE_BALOO
-    Baloo::FileMonitor* m_balooFileMonitor;
-#endif
 };
 
 #endif

@@ -33,14 +33,11 @@ class QLabel;
 class QVBoxLayout;
 
 /**
- * @brief Input box for searching files with or without Baloo.
+ * @brief Input box for searching files.
  *
  * The widget allows to specify:
  * - Where to search: Everywhere or below the current directory
  * - What to search: Filenames or content
- *
- * If Baloo is available and the current folder is indexed, further
- * options are offered.
  */
 class DolphinSearchBox : public QWidget {
     Q_OBJECT
@@ -144,17 +141,6 @@ private:
     void loadSettings();
     void saveSettings();
     void init();
-
-    /**
-     * @return URL that represents the Baloo query for starting the search.
-     */
-    KUrl balooUrlForSearching() const;
-
-    /**
-     * Extracts information from the given Baloo search \a url to
-     * initialize the search box properly.
-     */
-    void fromBalooSearchUrl(const KUrl& url);
 
     void updateFacetsToggleButton();
 private:

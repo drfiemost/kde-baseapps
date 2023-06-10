@@ -21,8 +21,6 @@
 #ifndef DOLPHINVIEW_H
 #define DOLPHINVIEW_H
 
-#include <config-baloo.h>
-
 #include "libdolphin_export.h"
 
 #include <kparts/part.h>

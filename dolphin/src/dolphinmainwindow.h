@@ -22,8 +22,6 @@
 #ifndef DOLPHIN_MAINWINDOW_H
 #define DOLPHIN_MAINWINDOW_H
 
-#include <config-baloo.h>
-
 #include <KFileItemDelegate>
 #include <kio/fileundomanager.h>
 #include <ksortablelist.h>

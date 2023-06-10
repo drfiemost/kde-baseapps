@@ -22,15 +22,8 @@
 
 #include <KDialog>
 #include <KFileItem>
-#include "config-baloo.h"
 
-#ifndef HAVE_BALOO
 class KFileMetaDataConfigurationWidget;
-#else
-namespace Baloo {
-    class FileMetaDataConfigWidget;
-}
-#endif
 
 class QLabel;
 
@@ -71,11 +64,7 @@ protected slots:
 
 private:
     QLabel* m_descriptionLabel;
-#ifndef HAVE_BALOO
     KFileMetaDataConfigurationWidget* m_configWidget;
-#else
-    Baloo::FileMetaDataConfigWidget* m_configWidget;
-#endif
 };
 
 #endif

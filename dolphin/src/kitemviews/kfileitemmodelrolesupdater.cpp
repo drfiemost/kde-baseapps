@@ -40,13 +40,6 @@
 
 #include <algorithm>
 
-#ifdef HAVE_BALOO
-    #include "private/kbaloorolesprovider.h"
-    #include <baloo/file.h>
-    #include <baloo/filefetchjob.h>
-    #include <baloo/filemonitor.h>
-#endif
-
 // #define KFILEITEMMODELROLESUPDATER_DEBUG
 
 namespace {
@@ -89,9 +82,6 @@ KFileItemModelRolesUpdater::KFileItemModelRolesUpdater(KFileItemModel* model, QO
     m_recentlyChangedItems(),
     m_changedItems(),
     m_directoryContentsCounter(0)
-  #ifdef HAVE_BALOO
-  , m_balooFileMonitor(0)
-  #endif
 {
     Q_ASSERT(model);
 
@@ -122,9 +112,6 @@ KFileItemModelRolesUpdater::KFileItemModelRolesUpdater(KFileItemModel* model, QO
     m_resolvableRoles.insert("size");
     m_resolvableRoles.insert("type");
     m_resolvableRoles.insert("isExpandable");
-#ifdef HAVE_BALOO
-    m_resolvableRoles += KBalooRolesProvider::instance().roles();
-#endif
 
     m_directoryContentsCounter = new KDirectoryContentsCounter(m_model, this);
     connect(m_directoryContentsCounter, SIGNAL(result(QString,int)),
@@ -262,32 +249,6 @@ void KFileItemModelRolesUpdater::setRoles(const QSet<QByteArray>& roles)
     if (m_roles != roles) {
         m_roles = roles;
 
-#ifdef HAVE_BALOO
-        // Check whether there is at least one role that must be resolved
-        // with the help of Baloo. If this is the case, a (quite expensive)
-        // resolving will be done in KFileItemModelRolesUpdater::rolesData() and
-        // the role gets watched for changes.
-        const KBalooRolesProvider& rolesProvider = KBalooRolesProvider::instance();
-        bool hasBalooRole = false;
-        QSetIterator<QByteArray> it(roles);
-        while (it.hasNext()) {
-            const QByteArray& role = it.next();
-            if (rolesProvider.roles().contains(role)) {
-                hasBalooRole = true;
-                break;
-            }
-        }
-
-        if (hasBalooRole && !m_balooFileMonitor) {
-            m_balooFileMonitor = new Baloo::FileMonitor(this);
-            connect(m_balooFileMonitor, SIGNAL(fileMetaDataChanged(QString)),
-                    this, SLOT(applyChangedBalooRoles(QString)));
-        } else if (!hasBalooRole && m_balooFileMonitor) {
-            delete m_balooFileMonitor;
-            m_balooFileMonitor = 0;
-        }
-#endif
-
         if (m_state == Paused) {
             m_rolesChangedDuringPausing = true;
         } else {
@@ -351,23 +312,6 @@ void KFileItemModelRolesUpdater::slotItemsRemoved(const KItemRangeList& itemRang
     Q_UNUSED(itemRanges);
 
     const bool allItemsRemoved = (m_model->count() == 0);
-
-#ifdef HAVE_BALOO
-    if (m_balooFileMonitor) {
-        // Don't let the FileWatcher watch for removed items
-        if (allItemsRemoved) {
-            m_balooFileMonitor->clear();
-        } else {
-            QStringList newFileList;
-            foreach (const QString& itemUrl, m_balooFileMonitor->files()) {
-                if (m_model->index(itemUrl) >= 0) {
-                    newFileList.append(itemUrl);
-                }
-            }
-            m_balooFileMonitor->setFiles(newFileList);
-        }
-    }
-#endif
 
     if (allItemsRemoved) {
         m_state = Idle;
@@ -690,59 +634,6 @@ void KFileItemModelRolesUpdater::resolveRecentlyChangedItems()
     m_changedItems += m_recentlyChangedItems;
     m_recentlyChangedItems.clear();
     updateChangedItems();
-}
-
-void KFileItemModelRolesUpdater::applyChangedBalooRoles(const QString& itemUrl)
-{
-#ifdef HAVE_BALOO
-    const KFileItem item = m_model->fileItem(itemUrl);
-
-    if (item.isNull()) {
-        // itemUrl is not in the model anymore, probably because
-        // the corresponding file has been deleted in the meantime.
-        return;
-    }
-
-    Baloo::FileFetchJob* job = new Baloo::FileFetchJob(item.localPath());
-    connect(job, SIGNAL(finished(KJob*)), this, SLOT(applyChangedBalooRolesJobFinished(KJob*)));
-    job->setProperty("item", QVariant::fromValue(item));
-    job->start();
-#else
-#ifndef Q_CC_MSVC
-    Q_UNUSED(itemUrl);
-#endif
-#endif
-}
-
-void KFileItemModelRolesUpdater::applyChangedBalooRolesJobFinished([[maybe_unused]] KJob* kjob)
-{
-#ifdef HAVE_BALOO
-    const KFileItem item = kjob->property("item").value<KFileItem>();
-
-    const KBalooRolesProvider& rolesProvider = KBalooRolesProvider::instance();
-    QHash<QByteArray, QVariant> data;
-
-    foreach (const QByteArray& role, rolesProvider.roles()) {
-        // Overwrite all the role values with an empty QVariant, because the roles
-        // provider doesn't overwrite it when the property value list is empty.
-        // See bug 322348
-        data.insert(role, QVariant());
-    }
-
-    Baloo::FileFetchJob* job = static_cast<Baloo::FileFetchJob*>(kjob);
-    QHashIterator<QByteArray, QVariant> it(rolesProvider.roleValues(job->file(), m_roles));
-    while (it.hasNext()) {
-        it.next();
-        data.insert(it.key(), it.value());
-    }
-
-    disconnect(m_model, SIGNAL(itemsChanged(KItemRangeList,QSet<QByteArray>)),
-               this,    SLOT(slotItemsChanged(KItemRangeList,QSet<QByteArray>)));
-    const int index = m_model->index(item);
-    m_model->setData(index, data);
-    connect(m_model, SIGNAL(itemsChanged(KItemRangeList,QSet<QByteArray>)),
-            this,    SLOT(slotItemsChanged(KItemRangeList,QSet<QByteArray>)));
-#endif
 }
 
 void KFileItemModelRolesUpdater::slotDirectoryContentsCountReceived(const QString& path, int count)
@@ -1077,12 +968,6 @@ QHash<QByteArray, QVariant> KFileItemModelRolesUpdater::rolesData(const KFileIte
 
     data.insert("iconOverlays", item.overlays());
 
-#ifdef HAVE_BALOO
-    if (m_balooFileMonitor) {
-        m_balooFileMonitor->addFile(item.localPath());
-        applyChangedBalooRoles(item.localPath());
-    }
-#endif
     return data;
 }
 

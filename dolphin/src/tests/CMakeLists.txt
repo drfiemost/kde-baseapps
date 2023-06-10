@@ -95,20 +95,6 @@ set(kitemlistkeyboardsearchmanagertest_SRCS
 kde4_add_unit_test(kitemlistkeyboardsearchmanagertest TEST ${kitemlistkeyboardsearchmanagertest_SRCS})
 target_link_libraries(kitemlistkeyboardsearchmanagertest ${KDE4_KIO_LIBS} Qt4::QtTest)
 
-# DolphinSearchBox
-if (Baloo_FOUND)
-  set(dolphinsearchboxtest_SRCS
-      dolphinsearchboxtest.cpp
-      ../search/dolphinfacetswidget.cpp
-      ../search/dolphinsearchbox.cpp
-  )
-  kde4_add_kcfg_files(dolphinsearchboxtest_SRCS
-      ../search/dolphin_searchsettings.kcfgc
-  )
-  kde4_add_unit_test(dolphinsearchboxtest TEST ${dolphinsearchboxtest_SRCS})
-  target_link_libraries(dolphinsearchboxtest ${KDE4_KIO_LIBS} ${BALOO_LIBRARIES} Qt4::QtTest)
-endif (Baloo_FOUND)
-
 # KStandardItemModelTest
 set(kstandarditemmodeltest_SRCS
     kstandarditemmodeltest.cpp
