@@ -5,17 +5,6 @@ set_package_properties(KFileMetaData PROPERTIES
                        PURPOSE "For accessing file metadata labels"
                       )
 
-macro_optional_find_package(LibAttica)
-set_package_properties(LibAttica PROPERTIES DESCRIPTION "A library to access Open Collaboration Service providers"
-                       URL "https://projects.kde.org/attica"
-                       TYPE OPTIONAL
-                       PURPOSE "Attica is needed for the Get Hot New Stuff support in dolphin"
-                      )
-
-if(LIBATTICA_FOUND)
-    add_definitions(-DENABLE_KNEWSTUFF3)
-endif(LIBATTICA_FOUND)
-
 macro_bool_to_01(X11_Xrender_FOUND HAVE_XRENDER)
 configure_file(config-X11.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-X11.h )
 
@@ -101,9 +90,6 @@ target_link_libraries(
     ${KDE4_KFILE_LIBS}
     konq
 )
-if(LIBATTICA_FOUND)
-    target_link_libraries(dolphinprivate4 ${KDE4_KNEWSTUFF3_LIBS})
-endif(LIBATTICA_FOUND)
 
 if(X11_Xrender_FOUND)
     target_link_libraries(dolphinprivate4 ${X11_Xrender_LIB})
@@ -226,9 +212,6 @@ target_link_libraries(kdeinit_dolphin4
     ${KDE4_SOLID_LIBS}
     ${KDE4_PHONON_LIBS}
 )
-if(LIBATTICA_FOUND)
-    target_link_libraries(kdeinit_dolphin4 ${KDE4_KNEWSTUFF3_LIBS})
-endif(LIBATTICA_FOUND)
 
 install(TARGETS kdeinit_dolphin4 ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(TARGETS dolphin4 ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -291,9 +274,6 @@ kde4_add_plugin(kcm_dolphingeneral ${kcm_dolphingeneral_PART_SRCS})
 target_link_libraries(kcm_dolphinviewmodes  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate4)
 target_link_libraries(kcm_dolphinnavigation  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} dolphinprivate4)
 target_link_libraries(kcm_dolphinservices  ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} dolphinprivate4)
-if(LIBATTICA_FOUND)
-    target_link_libraries(kcm_dolphinservices ${KDE4_KNEWSTUFF3_LIBS})
-endif(LIBATTICA_FOUND)
 target_link_libraries(kcm_dolphingeneral ${KDE4_KDEUI_LIBS} ${KDE4_KFILE_LIBS} ${KDE4_KIO_LIBS} dolphinprivate4)
 
 install(TARGETS kcm_dolphinviewmodes DESTINATION ${PLUGIN_INSTALL_DIR} )
