@@ -11,7 +11,7 @@ target_link_libraries(centralwidget konq ${KDE4_KDECORE_LIBS} Qt4::QtCore Qt4::Q
 
 ########### konqviewmgrtest ###############
 
-kde4_add_unit_test(konqviewmgrtest TEST konqviewmgrtest.cpp)
+kde4_add_unit_test(konqviewmgrtest konqviewmgrtest.cpp)
 target_link_libraries(konqviewmgrtest kdeinit_konqueror Qt4::QtCore Qt4::QtGui
                       ${KDE4_KHTML_LIBS} Qt4::QtTest)
 
