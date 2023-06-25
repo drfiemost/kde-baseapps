@@ -2559,7 +2559,7 @@ void IconView::changeEvent(QEvent *event)
 
     case QEvent::FontChange:
         updateGridSize();
-        // Fallthrough intended
+        [[fallthrough]];
 
     case QEvent::PaletteChange:
     case QEvent::StyleChange:
