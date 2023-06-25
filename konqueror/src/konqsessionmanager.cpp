@@ -302,10 +302,12 @@ void SessionRestoreDialog::slotItemChanged(QTreeWidgetItem* item, int column)
           if (numCheckSessions == 0) {
               parentItem->setCheckState(column, Qt::Unchecked);
           }
+          break;
       case Qt::Unchecked:
           if (numCheckSessions > 0) {
               parentItem->setCheckState(column, Qt::Checked);
           }
+          break;
       default:
           break;
     }
