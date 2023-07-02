@@ -398,13 +398,15 @@ void RelLinksPlugin::updateToolbar() {
 
         // -- Buttons or menu items activation / creation --
         if (lrel == "bookmark" || lrel == "alternate") {
-            int id = kactionmenu_map[lrel]->menu()->insertItem( title );
+            QAction *action = kactionmenu_map[lrel]->menu()->addAction( title );
+            int id = kactionmenu_map[lrel]->menu()->actions().indexOf( action );
             m_more->setEnabled(true);
             kactionmenu_map[lrel]->setEnabled(true);
             element_map[lrel][id] = e;
 
         } else if (lrel == "appendix" || lrel == "chapter" || lrel == "section" || lrel == "subsection") {
-            int id = kactionmenu_map[lrel]->menu()->insertItem( title );
+            QAction *action = kactionmenu_map[lrel]->menu()->addAction( title );
+            int id = kactionmenu_map[lrel]->menu()->actions().indexOf( action );
             m_document->setEnabled(true);
             kactionmenu_map[lrel]->setEnabled(true);
             element_map[lrel][id] = e;
@@ -423,7 +425,8 @@ void RelLinksPlugin::updateToolbar() {
             } else {
                 // For the moment all the elements are reference in a separated menu
                 // TODO : reference the unknown ?
-                int id = kactionmenu_map["unclassified"]->menu()->insertItem( lrel + " : " + title );
+                QAction *action = kactionmenu_map["unclassified"]->menu()->addAction( lrel + " : " + title );
+                int id = kactionmenu_map["unclassified"]->menu()->actions().indexOf( action );
                 kactionmenu_map["unclassified"]->setEnabled(true);
                 element_map["unclassified"][id] = e;
             }
