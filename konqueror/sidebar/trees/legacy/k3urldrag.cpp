@@ -147,8 +147,10 @@ bool K3URLDrag::decode( const QMimeSource *e, KUrl::List &uris, QMap<QString,QSt
             for ( ; it != l.end(); ++it ) {
                 if ( readingKey )
                     key = *it;
-                else
-                    metaData.replace( key, *it );
+                else {
+                    metaData.remove(key);
+                    metaData.insert(key, *it);
+                }
                 readingKey = !readingKey;
             }
             Q_ASSERT( readingKey ); // an odd number of items would be, well, odd ;-)
@@ -229,7 +231,7 @@ QByteArray K3URLDrag::encodedData( const char* mime ) const
             {
                 s += it.key();
                 s += "$@@$";
-                s += it.data();
+                s += it.value();
                 s += "$@@$";
             }
 	    a.resize( s.length() + 1 );
