@@ -22,8 +22,6 @@
 
 class QColorGroup;
 
-#include <kde3support_export.h>
-
 #include <Qt3Support/Q3ListView>
 #include <Qt3Support/Q3PtrList>
 
@@ -54,7 +52,7 @@ class KConfigGroup;
  * Reimplement dragObject() and (possibly) startDrag(),
  * and setDragEnabled(true).
  */
-class KDE3SUPPORT_EXPORT K3ListView : public Q3ListView
+class K3ListView : public Q3ListView
 {
   friend class K3ListViewItem;
 
@@ -277,12 +275,6 @@ public:
    * all items into account not only the visible ones.
    */
   Q3ListViewItem* itemAtIndex(int index);
-
-  /**
-   * @deprecated
-   * @see setFullWidth()
-   */
-  KDE_DEPRECATED void setFullWidth();
 
   /**
    * Let the last column fit exactly all the available width.
@@ -983,7 +975,7 @@ private:
  *
  * @short listview item with alternate background color support
  */
-class KDE3SUPPORT_EXPORT K3ListViewItem : public Q3ListViewItem
+class K3ListViewItem : public Q3ListViewItem
 {
   friend class K3ListView;
 public:
@@ -1031,10 +1023,6 @@ public:
    * returns true if this item is to be drawn with the alternate background
    */
   bool isAlternate();
-  /**
-   * returns the background color for this item
-   */
-  KDE_DEPRECATED const QColor &backgroundColor();  // #### should be removed in 4.0; use below instead
 
   /**
    * returns the background color for this item at given column

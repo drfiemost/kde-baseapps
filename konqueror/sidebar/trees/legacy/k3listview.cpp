@@ -1943,11 +1943,6 @@ void K3ListView::viewportPaintEvent(QPaintEvent *e)
   d->painting = false;
 }
 
-void K3ListView::setFullWidth()
-{
-  setFullWidth(true);
-}
-
 void K3ListView::setFullWidth(bool fullWidth)
 {
   d->fullWidth = fullWidth;
@@ -2233,13 +2228,6 @@ void K3ListViewItem::takeItem(Q3ListViewItem *item)
   Q3ListViewItem::takeItem(item);
   if(listView())
     emit static_cast<K3ListView *>(listView())->itemRemoved(item);
-}
-
-const QColor &K3ListViewItem::backgroundColor()
-{
-  if (isAlternate())
-    return static_cast< K3ListView* >(listView())->alternateBackground();
-  return listView()->viewport()->palette().color(QPalette::Base);
 }
 
 QColor K3ListViewItem::backgroundColor(int column)

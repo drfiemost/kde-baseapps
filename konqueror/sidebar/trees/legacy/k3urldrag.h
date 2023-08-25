@@ -20,7 +20,6 @@
 #ifndef KUrlDRAG_H
 #define KUrlDRAG_H
 
-#include <kde3support_export.h>
 #include <kurl.h>
 
 #include <QtCore/QStringList>
@@ -43,7 +42,7 @@ class K3URLDragPrivate;
  * To create a drag object, use the K3URLDrag constructor.
  * To handle drops, use Q3UriDrag::canDecode() and K3URLDrag::decode()
  */
-class KDE3SUPPORT_EXPORT K3URLDrag : public Q3UriDrag
+class K3URLDrag : public Q3UriDrag
 {
 public:
   /**
