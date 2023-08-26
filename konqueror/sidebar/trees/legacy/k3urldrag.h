@@ -23,7 +23,7 @@
 #include <kurl.h>
 
 #include <QtCore/QStringList>
-#include <Qt3Support/Q3ColorDrag>
+#include <Qt3Support/Q3UriDrag>
 
 class QMimeSource;
 
