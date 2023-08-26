@@ -21,11 +21,12 @@
 #include "k3listview.h"
 #include "k3listviewlineedit.h"
 
-#include <Qt3Support/Q3ColorDrag>
+#include <Qt3Support/Q3StoredDrag>
 #include <QtGui/QActionEvent>
 #include <QtCore/QTimer>
 #include <Qt3Support/Q3Header>
 #include <QtGui/QCursor>
+#include <QMutableListIterator>
 
 #include <QtGui/QStyle>
 #include <QStyleOptionFocusRect>
@@ -923,7 +924,7 @@ void K3ListView::contentsDropEvent(QDropEvent* e)
 
 void K3ListView::movableDropEvent (Q3ListViewItem* parent, Q3ListViewItem* afterme)
 {
-  Q3PtrList<Q3ListViewItem> items, afterFirsts, afterNows;
+  QList<Q3ListViewItem*> items, afterFirsts, afterNows;
   Q3ListViewItem *current=currentItem();
   bool hasMoved=false;
   for (Q3ListViewItem *i = firstChild(), *iNext=0; i; i = iNext)
@@ -960,8 +961,9 @@ void K3ListView::movableDropEvent (Q3ListViewItem* parent, Q3ListViewItem* after
     afterme = i;
   }
   clearSelection();
-  for (Q3ListViewItem *i=items.first(); i; i=items.next() )
-    i->setSelected(true);
+  QMutableListIterator it(items);
+  while (it.hasNext())
+    it.next()->setSelected(true);
   if (current)
     setCurrentItem(current);
 

@@ -23,7 +23,7 @@
 class QColorGroup;
 
 #include <Qt3Support/Q3ListView>
-#include <Qt3Support/Q3PtrList>
+#include <QList>
 
 class Q3DragObject;
 class KConfig;
@@ -494,7 +494,7 @@ Q_SIGNALS:
    * each and every item moved, in order.  The first element in @p items associates
    * with the first of afterFirst and afterNow.
    */
-  void moved(Q3PtrList<Q3ListViewItem> &items, Q3PtrList<Q3ListViewItem> &afterFirst, Q3PtrList<Q3ListViewItem> &afterNow);
+  void moved(QList<Q3ListViewItem*> &items, QList<Q3ListViewItem*> &afterFirst, QList<Q3ListViewItem*> &afterNow);
 
   /**
    * This signal gets emitted when an item is renamed via in-place renaming.
