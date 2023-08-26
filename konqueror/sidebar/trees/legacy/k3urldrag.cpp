@@ -73,17 +73,6 @@ void K3URLDrag::setExportAsText( bool exp )
     d->m_exportAsText = exp;
 }
 
-K3URLDrag * K3URLDrag::newDrag( const KUrl::List &urls, QWidget* dragSource )
-{
-    return new K3URLDrag( urls, QMap<QString, QString>(), dragSource );
-}
-
-K3URLDrag * K3URLDrag::newDrag( const KUrl::List &urls, const QMap<QString, QString>& metaData,
-                              QWidget* dragSource )
-{
-    return new K3URLDrag( urls, metaData, dragSource );
-}
-
 QMap<QString, QString> &K3URLDrag::metaData()
 {
     return m_metaData;
@@ -187,7 +176,7 @@ QByteArray K3URLDrag::encodedData( const char* mime ) const
         return Q3UriDrag::encodedData( mime );
     else if ( mimetype == "text/plain" )
     {
-	QStringList uris;
+        QStringList uris;
         for (Q3StrListIterator it(m_urls); *it; ++it)
            uris.append(stringToUrl(*it).prettyUrl());
 
@@ -278,8 +267,3 @@ QString K3URLDrag::urlToString(const KUrl &url)
 
     return url.url(/*0 , 106*/); // 106 is mib enum for utf8 codec
 }
-
-// deprecated ctor
-K3URLDrag::K3URLDrag( const Q3StrList & urls, const QMap<QString,QString>& metaData,
-                    QWidget * dragSource ) :
-Q3UriDrag( urls, dragSource ), m_urls( urls ), m_metaData( metaData ), d( 0 ) {}
