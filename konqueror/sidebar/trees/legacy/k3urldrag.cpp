@@ -62,6 +62,7 @@ void K3URLDrag::init(const KUrl::List &urls)
     {
         m_urls.append( urlToString(*uit).toLatin1().constData() );
     }
+    
     setUris(m_urls);
 }
 
@@ -177,8 +178,8 @@ QByteArray K3URLDrag::encodedData( const char* mime ) const
     else if ( mimetype == "text/plain" )
     {
         QStringList uris;
-        for (Q3StrListIterator it(m_urls); *it; ++it)
-           uris.append(stringToUrl(*it).prettyUrl());
+        for (QByteArray url: m_urls)
+           uris.append(stringToUrl(url).prettyUrl());
 
         QByteArray s = uris.join( "\n" ).toLocal8Bit();
         if( uris.count() > 1 ) // terminate last line, unless it's the only line
@@ -189,8 +190,8 @@ QByteArray K3URLDrag::encodedData( const char* mime ) const
     else if ( mimetype.toLower() == "text/plain;charset=iso-8859-1")
     {
         QStringList uris;
-        for (Q3StrListIterator it(m_urls); *it; ++it)
-           uris.append(stringToUrl(*it).url()); // was using ",4" - the mib for latin1
+        for (QByteArray url: m_urls)
+           uris.append(stringToUrl(url).url()); // was using ",4" - the mib for latin1
 
         QByteArray s = uris.join( "\n" ).toLatin1();
         if( uris.count() > 1 )
@@ -201,8 +202,8 @@ QByteArray K3URLDrag::encodedData( const char* mime ) const
     else if ( mimetype.toLower() == "text/plain;charset=utf-8")
     {
         QStringList uris;
-        for (Q3StrListIterator it(m_urls); *it; ++it)
-           uris.append(stringToUrl(*it).prettyUrl());
+        for (QByteArray url: m_urls)
+           uris.append(stringToUrl(url).prettyUrl());
 
         QByteArray s = uris.join( "\n" ).toUtf8();
         if( uris.count() > 1 )

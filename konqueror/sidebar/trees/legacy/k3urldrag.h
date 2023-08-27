@@ -22,6 +22,8 @@
 
 #include <kurl.h>
 
+#include <QtCore/QByteArray>
+#include <QtCore/QList>
 #include <QtCore/QStringList>
 #include <Qt3Support/Q3UriDrag>
 
@@ -135,7 +137,7 @@ public:
 private:
   void init(const KUrl::List &urls);
 
-  Q3StrList m_urls;
+  QList<QByteArray> m_urls;
   QMap<QString,QString> m_metaData;
   K3URLDragPrivate* d;
 };
