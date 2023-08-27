@@ -22,10 +22,10 @@
 #include "k3listviewlineedit.h"
 
 #include "q3dragobject.h"
+#include "q3header.h"
 
 #include <QtGui/QActionEvent>
 #include <QtCore/QTimer>
-#include <Qt3Support/Q3Header>
 #include <QtGui/QCursor>
 #include <QMutableListIterator>
 

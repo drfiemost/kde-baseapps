@@ -19,6 +19,8 @@
 
 #include "k3listviewsearchline.h"
 
+#include "q3header.h"
+
 #include <k3listview.h>
 #include <kiconloader.h>
 #include <ktoolbar.h>
@@ -31,7 +33,6 @@
 #include <QLabel>
 #include <QContextMenuEvent>
 #include <QList>
-#include <Q3Header>
 #include <QToolButton>
 
 class K3ListViewSearchLine::K3ListViewSearchLinePrivate
