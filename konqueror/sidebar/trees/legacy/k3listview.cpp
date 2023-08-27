@@ -2333,9 +2333,9 @@ bool K3ListViewItem::isAlternate()
   return false;
 }
 
-void K3ListViewItem::paintCell(QPainter *p, const QColorGroup &cg, int column, int width, int alignment)
+void K3ListViewItem::paintCell(QPainter *p, const QPalette &cg, int column, int width, int alignment)
 {
-  QColorGroup _cg = cg;
+  QPalette _cg = cg;
   Q3ListView* lv = listView();
   _cg.setColor( lv->backgroundRole(), backgroundColor(column) );
   Q3ListViewItem::paintCell(p, _cg, column, width, alignment);

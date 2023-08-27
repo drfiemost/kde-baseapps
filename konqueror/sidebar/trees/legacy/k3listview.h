@@ -20,9 +20,9 @@
 #ifndef KLISTVIEW_H
 #define KLISTVIEW_H
 
-class QColorGroup;
+class QPalette;
 
-#include <Qt3Support/Q3ListView>
+#include "q3listview.h"
 #include <QList>
 
 class Q3DragObject;
@@ -1033,7 +1033,7 @@ public:
    */
   QColor backgroundColor(int column);
 
-  virtual void paintCell(QPainter *p, const QColorGroup &cg,
+  virtual void paintCell(QPainter *p, const QPalette &cg,
     int column, int width, int alignment);
 
 private:

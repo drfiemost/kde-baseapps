@@ -149,7 +149,7 @@ struct Q3ListViewPrivate
 
     class ViewColumnInfo {
     public:
-        ViewColumnInfo(): align(Qt::AlignAuto), sortable(true), next(0) {}
+        ViewColumnInfo(): align(Qt::AlignLeft), sortable(true), next(0) {}
         ~ViewColumnInfo() { delete next; }
         int align;
         bool sortable;
@@ -1987,7 +1987,7 @@ static QStyleOptionQ3ListView getStyleOption(const Q3ListView *lv, const Q3ListV
 }
 
 /*!
-    \fn void Q3ListViewItem::paintCell(QPainter *painter, const QColorGroup & cg, int column, int width, int align)
+    \fn void Q3ListViewItem::paintCell(QPainter *painter, const QPalette & cg, int column, int width, int align)
 
     This virtual function paints the contents of one column of an item
     and aligns it as described by \a align.
@@ -2014,7 +2014,7 @@ static QStyleOptionQ3ListView getStyleOption(const Q3ListView *lv, const Q3ListV
 
     \sa paintBranches(), Q3ListView::drawContentsOffset()
 */
-void Q3ListViewItem::paintCell(QPainter * p, const QColorGroup & cg,
+void Q3ListViewItem::paintCell(QPainter * p, const QPalette & cg,
                                int column, int width, int align)
 {
     // Change width() if you change this.
@@ -2219,7 +2219,7 @@ int Q3ListViewItem::width(const QFontMetrics& fm,
     \sa paintCell() paintBranches() Q3ListView::setAllColumnsShowFocus()
 */
 
-void Q3ListViewItem::paintFocus(QPainter *p, const QColorGroup &cg, const QRect &r)
+void Q3ListViewItem::paintFocus(QPainter *p, const QPalette &cg, const QRect &r)
 {
     QPalette pal = cg;
     Q3ListView *lv = listView();
@@ -2257,7 +2257,7 @@ void Q3ListViewItem::paintFocus(QPainter *p, const QColorGroup &cg, const QRect 
     \sa paintCell(), Q3ListView::drawContentsOffset()
 */
 
-void Q3ListViewItem::paintBranches(QPainter * p, const QColorGroup & cg,
+void Q3ListViewItem::paintBranches(QPainter * p, const QPalette & cg,
                                    int w, int y, int h)
 {
     Q3ListView *lv = listView();
@@ -2588,6 +2588,7 @@ void Q3ListViewItem::ignoreDoubleClick()
 Q3ListView::Q3ListView(QWidget * parent, const char *name, Qt::WindowFlags f)
     : Q3ScrollView(parent, name, f | Qt::WStaticContents | Qt::WNoAutoErase)
 {
+    //setAttribute(Qt::WA_StaticContents | Qt::WA_NoBackground);
     init();
 }
 
@@ -2891,8 +2892,7 @@ void Q3ListView::drawContentsOffset(QPainter * p, int ox, int oy,
                     // map to Left currently. This should change once we
                     // can really reverse the listview.
                     int align = columnAlignment(ac);
-                    if (align == Qt::AlignAuto) align = Qt::AlignLeft;
-                        current.i->paintCell(p, pal, ac, r.width(), align);
+                    current.i->paintCell(p, pal, ac, r.width(), align);
                 }
                 p->restore();
                 x += cs;
@@ -3470,7 +3470,7 @@ void Q3ListView::setColumnAlignment(int column, int align)
 int Q3ListView::columnAlignment(int column) const
 {
     if (column < 0 || !d->vci)
-        return Qt::AlignAuto;
+        return Qt::AlignLeft;
     Q3ListViewPrivate::ViewColumnInfo * l = d->vci;
     while(column) {
         if (!l->next)
@@ -3478,7 +3478,7 @@ int Q3ListView::columnAlignment(int column) const
         l = l->next;
         column--;
     }
-    return l ? l->align : Qt::AlignAuto;
+    return l ? l->align : Qt::AlignLeft;
 }
 
 
@@ -3584,8 +3584,7 @@ void Q3ListView::handleSizeChange(int section, int os, int ns)
     // map auto to left for now. Need to fix this once we support
     // reverse layout on the listview.
     int align = columnAlignment(section);
-    if (align == Qt::AlignAuto) align = Qt::AlignLeft;
-    if (align != Qt::AlignAuto && align != Qt::AlignLeft)
+    if (align != Qt::AlignLeft)
         viewport()->repaint(d->h->cellPos(actual) - contentsX(), 0,
                              d->h->cellSize(actual), visibleHeight());
 
@@ -3778,7 +3777,7 @@ bool Q3ListView::eventFilter(QObject * o, QEvent * e)
                 }
             } else if (e->type() == QEvent::FocusOut) {
                 if (((QFocusEvent*)e)->reason() != Qt::PopupFocusReason) {
-                    QCustomEvent *e = new QCustomEvent(9999);
+                    QEvent *e = new QEvent(static_cast<QEvent::Type>(9999));
                     QApplication::postEvent(o, e);
                     return true;
                 }
@@ -4196,16 +4195,16 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
         d->startEdit = false;
     Q3ListViewItem *oldCurrent = currentItem();
 
-    if (e->button() == Qt::RightButton && (e->buttons() & Qt::ControlButton))
+    if (e->button() == Qt::RightButton && (e->modifiers() & Qt::ControlModifier))
         goto emit_signals;
 
     if (!i) {
-        if (!(e->buttons() & Qt::ControlButton))
+        if (!(e->modifiers() & Qt::ControlModifier))
             clearSelection();
         goto emit_signals;
     } else {
         // No new anchor when using shift
-        if (!(e->buttons() & Qt::ShiftButton))
+        if (!(e->modifiers() & Qt::ShiftModifier))
             d->selectAnchor = i;
     }
 
@@ -4289,7 +4288,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
             setSelected(i, d->select);
         else if (selectionMode() == Extended) {
             bool changed = false;
-            if (!(e->buttons() & (Qt::ControlButton | Qt::ShiftButton))) {
+            if (!(e->modifiers() & (Qt::ControlModifier | Qt::ShiftModifier))) {
                 if (!i->isSelected()) {
                     bool blocked = signalsBlocked();
                     blockSignals(true);
@@ -4299,9 +4298,9 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
                     changed = true;
                 }
             } else {
-                if (e->buttons() & Qt::ShiftButton)
+                if (e->modifiers() & Qt::ShiftModifier)
                     d->pressedSelected = false;
-                if ((e->buttons() & Qt::ControlButton) && !(e->buttons() & Qt::ShiftButton) && i) {
+                if ((e->modifiers() & Qt::ControlModifier) && !(e->modifiers() & Qt::ShiftModifier) && i) {
                     i->setSelected(!i->isSelected());
                     changed = true;
                     d->pressedSelected = false;
@@ -4341,7 +4340,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
     emit mouseButtonPressed(e->button(), i, viewport()->mapToGlobal(vp), c);
 
     if (e->button() == Qt::RightButton && i == d->pressedItem) {
-        if (!i && !(e->buttons() & Qt::ControlButton))
+        if (!i && !(e->modifiers() & Qt::ControlModifier))
             clearSelection();
 
         emit rightButtonPressed(i, viewport()->mapToGlobal(vp), c);
@@ -4475,7 +4474,7 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
             r.setLeft(r.left() + itemMargin() + (currentItem()->depth() +
                                                    (rootIsDecorated() ? 1 : 0)) * treeStepSize() - 1);
         if (r.contains(e->pos()) &&
-             !(e->buttons() & (Qt::ShiftButton | Qt::ControlButton)))
+             !(e->modifiers() & (Qt::ShiftModifier | Qt::ControlModifier)))
             d->renameTimer->setSingleShot(true);
             d->renameTimer->start(QApplication::doubleClickInterval());
     }
@@ -4494,7 +4493,7 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
 
         if (e->button() == Qt::RightButton) {
             if (!i) {
-                if (!(e->buttons() & Qt::ControlButton))
+                if (!(e->modifiers() & Qt::ControlModifier))
                     clearSelection();
                 emit rightButtonClicked(0, viewport()->mapToGlobal(vp), -1);
                 return;
@@ -4856,7 +4855,7 @@ void Q3ListView::keyPressEvent(QKeyEvent * e)
             i = i->itemBelow();
         d->currentPrefix.truncate(0);
         break;
-    case Qt::Key_Next:
+    case Qt::Key_PageDown:
         selectCurrent = false;
         i2 = itemAt(QPoint(0, visibleHeight()-1));
         if (i2 == i || !r.isValid() ||
@@ -4879,7 +4878,7 @@ void Q3ListView::keyPressEvent(QKeyEvent * e)
         }
         d->currentPrefix.truncate(0);
         break;
-    case Qt::Key_Prior:
+    case Qt::Key_PageUp:
         selectCurrent = false;
         i2 = itemAt(QPoint(0, 0));
         if (i == i2 || !r.isValid() || r.top() <= 0) {
@@ -5014,7 +5013,7 @@ void Q3ListView::keyPressEvent(QKeyEvent * e)
             }
         } else {
             d->currentPrefix.truncate(0);
-            if (e->modifiers() & Qt::ControlButton) {
+            if (e->modifiers() & Qt::ControlModifier) {
                 d->currentPrefix.clear();
                 switch (e->key()) {
                 case Qt::Key_A:
@@ -5030,13 +5029,13 @@ void Q3ListView::keyPressEvent(QKeyEvent * e)
     if (!i)
         return;
 
-    if (!(e->modifiers() & Qt::ShiftButton) || !d->selectAnchor)
+    if (!(e->modifiers() & Qt::ShiftModifier) || !d->selectAnchor)
         d->selectAnchor = i;
 
     setCurrentItem(i);
     if (i->isSelectable())
-        handleItemChange(old, wasNavigation && (e->modifiers() & Qt::ShiftButton),
-                          wasNavigation && (e->modifiers() & Qt::ControlButton));
+        handleItemChange(old, wasNavigation && (e->modifiers() & Qt::ShiftModifier),
+                          wasNavigation && (e->modifiers() & Qt::ControlModifier));
 
     if (d->focusItem && !d->focusItem->isSelected() && d->selectionMode == Single && selectCurrent)
         setSelected(d->focusItem, true);
@@ -6547,7 +6546,7 @@ int Q3CheckListItem::width(const QFontMetrics& fm, const Q3ListView* lv, int col
     The item is in column \a column, has width \a width and has
     alignment \a align. (See \l Qt::Alignment for valid alignments.)
 */
-void Q3CheckListItem::paintCell(QPainter * p, const QColorGroup & cg,
+void Q3CheckListItem::paintCell(QPainter * p, const QPalette & cg,
                                int column, int width, int align)
 {
     if (!p)
@@ -6634,7 +6633,7 @@ void Q3CheckListItem::paintCell(QPainter * p, const QColorGroup & cg,
 
     // Draw text ----------------------------------------------------
     p->translate(r, 0);
-    p->setPen(QPen(cg.text()));
+    p->setPen(QPen(cg.text().color()));
     Q3ListViewItem::paintCell(p, cg, column, width - r, align);
 }
 
@@ -6642,7 +6641,7 @@ void Q3CheckListItem::paintCell(QPainter * p, const QColorGroup & cg,
     Draws the focus rectangle \a r using the color group \a cg on the
     painter \a p.
 */
-void Q3CheckListItem::paintFocus(QPainter *p, const QColorGroup & cg,
+void Q3CheckListItem::paintFocus(QPainter *p, const QPalette & cg,
                                  const QRect & r)
 {
     bool intersect = true;

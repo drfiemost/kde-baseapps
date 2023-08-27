@@ -254,8 +254,9 @@ void qt_set_null_label_bit(Q3HeaderData *data, int section, bool b)
 */
 
 Q3Header::Q3Header(QWidget *parent, const char *name)
-    : QWidget(parent, name, Qt::WStaticContents)
+    : QWidget(parent)
 {
+    setAttribute(Qt::WA_StaticContents);
     orient = Qt::Horizontal;
     init(0);
 }
@@ -266,8 +267,9 @@ Q3Header::Q3Header(QWidget *parent, const char *name)
 */
 
 Q3Header::Q3Header(int n, QWidget *parent, const char *name)
-    : QWidget(parent, name, Qt::WStaticContents)
+    : QWidget(parent)
 {
+    setAttribute(Qt::WA_StaticContents);
     orient = Qt::Horizontal;
     init(n);
 }
@@ -632,12 +634,12 @@ void Q3Header::keyPressEvent(QKeyEvent *e)
                || (orientation() == Qt::Vertical && (e->key() == Qt::Key_Up || e->key() == Qt::Key_Down))) {
         int dir = e->key() == Qt::Key_Right || e->key() == Qt::Key_Down ? 1 : -1;
         int s = d->i2s[i];
-        if (e->state() & Qt::ControlButton  && d->resize[s]) {
+        if (e->modifiers() & Qt::ControlModifier  && d->resize[s]) {
             //resize
-            int step = e->state() & Qt::ShiftButton ? dir : 10*dir;
+            int step = e->modifiers() & Qt::ShiftModifier ? dir : 10*dir;
             int c = d->positions[i] + d->sizes[s] +  step;
             handleColumnResize(i, c, true);
-        } else         if (e->state() & (Qt::AltButton|Qt::MetaButton) && d->move) {
+        } else         if (e->modifiers() & (Qt::AltModifier|Qt::MetaModifier) && d->move) {
             //move section
             int i2 = (i + count() + dir) % count();
             d->focusIdx = i2;
@@ -812,15 +814,15 @@ void Q3Header::mouseMoveEvent(QMouseEvent *e)
         if (handleAt(c) < 0)
             unsetCursor();
         else if (orient == Qt::Horizontal)
-            setCursor(Qt::splitHCursor);
+            setCursor(Qt::SplitHCursor);
         else
-            setCursor(Qt::splitVCursor);
+            setCursor(Qt::SplitVCursor);
 #endif
         break;
     case Blocked:
         break;
     case Pressed:
-        if (QABS(c - clickPos) > 4 && d->move) {
+        if (qAbs(c - clickPos) > 4 && d->move) {
             state = Moving;
             moveToIdx = -1;
 #ifndef QT_NO_CURSOR
@@ -1140,7 +1142,7 @@ QSize Q3Header::sectionSizeHint(int section, const QFontMetrics& fm) const
             QStringList list = label.split(QLatin1Char('\n'));
             for (int i=0; i < list.count(); ++i) {
                 int tmpw = fm.width(list.at(i));
-                w = QMAX(w, tmpw);
+                w = qMax(w, tmpw);
             }
         } else {
             bound.setHeight(fm.height());
@@ -1589,7 +1591,7 @@ void Q3Header::paintSectionLabel(QPainter *p, int index, const QRect& fr)
             opt.state |= QStyle::State_UpArrow;
         QRect ar(fr.x() + tw - arrowWidth - 6 + ew, 4, arrowWidth, arrowHeight);
         if (label(section).isRightToLeft())
-            ar.moveBy( 2*(fr.right() - ar.right()) + ar.width() - fr.width(), 0 );
+            ar.translate( 2*(fr.right() - ar.right()) + ar.width() - fr.width(), 0 );
         opt.rect = ar;
         style()->drawPrimitive(QStyle::PE_IndicatorHeaderArrow, &opt, p, this);
     }
