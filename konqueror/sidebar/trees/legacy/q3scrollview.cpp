@@ -552,10 +552,9 @@ void Q3ScrollViewData::viewportResized(int w, int h)
 */
 
 Q3ScrollView::Q3ScrollView(QWidget *parent, const char *name, Qt::WindowFlags f) :
-    Q3Frame(parent, name, f & (~WStaticContents) & (~WNoAutoErase) & (~WResizeNoErase))
+    Q3Frame(parent, name, f)
 {
-    WindowFlags flags = WResizeNoErase | (f&WPaintClever) | (f&WRepaintNoErase) | (f&WStaticContents);
-    d = new Q3ScrollViewData(this, flags);
+    d = new Q3ScrollViewData(this, 0);
 
 #ifndef QT_NO_DRAGANDDROP
     connect(&d->autoscroll_timer, SIGNAL(timeout()),
@@ -1113,7 +1112,8 @@ void Q3ScrollView::resizeEvent(QResizeEvent* event)
     d->inresize = true;
     updateScrollBars();
     d->inresize = inresize;
-    d->scrollbar_timer.start(0, true);
+    d->scrollbar_timer.setSingleShot(true);
+    d->scrollbar_timer.start(0);
 
     d->hideOrShowAll(this);
 }
@@ -1364,7 +1364,7 @@ void Q3ScrollView::addChild(QWidget* child, int x, int y)
 #endif
         return;
     }
-    child->polish();
+    child->ensurePolished();
     child->setBackgroundOrigin(WidgetOrigin);
 
     if (child->parentWidget() == viewport()) {
@@ -2156,7 +2156,8 @@ void Q3ScrollView::resizeContents(int w, int h)
     d->vwidth = w;
     d->vheight = h;
 
-    d->scrollbar_timer.start(0, true);
+    d->scrollbar_timer.setSingleShot(true);
+    d->scrollbar_timer.start(0);
 
     if (d->children.isEmpty() && d->policy == Default)
         setResizePolicy(Manual);
@@ -2653,7 +2654,7 @@ QSize Q3ScrollView::sizeHint() const
     if (d->use_cached_size_hint && d->cachedSizeHint.isValid())
         return d->cachedSizeHint;
 
-    constPolish();
+    ensurePolished();
     int f = 2 * frameWidth();
     int h = fontMetrics().height();
     QSize sz(f, f);
