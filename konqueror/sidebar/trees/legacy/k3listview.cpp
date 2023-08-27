@@ -21,7 +21,8 @@
 #include "k3listview.h"
 #include "k3listviewlineedit.h"
 
-#include <Qt3Support/Q3StoredDrag>
+#include "q3dragobject.h"
+
 #include <QtGui/QActionEvent>
 #include <QtCore/QTimer>
 #include <Qt3Support/Q3Header>
