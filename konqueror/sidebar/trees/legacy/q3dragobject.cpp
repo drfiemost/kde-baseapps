@@ -137,12 +137,12 @@ QDragMime::~QDragMime()
 }
 QByteArray QDragMime::data(const QString &mimetype) const
 {
-    return dragObject->encodedData(mimetype.latin1());
+    return dragObject->encodedData(mimetype.toLatin1());
 }
 
 bool QDragMime::hasFormat(const QString &mimetype) const
 {
-    return dragObject->provides(mimetype.latin1());
+    return dragObject->provides(mimetype.toLatin1());
 }
 
 QStringList QDragMime::formats() const
@@ -700,7 +700,7 @@ bool Q3TextDrag::decode(const QMimeSource* e, QString& str, QString& subtype)
                             l = payload.size();
                         }
 
-                        str = codec->toUnicode(payload,l);
+                        str = codec->toUnicode(payload.constData(),l);
 
                         if (subtype.isNull())
                             subtype = foundst;
@@ -1242,7 +1242,7 @@ QByteArray Q3UriDrag::unicodeUriToUri(const QString& uuri)
             // Everything else is escaped as %HH
             QString s;
             s.sprintf("%%%02x",(uchar)utf8[i]);
-            escutf8 += s.latin1();
+            escutf8 += s.toLatin1();
         }
     }
     return escutf8;
