@@ -11,6 +11,7 @@ set(libkonq_sidebar_tree_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3urldrag.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3dragobject.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3header.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3listview.cpp
 )
 
 #remove_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
