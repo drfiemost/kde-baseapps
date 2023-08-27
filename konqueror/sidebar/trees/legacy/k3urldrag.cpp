@@ -19,7 +19,6 @@
 
 #include "k3urldrag.h"
 #include <QByteArray>
-#include <Qt3Support/Q3StrList>
 #include <QtGui/QFont>
 #include <unistd.h>
 

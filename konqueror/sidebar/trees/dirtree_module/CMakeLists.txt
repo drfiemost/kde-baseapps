@@ -10,7 +10,7 @@ set(konq_sidebartree_dirtree_SRCS dirtree_module.cpp dirtree_item.cpp ${libkonq_
 
 kde4_add_plugin(konq_sidebartree_dirtree ${konq_sidebartree_dirtree_SRCS})
 
-target_link_libraries(konq_sidebartree_dirtree  ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KPARTS_LIBS} konq konqsidebarplugin  )
+target_link_libraries(konq_sidebartree_dirtree  ${KDE4_KPARTS_LIBS} konq konqsidebarplugin  )
 
 install(TARGETS konq_sidebartree_dirtree  DESTINATION ${PLUGIN_INSTALL_DIR} )
 

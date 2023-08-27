@@ -41,18 +41,21 @@
 
 #include "qwidget.h"
 #ifndef QT_NO_SCROLLVIEW
+#include "q3scrollview.h"
+
+#include "q3listview.h"
+
+#include <QHash>
+#include <QList>
+
 #include "qscrollbar.h"
 #include "qpainter.h"
 #include "qpixmap.h"
 #include "qcursor.h"
-#include "q3scrollview.h"
-#include "q3ptrdict.h"
 #include "qapplication.h"
 #include "qtimer.h"
 #include "qstyle.h"
-#include "q3ptrlist.h"
 #include "qevent.h"
-#include "q3listview.h"
 #ifdef Q_WS_MAC
 # include "private/qt_mac_p.h"
 #endif
@@ -162,7 +165,7 @@ public:
     }
     ~Q3ScrollViewData();
 
-    QSVChildRec* rec(QWidget* w) { return childDict.find(w); }
+    QSVChildRec* rec(QWidget* w) { return childDict.value(w); }
     QSVChildRec* ancestorRec(QWidget* w);
     QSVChildRec* addChildRec(QWidget* w, int x, int y)
     {
@@ -174,7 +177,7 @@ public:
     void deleteChildRec(QSVChildRec* r)
     {
         childDict.remove(r->child);
-        children.removeRef(r);
+        children.removeAll(r);
         delete r;
     }
 
@@ -193,8 +196,8 @@ public:
     QAbstractScrollAreaWidget*    viewport;
     QClipperWidget*     clipped_viewport;
     int         flags;
-    Q3PtrList<QSVChildRec>       children;
-    Q3PtrDict<QSVChildRec>       childDict;
+    QList<QSVChildRec*>          children;
+    QHash<QWidget*,QSVChildRec*> childDict;
     QWidget*    corner;
     int         vx, vy, vwidth, vheight; // for drawContents-style usage
     int         l_marg, r_marg, t_marg, b_marg;
@@ -232,7 +235,8 @@ public:
 
 inline Q3ScrollViewData::~Q3ScrollViewData()
 {
-    children.setAutoDelete(true);
+    while (!children.isEmpty())
+        delete children.takeFirst();
 }
 
 QSVChildRec* Q3ScrollViewData::ancestorRec(QWidget* w)
@@ -273,8 +277,9 @@ void Q3ScrollViewData::hideOrShowAll(Q3ScrollView* sv, bool isScroll)
         clipped_viewport->move(nx,ny);
         clipped_viewport->update();
     }
-    for (QSVChildRec *r = children.first(); r; r=children.next()) {
-        r->hideOrShow(sv, clipped_viewport);
+    QListIterator<QSVChildRec*> it(children);
+    while (it.hasNext()) {
+        it.next()->hideOrShow(sv, clipped_viewport);
     }
 }
 
@@ -284,7 +289,9 @@ void Q3ScrollViewData::moveAllBy(int dx, int dy)
         clipped_viewport->move(clipped_viewport->x()+dx,
                                 clipped_viewport->y()+dy);
     } else {
-        for (QSVChildRec *r = children.first(); r; r=children.next()) {
+        QListIterator<QSVChildRec*> it(children);
+        while (it.hasNext()) {
+            auto r = it.next();
             r->child->move(r->child->x()+dx,r->child->y()+dy);
         }
         if (static_bg)
@@ -294,8 +301,9 @@ void Q3ScrollViewData::moveAllBy(int dx, int dy)
 
 bool Q3ScrollViewData::anyVisibleChildren()
 {
-    for (QSVChildRec *r = children.first(); r; r=children.next()) {
-        if (r->child->isVisible()) return true;
+    QListIterator<QSVChildRec*> it(children);
+    while (it.hasNext()) {
+        if (it.next()->child->isVisible()) return true;
     }
     return false;
 }
@@ -2802,6 +2810,8 @@ QSize Q3ScrollView::cachedSizeHint() const
 {
     return d->use_cached_size_hint ? d->cachedSizeHint : QSize();
 }
+
+#include "moc_q3scrollview.cpp"
 
 QT_END_NAMESPACE
 

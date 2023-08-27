@@ -40,7 +40,7 @@ public:
 
     virtual void setOpen( bool open );
 
-    virtual void paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment );
+    void paintCell( QPainter *_painter, const QPalette & _cg, int _column, int _width, int _alignment ) override;
 
     virtual bool acceptsDrops( const QStringList & formats );
     virtual void drop( QDropEvent * ev );

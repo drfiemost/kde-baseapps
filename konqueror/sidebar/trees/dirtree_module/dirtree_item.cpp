@@ -115,7 +115,7 @@ bool KonqSidebarDirTreeItem::hasStandardIcon()
     return m_fileItem.determineMimeType()->iconName( m_fileItem.url()/*, m_fileItem->isLocalFile()*/ ) == "folder";
 }
 
-void KonqSidebarDirTreeItem::paintCell( QPainter *_painter, const QColorGroup & _cg, int _column, int _width, int _alignment )
+void KonqSidebarDirTreeItem::paintCell( QPainter *_painter, const QPalette & _cg, int _column, int _width, int _alignment )
 {
     if (m_fileItem.isLink())
     {

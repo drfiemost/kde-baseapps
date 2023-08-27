@@ -20,9 +20,10 @@
 #ifndef KONQ_SIDEBARTREEITEM_H
 #define KONQ_SIDEBARTREEITEM_H
 
+#include "q3listview.h"
+
 #include <QListView>
 #include <QtCore/QStringList>
-#include <Qt3Support/Q3ListView>
 #include <kurl.h>
 
 class KonqSidebarTree;

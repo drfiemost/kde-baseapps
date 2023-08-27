@@ -1,10 +1,7 @@
 include_directories (${CMAKE_CURRENT_SOURCE_DIR})
 
 # TODO: rewrite to KDirModel
-if (${QT_QT3SUPPORT_FOUND})
 add_subdirectory( trees )
-endif()
-
 add_subdirectory( web_module )
 add_subdirectory( history_module )
 add_subdirectory( places_module )
@@ -17,7 +14,7 @@ set(konqsidebarplugin_LIB_SRCS konqsidebarplugin.cpp )
 
 kde4_add_library(konqsidebarplugin SHARED ${konqsidebarplugin_LIB_SRCS})
 
-target_link_libraries(konqsidebarplugin ${KDE4_KPARTS_LIBS} Qt4::Qt3Support)
+target_link_libraries(konqsidebarplugin ${KDE4_KPARTS_LIBS})
 
 set_target_properties(konqsidebarplugin PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS konqsidebarplugin ${INSTALL_TARGETS_DEFAULT_ARGS} )
