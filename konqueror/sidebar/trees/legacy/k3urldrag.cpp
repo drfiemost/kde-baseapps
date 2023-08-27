@@ -107,11 +107,11 @@ bool K3URLDrag::decode( const QMimeSource *e, KUrl::List &uris )
         }
     }
 
-    Q3StrList lst;
+    QList<QByteArray> lst;
     Q3UriDrag::decode( e, lst );
-    for (Q3StrListIterator it(lst); *it; ++it)
+    for (QByteArray it: lst)
     {
-      KUrl url = stringToUrl( *it );
+      KUrl url = stringToUrl( it );
       if ( !url.isValid() )
       {
         uris.clear();

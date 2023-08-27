@@ -46,8 +46,8 @@
 #include <QtGui/qcolor.h>
 #include <QtGui/qmime.h>
 #include <QtGui/qimage.h>
-#include <Qt3Support/q3strlist.h>
 #include <QtCore/qlist.h>
+#include <QByteArray>
 
 QT_BEGIN_HEADER
 
@@ -62,7 +62,6 @@ class Q3StoredDragPrivate;
 class Q3ImageDragPrivate;
 class Q3ImageDrag;
 class Q3TextDrag;
-class Q3StrList;
 class QImage;
 class QPixmap;
 
@@ -170,7 +169,7 @@ class Q3UriDrag: public Q3StoredDrag {
     Q_OBJECT
 
 public:
-    Q3UriDrag(const Q3StrList &uris, QWidget * dragSource = 0, const char * name = 0);
+    Q3UriDrag(const QList<QByteArray> &uris, QWidget * dragSource = 0, const char * name = 0);
     Q3UriDrag(QWidget * dragSource = 0, const char * name = 0);
     ~Q3UriDrag();
 
@@ -186,7 +185,7 @@ public:
     static QString uriToUnicodeUri(const char*);
     static QByteArray unicodeUriToUri(const QString&);
     static bool canDecode(const QMimeSource* e);
-    static bool decode(const QMimeSource* e, Q3StrList& i);
+    static bool decode(const QMimeSource* e, QList<QByteArray>& i);
     static bool decodeToUnicodeUris(const QMimeSource* e, QStringList& i);
     static bool decodeLocalFiles(const QMimeSource* e, QStringList& i);
 

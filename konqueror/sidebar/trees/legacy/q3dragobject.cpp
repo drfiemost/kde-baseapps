@@ -58,7 +58,6 @@
 #include "qregexp.h"
 #include "qdir.h"
 #include "qdrag.h"
-#include "q3strlist.h"
 
 #include <QByteArray>
 
@@ -1044,7 +1043,7 @@ QByteArray Q3StoredDrag::encodedData(const char* m) const
 
     Note that URIs are always in escaped UTF8 encoding.
 */
-Q3UriDrag::Q3UriDrag(const Q3StrList &uris, QWidget * dragSource, const char * name) :
+Q3UriDrag::Q3UriDrag(const QList<QByteArray> &uris, QWidget * dragSource, const char * name) :
     Q3StoredDrag("text/uri-list", dragSource)
 {
     setObjectName(QLatin1String(name));
@@ -1108,7 +1107,7 @@ bool Q3UriDrag::canDecode(const QMimeSource* e)
 }
 
 /*!
-    \fn bool Q3UriDrag::decode(const QMimeSource* source, Q3StrList& list)
+    \fn bool Q3UriDrag::decode(const QMimeSource* source, QList<QByteArray>& list)
 
     Decodes URIs from the MIME \a source, placing the result in the \a list.
     The list is cleared before any items are inserted.
@@ -1116,12 +1115,11 @@ bool Q3UriDrag::canDecode(const QMimeSource* e)
     Returns true if the MIME \a source contained a valid list of URIs;
     otherwise returns false.
 */
-bool Q3UriDrag::decode(const QMimeSource* e, Q3StrList& l)
+bool Q3UriDrag::decode(const QMimeSource* e, QList<QByteArray>& l)
 {
     QByteArray payload = e->encodedData("text/uri-list");
     if (payload.size()) {
         l.clear();
-        l.setAutoDelete(true);
         uint c=0;
         const char* data = payload.data();
         while ((int)c < payload.size() && data[c]) {
@@ -1409,7 +1407,7 @@ QString Q3UriDrag::uriToLocalFile(const char* uri)
 */
 bool Q3UriDrag::decodeLocalFiles(const QMimeSource* e, QStringList& l)
 {
-    Q3StrList u;
+    QList<QByteArray> u;
     if (!decode(e, u))
         return false;
 
@@ -1434,7 +1432,7 @@ bool Q3UriDrag::decodeLocalFiles(const QMimeSource* e, QStringList& l)
 */
 bool Q3UriDrag::decodeToUnicodeUris(const QMimeSource* e, QStringList& l)
 {
-    Q3StrList u;
+    QList<QByteArray> u;
     if (!decode(e, u))
         return false;
 
