@@ -59,7 +59,8 @@
 #include "qdir.h"
 #include "qdrag.h"
 #include "q3strlist.h"
-#include "q3cstring.h"
+
+#include <QByteArray>
 
 #include "qobject_p.h" // FIXME remove
 
@@ -1129,7 +1130,7 @@ bool Q3UriDrag::decode(const QMimeSource* e, Q3StrList& l)
             while ((int)c < payload.size() && data[c] && data[c]!='\r'
                    && data[c] != '\n')
                 c++;
-            Q3CString s(data+f,c-f+1);
+            QByteArray s(data+f,c-f+1);
             if (s[0] != '#') // non-comment?
                 l.append(s);
             // Skip junk
