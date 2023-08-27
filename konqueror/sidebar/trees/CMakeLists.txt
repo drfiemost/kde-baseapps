@@ -9,6 +9,7 @@ set(libkonq_sidebar_tree_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listviewsearchline.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3urldrag.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3dragobject.cpp
 )
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)

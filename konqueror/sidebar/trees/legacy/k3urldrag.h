@@ -25,7 +25,8 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
-#include <Qt3Support/Q3UriDrag>
+
+#include "q3dragobject.h"
 
 class QMimeSource;
 
