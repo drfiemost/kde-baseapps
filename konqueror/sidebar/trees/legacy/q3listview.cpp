@@ -46,6 +46,7 @@
 #include "q3tl.h"
 #include "q3dragobject.h"
 #include "q3cleanuphandler.h"
+#include "q3header.h"
 
 #include "qapplication.h"
 #include "qbitmap.h"
@@ -53,7 +54,6 @@
 #include "qdatetime.h"
 #include "qevent.h"
 #include "qhash.h"
-#include "q3header.h"
 #include "qicon.h"
 #include "qlineedit.h"
 #include "qpainter.h"
