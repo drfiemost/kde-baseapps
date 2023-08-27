@@ -2811,7 +2811,7 @@ void Q3ListView::drawContentsOffset(QPainter * p, int ox, int oy,
         QRect br(cx - ox, cy - oy, cw, ch);
         for (int i = 0; i < d->dirtyItems.size(); ++i) {
             const Q3ListViewItem * item = d->dirtyItems.at(i);
-            QRect ir = itemRect(item).intersected(viewport()->visibleRect());
+            QRect ir = itemRect(item).intersected(viewport()->visibleRegion().boundingRect());
             if (ir.isEmpty() || br.contains(ir))
                 // we're painting this one, or it needs no painting: forget it
                 d->dirtyItems.removeAt(i);
@@ -7903,7 +7903,7 @@ void Q3ListView::adjustColumn(int col)
 
     int w = d->h->sectionSizeHint(col, fontMetrics()).width();
     if (d->h->iconSet(col))
-        w += d->h->iconSet(col)->pixmap().width();
+        w += d->h->iconSet(col)->pixmap(22).width();
     w = qMax(w, 20);
     QFontMetrics fm(fontMetrics());
     Q3ListViewItem* item = firstChild();
