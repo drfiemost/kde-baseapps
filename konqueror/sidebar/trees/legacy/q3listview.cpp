@@ -835,7 +835,7 @@ void Q3ListViewItem::startRename(int col)
     }
     if (r.width() > lv->visibleWidth())
         r.setWidth(lv->visibleWidth());
-    renameBox = new QLineEdit(lv->viewport(), "qt_renamebox");
+    renameBox = new QLineEdit(lv->viewport());
     renameBox->setFrame(false);
     renameBox->setText(text(col));
     renameBox->selectAll();
@@ -2816,7 +2816,8 @@ void Q3ListView::drawContentsOffset(QPainter * p, int ox, int oy,
         }
         if (d->dirtyItems.count()) {
             // there are still items left that need repainting
-            d->dirtyItemTimer->start(0, true);
+            d->dirtyItemTimer->setSingleShot(true);
+            d->dirtyItemTimer->start(0);
         } else {
             // we're painting all items that need to be painted
             d->dirtyItems.clear();
@@ -3626,7 +3627,7 @@ void Q3ListView::updateDirtyItems()
     d->dirtyItems.clear();
     if (!ir.isEmpty())  {                      // rectangle to be repainted
         if (ir.x() < 0)
-            ir.moveBy(-ir.x(), 0);
+            ir.translate(-ir.x(), 0);
         viewport()->repaint(ir);
     }
 }
@@ -3690,7 +3691,8 @@ void Q3ListView::triggerUpdate()
         return; // it will update when shown, or something.
     }
 
-    d->timer->start(0, true);
+    d->timer->setSingleShot(true);
+    d->timer->start(0);
 }
 
 
@@ -3708,14 +3710,14 @@ bool Q3ListView::eventFilter(QObject * o, QEvent * e)
         QMouseEvent me2(me->type(),
                          QPoint(me->pos().x(),
                                  me->pos().y() - d->h->height()),
-                         me->button(), me->state());
+                         me->button(), me->buttons(), me->modifiers());
         switch(me2.type()) {
         case QEvent::MouseButtonDblClick:
             if (me2.button() == Qt::RightButton)
                 return true;
             break;
         case QEvent::MouseMove:
-            if (me2.state() & Qt::RightButton) {
+            if (me2.buttons() & Qt::RightButton) {
                 viewportMouseMoveEvent(&me2);
                 return true;
             }
@@ -4194,16 +4196,16 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
         d->startEdit = false;
     Q3ListViewItem *oldCurrent = currentItem();
 
-    if (e->button() == Qt::RightButton && (e->state() & Qt::ControlButton))
+    if (e->button() == Qt::RightButton && (e->buttons() & Qt::ControlButton))
         goto emit_signals;
 
     if (!i) {
-        if (!(e->state() & Qt::ControlButton))
+        if (!(e->buttons() & Qt::ControlButton))
             clearSelection();
         goto emit_signals;
     } else {
         // No new anchor when using shift
-        if (!(e->state() & Qt::ShiftButton))
+        if (!(e->buttons() & Qt::ShiftButton))
             d->selectAnchor = i;
     }
 
@@ -4287,7 +4289,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
             setSelected(i, d->select);
         else if (selectionMode() == Extended) {
             bool changed = false;
-            if (!(e->state() & (Qt::ControlButton | Qt::ShiftButton))) {
+            if (!(e->buttons() & (Qt::ControlButton | Qt::ShiftButton))) {
                 if (!i->isSelected()) {
                     bool blocked = signalsBlocked();
                     blockSignals(true);
@@ -4297,9 +4299,9 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
                     changed = true;
                 }
             } else {
-                if (e->state() & Qt::ShiftButton)
+                if (e->buttons() & Qt::ShiftButton)
                     d->pressedSelected = false;
-                if ((e->state() & Qt::ControlButton) && !(e->state() & Qt::ShiftButton) && i) {
+                if ((e->buttons() & Qt::ControlButton) && !(e->buttons() & Qt::ShiftButton) && i) {
                     i->setSelected(!i->isSelected());
                     changed = true;
                     d->pressedSelected = false;
@@ -4339,7 +4341,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
     emit mouseButtonPressed(e->button(), i, viewport()->mapToGlobal(vp), c);
 
     if (e->button() == Qt::RightButton && i == d->pressedItem) {
-        if (!i && !(e->state() & Qt::ControlButton))
+        if (!i && !(e->buttons() & Qt::ControlButton))
             clearSelection();
 
         emit rightButtonPressed(i, viewport()->mapToGlobal(vp), c);
@@ -4473,8 +4475,9 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
             r.setLeft(r.left() + itemMargin() + (currentItem()->depth() +
                                                    (rootIsDecorated() ? 1 : 0)) * treeStepSize() - 1);
         if (r.contains(e->pos()) &&
-             !(e->state() & (Qt::ShiftButton | Qt::ControlButton)))
-            d->renameTimer->start(QApplication::doubleClickInterval(), true);
+             !(e->buttons() & (Qt::ShiftButton | Qt::ControlButton)))
+            d->renameTimer->setSingleShot(true);
+            d->renameTimer->start(QApplication::doubleClickInterval());
     }
     if (i && vp.x() + contentsX() < itemMargin() + (i->depth() + (rootIsDecorated() ? 1 : 0)) * treeStepSize())
         i = 0;
@@ -4491,7 +4494,7 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
 
         if (e->button() == Qt::RightButton) {
             if (!i) {
-                if (!(e->state() & Qt::ControlButton))
+                if (!(e->buttons() & Qt::ControlButton))
                     clearSelection();
                 emit rightButtonClicked(0, viewport()->mapToGlobal(vp), -1);
                 return;
@@ -4581,9 +4584,9 @@ void Q3ListView::contentsMouseMoveEvent(QMouseEvent * e)
         i = d->startDragItem;
 
     if (!d->buttonDown ||
-         ((e->state() & Qt::LeftButton) != Qt::LeftButton &&
-           (e->state() & Qt::MidButton) != Qt::MidButton &&
-           (e->state() & Qt::RightButton) != Qt::RightButton))
+         ((e->buttons() & Qt::LeftButton) != Qt::LeftButton &&
+           (e->buttons() & Qt::MidButton) != Qt::MidButton &&
+           (e->buttons() & Qt::RightButton) != Qt::RightButton))
         return;
 
     if (d->pressedItem &&
@@ -4613,7 +4616,8 @@ void Q3ListView::contentsMouseMoveEvent(QMouseEvent * e)
         d->scrollTimer = new QTimer(this);
         connect(d->scrollTimer, SIGNAL(timeout()),
                  this, SLOT(doAutoScroll()));
-        d->scrollTimer->start(100, false);
+        d->scrollTimer->setSingleShot(false);
+        d->scrollTimer->start(100);
         // call it once manually
         doAutoScroll(vp);
     }
@@ -4711,7 +4715,8 @@ void Q3ListView::doAutoScroll(const QPoint &cursorPos)
     }
 
     setCurrentItem(c);
-    d->visibleTimer->start(1, true);
+    d->visibleTimer->setSingleShot(true);
+    d->visibleTimer->start(1);
 }
 
 /*!
@@ -4745,7 +4750,7 @@ QVariant Q3ListView::inputMethodQuery(Qt::InputMethodQuery query) const
     if (query == Qt::ImMicroFocus) {
         QRect mfrect = itemRect(d->focusItem);
         if (mfrect.isValid() && header() && header()->isVisible())
-            mfrect.moveBy(0, header()->height());
+            mfrect.translate(0, header()->height());
         return mfrect;
     }
     return QWidget::inputMethodQuery(query);
@@ -5009,7 +5014,7 @@ void Q3ListView::keyPressEvent(QKeyEvent * e)
             }
         } else {
             d->currentPrefix.truncate(0);
-            if (e->state() & Qt::ControlButton) {
+            if (e->modifiers() & Qt::ControlButton) {
                 d->currentPrefix.clear();
                 switch (e->key()) {
                 case Qt::Key_A:
@@ -5025,20 +5030,21 @@ void Q3ListView::keyPressEvent(QKeyEvent * e)
     if (!i)
         return;
 
-    if (!(e->state() & Qt::ShiftButton) || !d->selectAnchor)
+    if (!(e->modifiers() & Qt::ShiftButton) || !d->selectAnchor)
         d->selectAnchor = i;
 
     setCurrentItem(i);
     if (i->isSelectable())
-        handleItemChange(old, wasNavigation && (e->state() & Qt::ShiftButton),
-                          wasNavigation && (e->state() & Qt::ControlButton));
+        handleItemChange(old, wasNavigation && (e->modifiers() & Qt::ShiftButton),
+                          wasNavigation && (e->modifiers() & Qt::ControlButton));
 
     if (d->focusItem && !d->focusItem->isSelected() && d->selectionMode == Single && selectCurrent)
         setSelected(d->focusItem, true);
 
-    if (singleStep)
-        d->visibleTimer->start(1, true);
-    else
+    if (singleStep) {
+        d->visibleTimer->setSingleShot(true);
+        d->visibleTimer->start(1);
+    } else
         ensureItemVisible(i);
 }
 
@@ -5829,7 +5835,8 @@ void Q3ListView::repaintItem(const Q3ListViewItem * item) const
 {
     if (!item)
         return;
-    d->dirtyItemTimer->start(0, true);
+    d->dirtyItemTimer->setSingleShot(true);
+    d->dirtyItemTimer->start(0);
     d->dirtyItems.append(item);
 }
 
@@ -6319,7 +6326,7 @@ void Q3CheckListItem::activate()
 
         QRect r(x, y, boxsize-3, boxsize-3);
         // columns might have been swapped
-        r.moveBy(lv->header()->sectionPos(0), 0);
+        r.translate(lv->header()->sectionPos(0), 0);
         if (!r.contains(pos))
             return;
     }
@@ -6761,7 +6768,8 @@ void Q3ListView::setOpen(Q3ListViewItem * item, bool open)
     }
 
     if (i < d->drawables.size()) {
-        d->dirtyItemTimer->start(0, true);
+        d->dirtyItemTimer->setSingleShot(true);
+        d->dirtyItemTimer->start(0);
         for (; i < d->drawables.size(); ++i) {
             const Q3ListViewPrivate::DrawableItem &c = d->drawables.at(i);
             d->dirtyItems.append(c.i);
