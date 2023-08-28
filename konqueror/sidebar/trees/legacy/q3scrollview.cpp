@@ -112,8 +112,8 @@ class QAbstractScrollAreaWidget : public QWidget
     Q_OBJECT
 
 public:
-    QAbstractScrollAreaWidget(Q3ScrollView* parent=0, const char* name=0, Qt::WindowFlags f = 0)
-        : QWidget(parent, name, f)
+    QAbstractScrollAreaWidget(Q3ScrollView* parent=0, Qt::WindowFlags f = 0)
+        : QWidget(parent, f)
     {
         setAutoFillBackground(true);
     }
@@ -124,8 +124,8 @@ class QClipperWidget : public QWidget
     Q_OBJECT
 
 public:
-    QClipperWidget(QWidget * parent=0, const char * name=0, Qt::WindowFlags f=0)
-        : QWidget (parent,name,f) {}
+    QClipperWidget(QWidget * parent=0)
+        : QWidget (parent) {}
 };
 
 QT_BEGIN_INCLUDE_NAMESPACE
@@ -134,22 +134,21 @@ QT_END_INCLUDE_NAMESPACE
 
 class Q3ScrollViewData {
 public:
-    Q3ScrollViewData(Q3ScrollView* parent, int vpwflags) :
-        hbar(new QScrollBar(Qt::Horizontal, parent, "qt_hbar")),
-        vbar(new QScrollBar(Qt::Vertical, parent, "qt_vbar")),
-        viewport(new QAbstractScrollAreaWidget(parent, "qt_viewport", QFlag(vpwflags))),
+    Q3ScrollViewData(Q3ScrollView* parent) :
+        hbar(new QScrollBar(Qt::Horizontal, parent)),
+        vbar(new QScrollBar(Qt::Vertical, parent)),
+        viewport(new QAbstractScrollAreaWidget(parent)),
         clipped_viewport(0),
-        flags(vpwflags),
         vx(0), vy(0), vwidth(1), vheight(1),
 #ifndef QT_NO_DRAGANDDROP
-        autoscroll_timer(parent, "scrollview autoscroll timer"),
+        autoscroll_timer(parent),
         drag_autoscroll(true),
 #endif
-        scrollbar_timer(parent, "scrollview scrollbar timer"),
+        scrollbar_timer(parent),
         inresize(false), use_cached_size_hint(true)
     {
         l_marg = r_marg = t_marg = b_marg = 0;
-        viewport->polish();
+        viewport->ensurePolished();
         vMode = Q3ScrollView::Auto;
         hMode = Q3ScrollView::Auto;
         corner = 0;
@@ -162,6 +161,11 @@ public:
         hbarPressed = false;
         vbarPressed = false;
         hbar->setLayoutDirection(Qt::LeftToRight);
+        viewport->setObjectName("qt_viewport");
+        hbar->setObjectName("qt_hbar");
+        vbar->setObjectName("qt_vbar");
+        autoscroll_timer.setObjectName("scrollview autoscroll timer");
+        scrollbar_timer.setObjectName("scrollview scrollbar timer");
     }
     ~Q3ScrollViewData();
 
@@ -195,7 +199,6 @@ public:
     bool vbarPressed;
     QAbstractScrollAreaWidget*    viewport;
     QClipperWidget*     clipped_viewport;
-    int         flags;
     QList<QSVChildRec*>          children;
     QHash<QWidget*,QSVChildRec*> childDict;
     QWidget*    corner;
@@ -267,7 +270,7 @@ void Q3ScrollViewData::hideOrShowAll(Q3ScrollView* sv, bool isScroll)
          viewport->height()) {
         // clipped_viewport still covers viewport
         if(static_bg)
-            clipped_viewport->repaint(true);
+            clipped_viewport->repaint();
         else if ((!isScroll && !clipped_viewport->testAttribute(Qt::WA_StaticContents)) || static_bg)
             clipped_viewport->update();
     } else {
@@ -295,7 +298,7 @@ void Q3ScrollViewData::moveAllBy(int dx, int dy)
             r->child->move(r->child->x()+dx,r->child->y()+dy);
         }
         if (static_bg)
-            viewport->repaint(true);
+            viewport->repaint();
     }
 }
 
@@ -562,7 +565,7 @@ void Q3ScrollViewData::viewportResized(int w, int h)
 Q3ScrollView::Q3ScrollView(QWidget *parent, const char *name, Qt::WindowFlags f) :
     Q3Frame(parent, name, f)
 {
-    d = new Q3ScrollViewData(this, 0);
+    d = new Q3ScrollViewData(this);
 
 #ifndef QT_NO_DRAGANDDROP
     connect(&d->autoscroll_timer, SIGNAL(timeout()),
@@ -957,7 +960,7 @@ void Q3ScrollView::updateScrollBars()
 
     // Position the scroll bars, viewport and corner widget.
     int bottom;
-    bool reverse = QApplication::reverseLayout();
+    bool reverse = QApplication::layoutDirection() == Qt::RightToLeft;
     int xoffset = (reverse && (showv || cornerWidget())) ? vsbExt : 0;
     int xpos = reverse ? 0 : w - vsbExt;
     bool frameContentsOnly =
@@ -1170,7 +1173,7 @@ void  Q3ScrollView::mouseMoveEvent(QMouseEvent *e)
 void Q3ScrollView::wheelEvent(QWheelEvent *e)
 {
     QWheelEvent ce(viewport()->mapFromGlobal(e->globalPos()),
-                    e->globalPos(), e->delta(), e->state());
+                    e->globalPos(), e->delta(), e->buttons(), e->modifiers());
     viewportWheelEvent(&ce);
     if (!ce.isAccepted()) {
         if (e->orientation() == Horizontal && horizontalScrollBar())
@@ -1194,7 +1197,7 @@ void Q3ScrollView::contextMenuEvent(QContextMenuEvent *e)
     }
 
     QContextMenuEvent ce(e->reason(), viewport()->mapFromGlobal(e->globalPos()),
-                          e->globalPos(), e->state());
+                          e->globalPos(), e->modifiers());
     viewportContextMenuEvent(&ce);
     if (ce.isAccepted())
         e->accept();
@@ -1399,7 +1402,9 @@ void Q3ScrollView::addChild(QWidget* child, int x, int y)
         setResizePolicy(Manual);
     }
     if (child->parentWidget() != viewport()) {
-            child->reparent(viewport(), 0, QPoint(0,0), false);
+        child->setParent(viewport());
+        child->move(QPoint(0,0));
+        child->setVisible(false);
     }
     d->addChildRec(child,x,y)->hideOrShow(this, d->clipped_viewport);
 
@@ -1557,7 +1562,7 @@ bool Q3ScrollView::eventFilter(QObject *obj, QEvent *e)
         case QEvent::ChildRemoved:
             removeChild((QWidget*)((QChildEvent*)e)->child());
             break;
-        case QEvent::LayoutHint:
+        case QEvent::LayoutRequest:
             d->autoResizeHint(this);
             break;
         default:
@@ -1752,7 +1757,7 @@ void Q3ScrollView::viewportResizeEvent(QResizeEvent * /* event */)
 void Q3ScrollView::viewportMousePressEvent(QMouseEvent* e)
 {
     QMouseEvent ce(e->type(), viewportToContents(e->pos()),
-        e->globalPos(), e->button(), e->state());
+        e->globalPos(), e->button(), e->buttons(), e->modifiers());
     contentsMousePressEvent(&ce);
     if (!ce.isAccepted())
         e->ignore();
@@ -1769,7 +1774,7 @@ void Q3ScrollView::viewportMousePressEvent(QMouseEvent* e)
 void Q3ScrollView::viewportMouseReleaseEvent(QMouseEvent* e)
 {
     QMouseEvent ce(e->type(), viewportToContents(e->pos()),
-        e->globalPos(), e->button(), e->state());
+        e->globalPos(), e->button(), e->buttons(), e->modifiers());
     contentsMouseReleaseEvent(&ce);
     if (!ce.isAccepted())
         e->ignore();
@@ -1786,7 +1791,7 @@ void Q3ScrollView::viewportMouseReleaseEvent(QMouseEvent* e)
 void Q3ScrollView::viewportMouseDoubleClickEvent(QMouseEvent* e)
 {
     QMouseEvent ce(e->type(), viewportToContents(e->pos()),
-        e->globalPos(), e->button(), e->state());
+        e->globalPos(), e->button(), e->buttons(), e->modifiers());
     contentsMouseDoubleClickEvent(&ce);
     if (!ce.isAccepted())
         e->ignore();
@@ -1803,7 +1808,7 @@ void Q3ScrollView::viewportMouseDoubleClickEvent(QMouseEvent* e)
 void Q3ScrollView::viewportMouseMoveEvent(QMouseEvent* e)
 {
     QMouseEvent ce(e->type(), viewportToContents(e->pos()),
-        e->globalPos(), e->button(), e->state());
+        e->globalPos(), e->button(), e->buttons(), e->modifiers());
     contentsMouseMoveEvent(&ce);
     if (!ce.isAccepted())
         e->ignore();
@@ -1888,7 +1893,8 @@ void Q3ScrollView::viewportWheelEvent(QWheelEvent* e)
        the event itself.
     */
     QWheelEvent ce(viewportToContents(e->pos()),
-        e->globalPos(), e->delta(), e->state());
+        e->globalPos(), e->delta(), e->buttons(),
+        e->modifiers(), e-> orientation());
     contentsWheelEvent(&ce);
     if (ce.isAccepted())
         e->accept();
@@ -1905,7 +1911,7 @@ void Q3ScrollView::viewportWheelEvent(QWheelEvent* e)
 */
 void Q3ScrollView::viewportContextMenuEvent(QContextMenuEvent *e)
 {
-    QContextMenuEvent ce(e->reason(), viewportToContents(e->pos()), e->globalPos(), e->state());
+    QContextMenuEvent ce(e->reason(), viewportToContents(e->pos()), e->globalPos(), e->modifiers());
     contentsContextMenuEvent(&ce);
     if (ce.isAccepted())
         e->accept();
@@ -2559,7 +2565,8 @@ void Q3ScrollView::enableClipper(bool y)
     if (d->children.count())
         qFatal("May only call Q3ScrollView::enableClipper() before adding widgets");
     if (y) {
-        d->clipped_viewport = new QClipperWidget(clipper(), "qt_clipped_viewport", QFlag(d->flags));
+        d->clipped_viewport = new QClipperWidget(clipper());
+        d->clipped_viewport->setObjectName("qt_clipped_viewport");
         d->clipped_viewport->setGeometry(-coord_limit/2,-coord_limit/2,
                                          coord_limit,coord_limit);
         d->clipped_viewport->setBackgroundMode(d->viewport->backgroundMode());
