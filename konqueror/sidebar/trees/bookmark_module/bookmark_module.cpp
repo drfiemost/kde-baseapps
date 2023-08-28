@@ -226,11 +226,11 @@ void KonqSidebarBookmarkModule::slotMoved(Q3ListViewItem *i, Q3ListViewItem*, Q3
         while (true) {
             QChar c1 = oldAddress[i];
             QChar c2 = newAddress[i];
-            if (c1 == QChar::null) {
+            if (c1 == QChar::Null) {
                 // oldParentGroup is probably parent of parentGroup.
                 s_bookmarkManager->emitChanged( oldParentGroup );
                 break;
-            } else if (c2 == QChar::null) {
+            } else if (c2 == QChar::Null) {
                 // parentGroup is probably parent of oldParentGroup.
                 s_bookmarkManager->emitChanged( parentGroup );
                 break;
