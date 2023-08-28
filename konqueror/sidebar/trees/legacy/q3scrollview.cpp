@@ -1358,7 +1358,7 @@ void Q3ScrollView::removeChild(QWidget* child)
 */
 void Q3ScrollView::removeChild(QObject* child)
 {
-    Q3Frame::removeChild(child);
+    child->setParent(nullptr);
 }
 
 /*!
@@ -1826,9 +1826,16 @@ void Q3ScrollView::viewportMouseMoveEvent(QMouseEvent* e)
 */
 void Q3ScrollView::viewportDragEnterEvent(QDragEnterEvent* e)
 {
-    e->setPoint(viewportToContents(e->pos()));
-    contentsDragEnterEvent(e);
-    e->setPoint(contentsToViewport(e->pos()));
+    QDragEnterEvent* ev = new QDragEnterEvent(
+        viewportToContents(e->pos()),
+        e->dropAction(),
+        e->mimeData(),
+        e->mouseButtons(),
+        e->keyboardModifiers()
+    );
+    contentsDragEnterEvent(ev);
+    e->setAccepted(ev->isAccepted());
+    delete ev;
 }
 
 /*!\internal
@@ -1841,9 +1848,16 @@ void Q3ScrollView::viewportDragEnterEvent(QDragEnterEvent* e)
 */
 void Q3ScrollView::viewportDragMoveEvent(QDragMoveEvent* e)
 {
-    e->setPoint(viewportToContents(e->pos()));
-    contentsDragMoveEvent(e);
-    e->setPoint(contentsToViewport(e->pos()));
+    QDragMoveEvent* ev = new QDragMoveEvent(
+        viewportToContents(e->pos()),
+        e->dropAction(),
+        e->mimeData(),
+        e->mouseButtons(),
+        e->keyboardModifiers()
+    );
+    contentsDragMoveEvent(ev);
+    e->setAccepted(ev->isAccepted());
+    delete ev;
 }
 
 /*!\internal
@@ -1869,9 +1883,16 @@ void Q3ScrollView::viewportDragLeaveEvent(QDragLeaveEvent* e)
 */
 void Q3ScrollView::viewportDropEvent(QDropEvent* e)
 {
-    e->setPoint(viewportToContents(e->pos()));
-    contentsDropEvent(e);
-    e->setPoint(contentsToViewport(e->pos()));
+    QDropEvent* ev = new QDropEvent(
+        viewportToContents(e->pos()),
+        e->dropAction(),
+        e->mimeData(),
+        e->mouseButtons(),
+        e->keyboardModifiers()
+    );
+    contentsDropEvent(ev);
+    e->setAccepted(ev->isAccepted());
+    delete ev;
 }
 
 #endif // QT_NO_DRAGANDDROP
