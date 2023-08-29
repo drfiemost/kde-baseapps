@@ -16,8 +16,7 @@ set(libkonq_sidebar_tree_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3scrollview.cpp
 )
 
-#remove_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+remove_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 add_subdirectory( init )
 add_subdirectory( dirtree_module )

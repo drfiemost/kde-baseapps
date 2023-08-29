@@ -1378,7 +1378,6 @@ void Q3ScrollView::addChild(QWidget* child, int x, int y)
         return;
     }
     child->ensurePolished();
-    child->setBackgroundOrigin(WidgetOrigin);
 
     if (child->parentWidget() == viewport()) {
         // May already be there
@@ -2590,8 +2589,10 @@ void Q3ScrollView::enableClipper(bool y)
         d->clipped_viewport->setObjectName("qt_clipped_viewport");
         d->clipped_viewport->setGeometry(-coord_limit/2,-coord_limit/2,
                                          coord_limit,coord_limit);
-        d->clipped_viewport->setBackgroundMode(d->viewport->backgroundMode());
-        d->viewport->setBackgroundMode(NoBackground); // no exposures for this
+        d->clipped_viewport->setAttribute(Qt::WA_NoSystemBackground,
+            d->viewport->testAttribute(Qt::WA_NoSystemBackground));
+        d->clipped_viewport->setBackgroundRole(d->viewport->backgroundRole());
+        d->viewport->setAttribute(Qt::WA_NoSystemBackground, true); // no exposures for this
         d->viewport->removeEventFilter(this);
         d->clipped_viewport->installEventFilter(this);
         d->clipped_viewport->show();
