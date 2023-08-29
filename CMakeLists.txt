@@ -13,7 +13,7 @@ endif()
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules )
 
-add_definitions(-DKDE_NO_DEPRECATED)
+#add_definitions(-DKDE_NO_DEPRECATED)
 
 include(CTest)
 include(CTestConfig.cmake)
