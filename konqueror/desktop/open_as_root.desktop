@@ -1,0 +1,13 @@
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=inode/directory;
+Actions=OpenAsRoot;
+
+[Desktop Action OpenAsRoot]
+TryExec=konqueror
+Exec=kdesu konqueror %U
+Icon=system-file-manager
+
+Name=Open as Root
+Name[it]=Apri come root
