@@ -25,7 +25,7 @@
 #include <QClipboard>
 #include <QCursor>
 #include <QtCore/QDir>
-#include <Qt3Support/Q3Header>
+#include "q3header.h"
 #include <QMenu>
 #include <QtCore/QTimer>
 #include <QApplication>
