@@ -72,6 +72,173 @@ QT_BEGIN_NAMESPACE
 
 const int Unsorted = 16383;
 
+static const char * const check_list_controller_xpm[] = {
+"16 16 4 1",
+"        c None",
+".        c #000000000000",
+"X        c #FFFFFFFF0000",
+"o        c #C71BC30BC71B",
+"                ",
+"                ",
+" ..........     ",
+" .XXXXXXXX.     ",
+" .XXXXXXXX.oo   ",
+" .XXXXXXXX.oo   ",
+" .XXXXXXXX.oo   ",
+" .XXXXXXXX.oo   ",
+" .XXXXXXXX.oo   ",
+" .XXXXXXXX.oo   ",
+" .XXXXXXXX.oo   ",
+" ..........oo   ",
+"   oooooooooo   ",
+"   oooooooooo   ",
+"                ",
+"                "};
+
+
+void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
+{
+    if (opt->subControls & 0x00000001)
+        p->fillRect(opt->rect, opt->viewportPalette.brush(opt->viewportBGRole));
+}
+
+QStyle::SubControl hitTestComplexControl(const QStyleOptionQ3ListView *opt, const QPoint &pt)
+{
+    if (pt.x() >= 0 && pt.x() < opt->treeStepSize)
+        return QStyle::SC_Q3ListViewExpand;
+    return QStyle::SC_None;
+}
+
+void drawFrameFocusRect(const QStyleOptionFocusRect *opt, QPainter *p)
+{
+    QColor bg = opt->backgroundColor;
+    QPen oldPen = p->pen();
+    if (bg.isValid()) {
+        int h, s, v;
+        bg.getHsv(&h, &s, &v);
+        if (v >= 128)
+            p->setPen(Qt::black);
+        else
+            p->setPen(Qt::white);
+    } else {
+        p->setPen(opt->palette.foreground().color());
+    }
+    QRect focusRect = opt->rect.adjusted(1, 1, -1, -1);
+    p->drawRect(focusRect.adjusted(0, 0, -1, -1)); //draw pen inclusive
+    p->setPen(oldPen);
+}
+
+void drawCheckListController(const QStyleOption *opt, QPainter *p)
+{
+#ifndef QT_NO_IMAGEFORMAT_XPM
+    p->drawPixmap(opt->rect.topLeft(), QPixmap(check_list_controller_xpm));
+#endif
+}
+
+void drawCheckListExclusiveIndicator(const QStyleOptionQ3ListView *opt, QPainter *p)
+{
+    if (opt->items.isEmpty())
+        return;
+    int x = opt->rect.x(),
+        y = opt->rect.y();
+#define INTARRLEN(x) sizeof(x)/(sizeof(int)*2)
+    static const int pts1[] = {                // dark lines
+        1,9, 1,8, 0,7, 0,4, 1,3, 1,2, 2,1, 3,1, 4,0, 7,0, 8,1, 9,1 };
+    static const int pts2[] = {                // black lines
+        2,8, 1,7, 1,4, 2,3, 2,2, 3,2, 4,1, 7,1, 8,2, 9,2 };
+    static const int pts3[] = {                // background lines
+        2,9, 3,9, 4,10, 7,10, 8,9, 9,9, 9,8, 10,7, 10,4, 9,3 };
+    static const int pts4[] = {                // white lines
+        2,10, 3,10, 4,11, 7,11, 8,10, 9,10, 10,9, 10,8, 11,7,
+        11,4, 10,3, 10,2 };
+    // static const int pts5[] = {                // inner fill
+    //    4,2, 7,2, 9,4, 9,7, 7,9, 4,9, 2,7, 2,4 };
+    //QPolygon a;
+
+    if (opt->state & QStyle::State_Enabled)
+        p->setPen(opt->palette.text().color());
+    else
+        p->setPen(QPen(opt->viewportPalette.color(QPalette::Disabled, QPalette::Text)));
+    QPolygon a(INTARRLEN(pts1), pts1);
+    a.translate(x, y);
+    //p->setPen(pal.dark());
+    p->drawPolyline(a);
+    a.setPoints(INTARRLEN(pts2), pts2);
+    a.translate(x, y);
+    p->drawPolyline(a);
+    a.setPoints(INTARRLEN(pts3), pts3);
+    a.translate(x, y);
+    //                p->setPen(black);
+    p->drawPolyline(a);
+    a.setPoints(INTARRLEN(pts4), pts4);
+    a.translate(x, y);
+    //                        p->setPen(blue);
+    p->drawPolyline(a);
+    //                a.setPoints(INTARRLEN(pts5), pts5);
+    //                a.translate(x, y);
+    //        QColor fillColor = isDown() ? g.background() : g.base();
+    //        p->setPen(fillColor);
+    //        p->setBrush(fillColor);
+    //        p->drawPolygon(a);
+    if (opt->state & QStyle::State_On) {
+        p->setPen(Qt::NoPen);
+        p->setBrush(opt->palette.text());
+        p->drawRect(x + 5, y + 4, 2, 4);
+        p->drawRect(x + 4, y + 5, 4, 2);
+    }
+#undef INTARRLEN
+}
+
+void drawCheckListIndicator(const QStyleOptionQ3ListView *opt, QPainter *p)
+{
+    if(opt->items.isEmpty())
+        return;
+    QStyleOptionQ3ListViewItem item = opt->items.at(0);
+    int x = opt->rect.x(),
+        y = opt->rect.y(),
+        w = opt->rect.width(),
+        h = opt->rect.width(),
+      marg = opt->itemMargin;
+
+    if (opt->state & QStyle::State_Enabled)
+        p->setPen(QPen(opt->palette.text().color(), 2));
+    else
+        p->setPen(QPen(opt->viewportPalette.color(QPalette::Disabled, QPalette::Text), 2));
+    if (opt->state & QStyle::State_Selected && !opt->rootIsDecorated
+        && !(item.features & QStyleOptionQ3ListViewItem::ParentControl)) {
+        p->fillRect(0, 0, x + marg + w + 4, item.height,
+                    opt->palette.brush(QPalette::Highlight));
+        if (item.state & QStyle::State_Enabled)
+            p->setPen(QPen(opt->palette.highlightedText().color(), 2));
+    }
+
+    if (opt->state & QStyle::State_NoChange)
+        p->setBrush(opt->palette.brush(QPalette::Button));
+    p->drawRect(x + marg, y + 2, w - 4, h - 4);
+    /////////////////////
+        ++x;
+        ++y;
+        if (opt->state & QStyle::State_On || opt->state & QStyle::State_NoChange) {
+            QLineF lines[7];
+            int i,
+                xx = x + 1 + marg,
+                yy = y + 5;
+            for (i = 0; i < 3; ++i) {
+                lines[i] = QLineF(xx, yy, xx, yy + 2);
+                ++xx;
+                ++yy;
+            }
+            yy -= 2;
+            for (i = 3; i < 7; ++i) {
+                lines[i] = QLineF(xx, yy, xx, yy + 2);
+                ++xx;
+                --yy;
+            }
+            p->drawLines(lines, 7);
+        }
+}
+
+
 struct Q3ListViewPrivate
 {
     // classes that are here to avoid polluting the global name space
@@ -2176,7 +2343,7 @@ void Q3ListViewItem::paintCell(QPainter * p, const QPalette & cg,
             opt.palette = pal;
             opt.subControls = QStyle::SC_Q3ListViewExpand;
             opt.activeSubControls = QStyle::SC_All;
-            lv->style()->drawComplexControl(QStyle::CC_Q3ListView, &opt, p, lv);
+            drawComplexControl(&opt, p);
         }
     }
 }
@@ -2236,7 +2403,7 @@ void Q3ListViewItem::paintFocus(QPainter *p, const QPalette &cg, const QRect &r)
             opt.state |= QStyle::State_None;
             opt.backgroundColor = pal.base().color();
         }
-        lv->style()->drawPrimitive(QStyle::PE_FrameFocusRect, &opt, p, lv);
+        drawFrameFocusRect(&opt, p);
     }
 }
 
@@ -2270,7 +2437,7 @@ void Q3ListViewItem::paintBranches(QPainter * p, const QPalette & cg,
     opt.palette = cg;
     opt.subControls = QStyle::SC_Q3ListViewBranch | QStyle::SC_Q3ListViewExpand;
     opt.activeSubControls = QStyle::SC_None;
-    lv->style()->drawComplexControl(QStyle::CC_Q3ListView, &opt, p, lv);
+    drawComplexControl(&opt, p);
 }
 
 
@@ -3008,7 +3175,7 @@ void Q3ListView::paintEmptyArea(QPainter * p, const QRect & rect)
     opt.rect = rect;
     opt.sortColumn = d->sortcolumn;
     opt.subControls = QStyle::SC_Q3ListView;
-    style()->drawComplexControl(QStyle::CC_Q3ListView, &opt, p, this);
+    drawComplexControl(&opt, p);
 }
 
 
@@ -4223,8 +4390,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
             Q3ListViewPrivate::DrawableItem it = d->drawables.at(draw);
             QStyleOptionQ3ListView opt = getStyleOption(this, i);
             x1 -= treeStepSize() * (it.l - 1);
-            QStyle::SubControl ctrl = style()->hitTestComplexControl(QStyle::CC_Q3ListView, &opt,
-                                                                     QPoint(x1, e->pos().y()), this);
+            QStyle::SubControl ctrl = hitTestComplexControl(&opt,QPoint(x1, e->pos().y()));
             if (ctrl == QStyle::SC_Q3ListViewExpand &&
                 e->type() == style()->styleHint(QStyle::SH_Q3ListViewExpand_SelectMouseType, 0,
                                                this)) {
@@ -4435,8 +4601,7 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
             int x1 = vp.x() + d->h->offset() - d->h->cellPos(d->h->mapToActual(0)) -
                      (treeStepSize() * (d->drawables.at(draw).l - 1));
             QStyleOptionQ3ListView opt = getStyleOption(this, i);
-            QStyle::SubControl ctrl = style()->hitTestComplexControl(QStyle::CC_Q3ListView, &opt,
-                                                                     QPoint(x1, e->pos().y()), this);
+            QStyle::SubControl ctrl = hitTestComplexControl(&opt, QPoint(x1, e->pos().y()));
             if (ctrl == QStyle::SC_Q3ListViewExpand) {
                 bool close = i->isOpen();
                 setOpen(i, !close);
@@ -6361,7 +6526,7 @@ void Q3CheckListItem::activate()
     Sets the button on if \a b is true, otherwise sets it off.
     Maintains radio button exclusivity.
 */
-void Q3CheckListItem::setOn(bool b )
+void Q3CheckListItem::setOn(bool b)
 {
     if (b)
         setState(On , true, true);
@@ -6608,7 +6773,7 @@ void Q3CheckListItem::paintCell(QPainter * p, const QPalette & cg,
             opt.rect.setRect(x, 0, boxsize, fm.height() + 2 + marg);
             opt.palette = cg;
             opt.state = styleflags;
-            lv->style()->drawPrimitive(QStyle::PE_Q3CheckListController, &opt, p, lv);
+            drawCheckListController(&opt, p);
             r += boxsize + 4;
         }
     } else {
@@ -6626,9 +6791,10 @@ void Q3CheckListItem::paintCell(QPainter * p, const QPalette & cg,
         opt.rect.setRect(x, y, boxsize, fm.height() + 2 + marg);
         opt.palette = cg;
         opt.state = styleflags;
-        lv->style()->drawPrimitive((myType == CheckBox || myType == CheckBoxController)
-                                    ? QStyle::PE_Q3CheckListIndicator
-                                    : QStyle::PE_Q3CheckListExclusiveIndicator, &opt, p, lv);
+        if (myType == CheckBox || myType == CheckBoxController)
+            drawCheckListIndicator(&opt, p);
+        else
+            drawCheckListExclusiveIndicator(&opt, p);
         r += boxsize + 4;
     }
 
