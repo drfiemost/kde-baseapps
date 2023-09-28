@@ -95,11 +95,163 @@ static const char * const check_list_controller_xpm[] = {
 "                ",
 "                "};
 
+Q_GLOBAL_STATIC_WITH_ARGS(QBitmap, globalVerticalLine, (1, 129))
+Q_GLOBAL_STATIC_WITH_ARGS(QBitmap, globalHorizontalLine, (128, 1))
 
 void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
 {
-    if (opt->subControls & 0x00000001)
-        p->fillRect(opt->rect, opt->viewportPalette.brush(opt->viewportBGRole));
+    int i;
+    if (opt->subControls & QStyle::SC_Q3ListView) {
+      if (opt->subControls & QStyle::SC_Q3ListViewExpand)
+          p->fillRect(opt->rect, opt->viewportPalette.brush(opt->viewportBGRole));
+    }
+    if (opt->subControls & (QStyle::SC_Q3ListViewBranch | QStyle::SC_Q3ListViewExpand)) {
+        if (opt->items.isEmpty())
+            return;
+
+        QStyleOptionQ3ListViewItem item = opt->items.at(0);
+        int y = opt->rect.y();
+        int c;
+        int dotoffset = 0;
+        QPolygon dotlines;
+        if ((opt->activeSubControls & QStyle::SC_All) && (opt->subControls & QStyle::SC_Q3ListViewExpand)) {
+            c = 2;
+            dotlines.resize(2);
+            dotlines[0] = QPoint(opt->rect.right(), opt->rect.top());
+            dotlines[1] = QPoint(opt->rect.right(), opt->rect.bottom());
+        } else {
+            int linetop = 0, linebot = 0;
+            // each branch needs at most two lines, ie. four end points
+            dotoffset = (item.itemY + item.height - y) % 2;
+            dotlines.resize(item.childCount * 4);
+            c = 0;
+
+            // skip the stuff above the exposed rectangle
+            for (i = 1; i < opt->items.size(); ++i) {
+                QStyleOptionQ3ListViewItem child = opt->items.at(i);
+                if (child.height + y > 0)
+                    break;
+                y += child.totalHeight;
+            }
+            int bx = opt->rect.width() / 2;
+
+            // paint stuff in the magical area
+            while (i < opt->items.size() && y < opt->rect.height()) {
+                QStyleOptionQ3ListViewItem child = opt->items.at(i);
+                if (child.features & QStyleOptionQ3ListViewItem::Visible) {
+                    int lh;
+                    if (!(item.features & QStyleOptionQ3ListViewItem::MultiLine))
+                        lh = child.height;
+                    else
+                        lh = p->fontMetrics().height() + 2 * opt->itemMargin;
+                    lh = qMax(lh, QApplication::globalStrut().height());
+                    if (lh % 2 > 0)
+                        ++lh;
+                    linebot = y + lh / 2;
+                    if (child.features & QStyleOptionQ3ListViewItem::Expandable
+                        || (child.childCount > 0 && child.height > 0)) {
+                        // needs a box
+                        p->setPen(opt->palette.mid().color());
+                        p->drawRect(bx - 4, linebot - 4, 8, 8);
+                        // plus or minus
+                        p->setPen(opt->palette.text().color());
+                        p->drawLine(bx - 2, linebot, bx + 2, linebot);
+                        if (!(child.state & QStyle::State_Open))
+                            p->drawLine(bx, linebot - 2, bx, linebot + 2);
+                        // dotlinery
+                        p->setPen(opt->palette.mid().color());
+                        dotlines[c++] = QPoint(bx, linetop);
+                        dotlines[c++] = QPoint(bx, linebot - 4);
+                        dotlines[c++] = QPoint(bx + 5, linebot);
+                        dotlines[c++] = QPoint(opt->rect.width(), linebot);
+                        linetop = linebot + 5;
+                    } else {
+                        // just dotlinery
+                        dotlines[c++] = QPoint(bx+1, linebot -1);
+                        dotlines[c++] = QPoint(opt->rect.width(), linebot -1);
+                    }
+                    y += child.totalHeight;
+                }
+                ++i;
+            }
+
+            // Expand line height to edge of rectangle if there's any
+            // visible child below
+            while (i < opt->items.size() && opt->items.at(i).height <= 0)
+                ++i;
+            if (i < opt->items.size())
+                linebot = opt->rect.height();
+
+            if (linetop < linebot) {
+                dotlines[c++] = QPoint(bx, linetop);
+                dotlines[c++] = QPoint(bx, linebot);
+            }
+        }
+        p->setPen(opt->palette.text().color());
+        QBitmap *verticalLine = globalVerticalLine();
+        QBitmap *horizontalLine = globalHorizontalLine();
+        static bool isInit = false;
+        if (!isInit) {
+            isInit = true;
+            // make 128*1 and 1*128 bitmaps that can be used for
+            // drawing the right sort of lines.
+            verticalLine->clear();
+            horizontalLine->clear();
+            QPolygon a(64);
+            QPainter p;
+            p.begin(verticalLine);
+            for(i = 0; i < 64; ++i)
+                a.setPoint(i, 0, i * 2 + 1);
+            p.setPen(Qt::color1);
+            p.drawPoints(a);
+            p.end();
+            QApplication::flush();
+            verticalLine->setMask(*verticalLine);
+            p.begin(horizontalLine);
+            for(i = 0; i < 64; ++i)
+                a.setPoint(i, i * 2 + 1, 0);
+            p.setPen(Qt::color1);
+            p.drawPoints(a);
+            p.end();
+            QApplication::flush();
+            horizontalLine->setMask(*horizontalLine);
+        }
+
+        int line; // index into dotlines
+        if (opt->subControls & QStyle::SC_Q3ListViewBranch) for(line = 0; line < c; line += 2) {
+            // assumptions here: lines are horizontal or vertical.
+            // lines always start with the numerically lowest
+            // coordinate.
+
+            // point ... relevant coordinate of current point
+            // end ..... same coordinate of the end of the current line
+            // other ... the other coordinate of the current point/line
+            if (dotlines[line].y() == dotlines[line+1].y()) {
+                int end = dotlines[line + 1].x();
+                int point = dotlines[line].x();
+                int other = dotlines[line].y();
+                while (point < end) {
+                    int i = 128;
+                    if (i + point > end)
+                        i = end-point;
+                    p->drawPixmap(point, other, *horizontalLine, 0, 0, i, 1);
+                    point += i;
+                }
+            } else {
+                int end = dotlines[line + 1].y();
+                int point = dotlines[line].y();
+                int other = dotlines[line].x();
+                int pixmapoffset = ((point & 1) != dotoffset) ? 1 : 0;
+                while(point < end) {
+                    int i = 128;
+                    if (i + point > end)
+                        i = end-point;
+                    p->drawPixmap(other, point, *verticalLine, 0, pixmapoffset, 1, i);
+                    point += i;
+                }
+            }
+        }
+    }
 }
 
 QStyle::SubControl hitTestComplexControl(const QStyleOptionQ3ListView *opt, const QPoint &pt)
@@ -2186,13 +2338,14 @@ void Q3ListViewItem::paintCell(QPainter * p, const QPalette & cg,
 {
     // Change width() if you change this.
 
-    QPalette pal = cg;
     if (!p)
         return;
 
     Q3ListView *lv = listView();
     if (!lv)
         return;
+
+    QPalette pal = cg;
     QFontMetrics fm(p->fontMetrics());
 
     // had, but we _need_ the column info for the ellipsis thingy!!!
