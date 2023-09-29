@@ -72,6 +72,13 @@ QT_BEGIN_NAMESPACE
 
 const int Unsorted = 16383;
 
+enum SubControl {
+    SC_Q3ListView =            0x00000001,
+    SC_Q3ListViewBranch =      0x00000002,
+    SC_Q3ListViewExpand =      0x00000004,
+};
+
+
 static const char * const check_list_controller_xpm[] = {
 "16 16 4 1",
 "        c None",
@@ -101,11 +108,11 @@ Q_GLOBAL_STATIC_WITH_ARGS(QBitmap, globalHorizontalLine, (128, 1))
 void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
 {
     int i;
-    if (opt->subControls & QStyle::SC_Q3ListView) {
-      if (opt->subControls & QStyle::SC_Q3ListViewExpand)
+    if (opt->subControls & QFlag(SC_Q3ListView)) {
+      if (opt->subControls & QFlag(SC_Q3ListViewExpand))
           p->fillRect(opt->rect, opt->viewportPalette.brush(opt->viewportBGRole));
     }
-    if (opt->subControls & (QStyle::SC_Q3ListViewBranch | QStyle::SC_Q3ListViewExpand)) {
+    if (opt->subControls & (QFlag(SC_Q3ListViewBranch) | QFlag(SC_Q3ListViewExpand))) {
         if (opt->items.isEmpty())
             return;
 
@@ -114,7 +121,7 @@ void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
         int c;
         int dotoffset = 0;
         QPolygon dotlines;
-        if ((opt->activeSubControls & QStyle::SC_All) && (opt->subControls & QStyle::SC_Q3ListViewExpand)) {
+        if ((opt->activeSubControls & QStyle::SC_All) && (opt->subControls & QFlag(SC_Q3ListViewExpand))) {
             c = 2;
             dotlines.resize(2);
             dotlines[0] = QPoint(opt->rect.right(), opt->rect.top());
@@ -218,7 +225,7 @@ void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
         }
 
         int line; // index into dotlines
-        if (opt->subControls & QStyle::SC_Q3ListViewBranch) for(line = 0; line < c; line += 2) {
+        if (opt->subControls & QFlag(SC_Q3ListViewBranch)) for(line = 0; line < c; line += 2) {
             // assumptions here: lines are horizontal or vertical.
             // lines always start with the numerically lowest
             // coordinate.
@@ -257,7 +264,7 @@ void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
 QStyle::SubControl hitTestComplexControl(const QStyleOptionQ3ListView *opt, const QPoint &pt)
 {
     if (pt.x() >= 0 && pt.x() < opt->treeStepSize)
-        return QStyle::SC_Q3ListViewExpand;
+        return static_cast<QStyle::SubControl>(SC_Q3ListViewExpand);
     return QStyle::SC_None;
 }
 
@@ -2494,7 +2501,7 @@ void Q3ListViewItem::paintCell(QPainter * p, const QPalette & cg,
             QStyleOptionQ3ListView opt = getStyleOption(lv, this);
             opt.rect.setRect(0, textheight, w + 1, height() - textheight + 1);
             opt.palette = pal;
-            opt.subControls = QStyle::SC_Q3ListViewExpand;
+            opt.subControls = QFlag(SC_Q3ListViewExpand);
             opt.activeSubControls = QStyle::SC_All;
             drawComplexControl(&opt, p);
         }
@@ -2588,7 +2595,7 @@ void Q3ListViewItem::paintBranches(QPainter * p, const QPalette & cg,
     QStyleOptionQ3ListView opt = getStyleOption(lv, this, true);
     opt.rect.setRect(0, y, w, h);
     opt.palette = cg;
-    opt.subControls = QStyle::SC_Q3ListViewBranch | QStyle::SC_Q3ListViewExpand;
+    opt.subControls = QFlag(SC_Q3ListViewBranch | SC_Q3ListViewExpand);
     opt.activeSubControls = QStyle::SC_None;
     drawComplexControl(&opt, p);
 }
@@ -3327,7 +3334,7 @@ void Q3ListView::paintEmptyArea(QPainter * p, const QRect & rect)
     QStyleOptionQ3ListView opt = getStyleOption(this, 0);
     opt.rect = rect;
     opt.sortColumn = d->sortcolumn;
-    opt.subControls = QStyle::SC_Q3ListView;
+    opt.subControls = QFlag(SC_Q3ListView);
     drawComplexControl(&opt, p);
 }
 
@@ -4544,7 +4551,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
             QStyleOptionQ3ListView opt = getStyleOption(this, i);
             x1 -= treeStepSize() * (it.l - 1);
             QStyle::SubControl ctrl = hitTestComplexControl(&opt,QPoint(x1, e->pos().y()));
-            if (ctrl == QStyle::SC_Q3ListViewExpand &&
+            if (ctrl == QFlag(SC_Q3ListViewExpand) &&
                 e->type() == style()->styleHint(QStyle::SH_Q3ListViewExpand_SelectMouseType, 0,
                                                this)) {
                 d->buttonDown = false;
@@ -4755,7 +4762,7 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
                      (treeStepSize() * (d->drawables.at(draw).l - 1));
             QStyleOptionQ3ListView opt = getStyleOption(this, i);
             QStyle::SubControl ctrl = hitTestComplexControl(&opt, QPoint(x1, e->pos().y()));
-            if (ctrl == QStyle::SC_Q3ListViewExpand) {
+            if (ctrl == QFlag(SC_Q3ListViewExpand)) {
                 bool close = i->isOpen();
                 setOpen(i, !close);
                 // ### Looks dangerous, removed because of reentrance problems
