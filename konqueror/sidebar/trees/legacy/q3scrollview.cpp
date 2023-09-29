@@ -2403,10 +2403,6 @@ void Q3ScrollView::drawContents(QPainter*, int, int, int, int)
 */
 void Q3ScrollView::frameChanged()
 {
-    // slight ugle-hack - the listview header needs readjusting when
-    // changing the frame
-    if (Q3ListView *lv = qobject_cast<Q3ListView *>(this))
-        lv->triggerUpdate();
     Q3Frame::frameChanged();
     updateScrollBars();
 }

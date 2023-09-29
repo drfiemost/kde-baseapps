@@ -193,7 +193,7 @@ protected:
     virtual void viewportWheelEvent( QWheelEvent * );
     virtual void viewportContextMenuEvent( QContextMenuEvent * );
 
-    void	frameChanged();
+    void frameChanged() override;
 
 public:
     virtual void setMargins(int left, int top, int right, int bottom);

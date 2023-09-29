@@ -437,6 +437,8 @@ protected:
     virtual void paintEmptyArea(QPainter *, const QRect &);
     void changeEvent(QEvent *);
 
+    void frameChanged() override;
+
 protected Q_SLOTS:
     void updateContents();
     void doAutoScroll();

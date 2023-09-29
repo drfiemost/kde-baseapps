@@ -7295,6 +7295,18 @@ void Q3ListView::showEvent(QShowEvent *)
 
 
 /*!
+    \reimp
+*/
+void Q3ListView::frameChanged()
+{
+    // the listview header needs readjusting when
+    // changing the frame
+    triggerUpdate();
+    Q3ScrollView::frameChanged();
+}
+
+
+/*!
     Returns the y coordinate of this item in the list view's
     coordinate system. This function is normally much slower than
     Q3ListView::itemAt(), but it works for all items whereas
