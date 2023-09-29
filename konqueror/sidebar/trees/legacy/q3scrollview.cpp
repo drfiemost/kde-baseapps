@@ -134,10 +134,10 @@ QT_END_INCLUDE_NAMESPACE
 
 class Q3ScrollViewData {
 public:
-    Q3ScrollViewData(Q3ScrollView* parent) :
+    Q3ScrollViewData(Q3ScrollView* parent, Qt::WindowFlags f) :
         hbar(new QScrollBar(Qt::Horizontal, parent)),
         vbar(new QScrollBar(Qt::Vertical, parent)),
-        viewport(new QAbstractScrollAreaWidget(parent)),
+        viewport(new QAbstractScrollAreaWidget(parent, f)),
         clipped_viewport(0),
         vx(0), vy(0), vwidth(1), vheight(1),
 #ifndef QT_NO_DRAGANDDROP
@@ -565,7 +565,7 @@ void Q3ScrollViewData::viewportResized(int w, int h)
 Q3ScrollView::Q3ScrollView(QWidget *parent, const char *name, Qt::WindowFlags f) :
     Q3Frame(parent, name, f)
 {
-    d = new Q3ScrollViewData(this);
+    d = new Q3ScrollViewData(this, f);
 
 #ifndef QT_NO_DRAGANDDROP
     connect(&d->autoscroll_timer, SIGNAL(timeout()),
