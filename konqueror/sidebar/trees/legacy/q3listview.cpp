@@ -42,10 +42,8 @@
 #include <qplatformdefs.h>
 #include "q3listview.h"
 
-#ifndef QT_NO_LISTVIEW
 #include "q3tl.h"
 #include "q3dragobject.h"
-#include "q3cleanuphandler.h"
 #include "q3header.h"
 
 #include "qapplication.h"
@@ -8300,5 +8298,3 @@ void Q3ListView::adjustColumn(int col)
 */
 
 QT_END_NAMESPACE
-
-#endif // QT_NO_LISTVIEW

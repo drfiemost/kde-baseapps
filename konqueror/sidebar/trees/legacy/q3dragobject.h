@@ -55,8 +55,6 @@ QT_BEGIN_HEADER
 QT_BEGIN_NAMESPACE
 
 class QWidget;
-class Q3ImageDrag;
-class Q3TextDrag;
 class QImage;
 class QPixmap;
 

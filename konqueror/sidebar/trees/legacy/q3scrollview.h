@@ -49,8 +49,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Qt3SupportLight)
-
 class Q3ScrollViewData;
 
 class Q3ScrollView : public QFrame

@@ -48,10 +48,6 @@ QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
-QT_MODULE(Qt3SupportLight)
-
-#ifndef QT_NO_LISTVIEW
-
 class QPixmap;
 class QFont;
 class Q3Header;
@@ -601,8 +597,6 @@ private:
     bool testPair(Q3ListViewItemIterator::IteratorFlag, Q3ListViewItemIterator::IteratorFlag, bool) const;
     bool isChecked(const Q3ListViewItem*) const;
 };
-
-#endif // QT_NO_LISTVIEW
 
 QT_END_NAMESPACE
 

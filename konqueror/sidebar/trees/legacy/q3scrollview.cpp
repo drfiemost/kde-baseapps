@@ -40,7 +40,7 @@
 ****************************************************************************/
 
 #include "qwidget.h"
-#ifndef QT_NO_SCROLLVIEW
+
 #include "q3scrollview.h"
 
 #include "q3listview.h"
@@ -2909,5 +2909,3 @@ QSize Q3ScrollView::cachedSizeHint() const
 #include "moc_q3scrollview.cpp"
 
 QT_END_NAMESPACE
-
-#endif // QT_NO_SCROLLVIEW
