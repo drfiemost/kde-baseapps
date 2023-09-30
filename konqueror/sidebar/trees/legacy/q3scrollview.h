@@ -42,8 +42,7 @@
 #ifndef Q3SCROLLVIEW_H
 #define Q3SCROLLVIEW_H
 
-#include "q3frame.h"
-
+#include <QtGui/qframe.h>
 #include <QtGui/qscrollbar.h>
 
 QT_BEGIN_HEADER
@@ -54,7 +53,7 @@ QT_MODULE(Qt3SupportLight)
 
 class Q3ScrollViewData;
 
-class Q3ScrollView : public Q3Frame
+class Q3ScrollView : public QFrame
 {
     Q_OBJECT
     Q_ENUMS( ResizePolicy ScrollBarMode )
@@ -68,6 +67,9 @@ class Q3ScrollView : public Q3Frame
     Q_PROPERTY( int contentsX READ contentsX )
     Q_PROPERTY( int contentsY READ contentsY )
     Q_PROPERTY( bool dragAutoScroll READ dragAutoScroll WRITE setDragAutoScroll )
+    Q_PROPERTY( int margin READ margin WRITE setMargin )
+    Q_PROPERTY( QRect contentsRect READ contentsRect )
+
 
 public:
     Q3ScrollView(QWidget* parent=0, const char* name=0, Qt::WindowFlags f=0);
@@ -143,6 +145,12 @@ public:
     virtual void setDragAutoScroll( bool b );
     bool	 dragAutoScroll() const;
 
+    int margin() const { return marg; }
+    void setMargin(int);
+
+    QRect contentsRect() const;
+    int frameWidth() const;
+
 Q_SIGNALS:
     void	contentsMoving(int x, int y);
     void	horizontalSliderPressed();
@@ -193,7 +201,7 @@ protected:
     virtual void viewportWheelEvent( QWheelEvent * );
     virtual void viewportContextMenuEvent( QContextMenuEvent * );
 
-    void frameChanged() override;
+   virtual void frameChanged();
 
 public:
     virtual void setMargins(int left, int top, int right, int bottom);
@@ -221,11 +229,17 @@ protected:
     QSize cachedSizeHint() const;
     void fontChange( const QFont & );
 
+    void paintEvent(QPaintEvent *);
+
+    virtual void drawFrame(QPainter *);
+
 private:
     void drawContents( QPainter* );
     void moveContents(int x, int y);
 
     Q3ScrollViewData* d;
+
+    int marg;
 
 private Q_SLOTS:
     void hslide(int);

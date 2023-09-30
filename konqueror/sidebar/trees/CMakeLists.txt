@@ -10,7 +10,6 @@ set(libkonq_sidebar_tree_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3listviewsearchline.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/k3urldrag.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3dragobject.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3frame.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3header.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3listview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/legacy/q3scrollview.cpp

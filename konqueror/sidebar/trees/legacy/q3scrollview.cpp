@@ -563,9 +563,13 @@ void Q3ScrollViewData::viewportResized(int w, int h)
 */
 
 Q3ScrollView::Q3ScrollView(QWidget *parent, const char *name, Qt::WindowFlags f) :
-    Q3Frame(parent, name, f)
+    QFrame(parent, f), marg(0)
 {
     d = new Q3ScrollViewData(this, f);
+
+    if (name)
+        setObjectName(QLatin1String(name));
+    setAttribute(Qt::WA_LayoutOnEntireRect);
 
 #ifndef QT_NO_DRAGANDDROP
     connect(&d->autoscroll_timer, SIGNAL(timeout()),
@@ -588,7 +592,7 @@ Q3ScrollView::Q3ScrollView(QWidget *parent, const char *name, Qt::WindowFlags f)
     connect(&d->scrollbar_timer, SIGNAL(timeout()),
              this, SLOT(updateScrollBars()));
 
-    setFrameStyle(Q3Frame::StyledPanel | Q3Frame::Sunken);
+    setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
     setLineWidth(style()->pixelMetric(QStyle::PM_DefaultFrameWidth));
     setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding));
 }
@@ -1109,9 +1113,10 @@ void Q3ScrollView::resize(const QSize& s)
 /*!
     \reimp
 */
-void Q3ScrollView::resizeEvent(QResizeEvent* event)
+void Q3ScrollView::resizeEvent(QResizeEvent* e)
 {
-    Q3Frame::resizeEvent(event);
+    if (e->size() == e->oldSize())
+        frameChanged();
 
 #if 0
     if (QApplication::reverseLayout()) {
@@ -1129,6 +1134,70 @@ void Q3ScrollView::resizeEvent(QResizeEvent* event)
     d->scrollbar_timer.start(0);
 
     d->hideOrShowAll(this);
+}
+
+
+void Q3ScrollView::paintEvent(QPaintEvent * event)
+{
+    QPainter paint(this);
+    if (!contentsRect().contains(event->rect())) {
+        paint.save();
+        paint.setClipRegion(event->region().intersected(frameRect()));
+        drawFrame(&paint);
+        paint.restore();
+    }
+    if (event->rect().intersects(contentsRect())) {
+        paint.setClipRegion(event->region().intersected(contentsRect()));
+        drawContents(&paint);
+    }
+}
+
+void Q3ScrollView::drawFrame(QPainter *p)
+{
+    QFrame::drawFrame(p);
+}
+
+/*!
+    \property Q3ScrollView::margin
+    \brief the width of the margin
+
+    The margin is the distance between the innermost pixel of the
+    frame and the outermost pixel of contentsRect(). It is included in
+    frameWidth().
+
+    The margin is filled according to backgroundMode().
+
+    The default value is 0.
+
+    \sa lineWidth(), frameWidth()
+*/
+
+void Q3ScrollView::setMargin(int w)
+{
+    if (marg == w)
+        return;
+    marg = w;
+    update();
+    frameChanged();
+}
+
+/*!
+    \property Q3ScrollView::contentsRect
+    \brief the frame's contents rectangle (including the margins)
+*/
+QRect Q3ScrollView::contentsRect() const
+{
+    QRect cr(QFrame::contentsRect());
+    cr.adjust(marg, marg, -marg, -marg);
+    return cr;
+}
+
+/*!
+    Returns the width of the frame (including the margin).
+*/
+int Q3ScrollView::frameWidth() const
+{
+    return QFrame::frameWidth() + marg;
 }
 
 
@@ -1337,7 +1406,7 @@ Q3ScrollView::ResizePolicy Q3ScrollView::resizePolicy() const
 */
 void Q3ScrollView::setEnabled(bool enable)
 {
-    Q3Frame::setEnabled(enable);
+    QFrame::setEnabled(enable);
 }
 
 /*!
@@ -1573,7 +1642,7 @@ bool Q3ScrollView::eventFilter(QObject *obj, QEvent *e)
         else if (e->type() == QEvent::Move)
             d->autoMove(this);
     }
-    return Q3Frame::eventFilter(obj, e);  // always continue with standard event processing
+    return QFrame::eventFilter(obj, e);  // always continue with standard event processing
 }
 
 /*!
@@ -2403,7 +2472,6 @@ void Q3ScrollView::drawContents(QPainter*, int, int, int, int)
 */
 void Q3ScrollView::frameChanged()
 {
-    Q3Frame::frameChanged();
     updateScrollBars();
 }
 
@@ -2547,7 +2615,7 @@ bool Q3ScrollView::focusNextPrevChild(bool next)
 {
     //  Makes sure that the new focus widget is on-screen, if
     //  necessary by scrolling the scroll view.
-    bool retval = Q3Frame::focusNextPrevChild(next);
+    bool retval = QFrame::focusNextPrevChild(next);
     if (retval) {
         QWidget *w = window()->focusWidget();
         if (isAncestorOf(w)) {
