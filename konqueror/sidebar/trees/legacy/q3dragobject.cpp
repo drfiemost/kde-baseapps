@@ -44,7 +44,6 @@
 #ifndef QT_NO_MIME
 
 #include "q3dragobject.h"
-#include "qpixmap.h"
 #include "qevent.h"
 #include "qfile.h"
 #include "qtextcodec.h"
@@ -61,8 +60,6 @@
 
 #include <QByteArray>
 
-#include "qobject_p.h" // FIXME remove
-
 #include <ctype.h>
 #if defined(Q_OS_WINCE)
 #include <winsock.h>
@@ -71,52 +68,7 @@
 
 QT_BEGIN_NAMESPACE
 
-static QWidget *last_target = 0;
-
-class QDragMime;
-
-class Q3DragObjectPrivate : public QObjectPrivate
-{
-    Q_DECLARE_PUBLIC(Q3DragObject)
-public:
-    Q3DragObjectPrivate(): hot(0,0),pm_cursor(0) {}
-    QPixmap pixmap;
-    QPoint hot;
-    // store default cursors
-    QPixmap *pm_cursor;
-};
-
-class Q3TextDragPrivate : public Q3DragObjectPrivate
-{
-    Q_DECLARE_PUBLIC(Q3TextDrag)
-public:
-    Q3TextDragPrivate() { setSubType(QLatin1String("plain")); }
-    void setSubType(const QString & st) {
-        subtype = st;
-        fmt = "text/" + subtype.toLatin1();
-    }
-
-    QString txt;
-    QString subtype;
-    QByteArray fmt;
-};
-
-class Q3StoredDragPrivate : public Q3DragObjectPrivate
-{
-    Q_DECLARE_PUBLIC(Q3StoredDrag)
-public:
-    Q3StoredDragPrivate() {}
-    const char* fmt;
-    QByteArray enc;
-};
-
-class Q3ImageDragPrivate : public Q3DragObjectPrivate
-{
-    Q_DECLARE_PUBLIC(Q3ImageDrag)
-public:
-    QImage img;
-    QList<QByteArray> ofmts;
-};
+static QWidget *last_target = nullptr;
 
 class QDragMime : public QMimeData
 {
@@ -166,15 +118,9 @@ QStringList QDragMime::formats() const
 */
 
 Q3DragObject::Q3DragObject(QWidget * dragSource, const char * name)
-    : QObject(*(new Q3DragObjectPrivate), dragSource)
+    : QObject(dragSource), hot(0, 0), pm_cursor(nullptr)
 {
     setObjectName(QLatin1String(name));
-}
-
-/*! \internal */
-Q3DragObject::Q3DragObject(Q3DragObjectPrivate &dd, QWidget *dragSource)
-    : QObject(dd, dragSource)
-{
 }
 
 /*!
@@ -204,9 +150,8 @@ Q3DragObject::~Q3DragObject()
 */
 void Q3DragObject::setPixmap(QPixmap pm, const QPoint& hotspot)
 {
-    Q_D(Q3DragObject);
-    d->pixmap = pm;
-    d->hot = hotspot;
+    pixmap = pm;
+    hot = hotspot;
 }
 
 /*!
@@ -226,9 +171,9 @@ void Q3DragObject::setPixmap(QPixmap pm)
 
     \sa QPixmap::isNull()
 */
-QPixmap Q3DragObject::pixmap() const
+QPixmap Q3DragObject::getPixmap() const
 {
-    return d_func()->pixmap;
+    return pixmap;
 }
 
 /*!
@@ -238,7 +183,7 @@ QPixmap Q3DragObject::pixmap() const
 */
 QPoint Q3DragObject::pixmapHotSpot() const
 {
-    return d_func()->hot;
+    return hot;
 }
 
 /*!
@@ -356,7 +301,7 @@ void Q3DragObject::dragLink()
 */
 bool Q3DragObject::drag(DragMode mode)
 {
-    Q_D(Q3DragObject);
+    //Q_D(Q3DragObject);
     QDragMime *data = new QDragMime(this);
     int i = 0;
     const char *fmt;
@@ -367,8 +312,8 @@ bool Q3DragObject::drag(DragMode mode)
 
     QDrag *drag = new QDrag(qobject_cast<QWidget *>(parent()));
     drag->setMimeData(data);
-    drag->setPixmap(d->pixmap);
-    drag->setHotSpot(d->hot);
+    drag->setPixmap(pixmap);
+    drag->setHotSpot(hot);
 
     Qt::DropActions allowedOps;
     Qt::DropAction defaultOp = Qt::IgnoreAction;
@@ -477,9 +422,10 @@ void stripws(QByteArray& s)
 */
 
 Q3TextDrag::Q3TextDrag(const QString &text, QWidget * dragSource, const char * name)
-    : Q3DragObject(*new Q3TextDragPrivate, dragSource)
+    : Q3DragObject(dragSource)
 {
     setObjectName(QLatin1String(name));
+    setSubtype(QLatin1String("plain"));
     setText(text);
 }
 
@@ -490,16 +436,10 @@ Q3TextDrag::Q3TextDrag(const QString &text, QWidget * dragSource, const char * n
 */
 
 Q3TextDrag::Q3TextDrag(QWidget * dragSource, const char * name)
-    : Q3DragObject(*(new Q3TextDragPrivate), dragSource)
+    : Q3DragObject(dragSource)
 {
     setObjectName(QLatin1String(name));
-}
-
-/*! \internal */
-Q3TextDrag::Q3TextDrag(Q3TextDragPrivate &dd, QWidget *dragSource)
-    : Q3DragObject(dd, dragSource)
-{
-
+    setSubtype(QLatin1String("plain"));
 }
 
 /*!
@@ -518,9 +458,9 @@ Q3TextDrag::~Q3TextDrag()
     You might use this to declare that the text is "text/html" by calling
     setSubtype("html").
 */
-void Q3TextDrag::setSubtype(const QString & st)
-{
-    d_func()->setSubType(st);
+void Q3TextDrag::setSubtype(const QString & st) {
+    subtype = st;
+    fmt = "text/" + subtype.toLatin1();
 }
 
 /*!
@@ -529,7 +469,7 @@ void Q3TextDrag::setSubtype(const QString & st)
 */
 void Q3TextDrag::setText(const QString &text)
 {
-    d_func()->txt = text;
+    txt = text;
 }
 
 
@@ -540,7 +480,7 @@ const char * Q3TextDrag::format(int i) const
 {
     if (i > 0)
         return 0;
-    return d_func()->fmt.constData();
+    return fmt.constData();
 }
 
 QTextCodec* qt_findcharset(const QByteArray& mimetype)
@@ -625,10 +565,9 @@ QTextCodec* findcodec(const QMimeSource* e)
 */
 QByteArray Q3TextDrag::encodedData(const char* mime) const
 {
-    Q_D(const Q3TextDrag);
-    if (mime != d->fmt)
+    if (mime != fmt)
         return QByteArray();
-    return d->txt.toUtf8();
+    return txt.toUtf8();
 }
 
 /*!
@@ -756,7 +695,7 @@ bool Q3TextDrag::decode(const QMimeSource* e, QString& str)
 
 Q3ImageDrag::Q3ImageDrag(QImage image,
                         QWidget * dragSource, const char * name)
-    : Q3DragObject(*(new Q3ImageDragPrivate), dragSource)
+    : Q3DragObject(dragSource)
 {
     setObjectName(QLatin1String(name));
     setImage(image);
@@ -768,15 +707,9 @@ Q3ImageDrag::Q3ImageDrag(QImage image,
 */
 
 Q3ImageDrag::Q3ImageDrag(QWidget * dragSource, const char * name)
-    : Q3DragObject(*(new Q3ImageDragPrivate), dragSource)
+    : Q3DragObject(dragSource)
 {
     setObjectName(QLatin1String(name));
-}
-
-/*! \internal */
-Q3ImageDrag::Q3ImageDrag(Q3ImageDragPrivate &dd, QWidget *dragSource)
-    : Q3DragObject(dd, dragSource)
-{
 }
 
 /*!
@@ -795,8 +728,7 @@ Q3ImageDrag::~Q3ImageDrag()
 */
 void Q3ImageDrag::setImage(QImage image)
 {
-    Q_D(Q3ImageDrag);
-    d->img = image;
+    img = image;
     QList<QByteArray> formats = QImageWriter::supportedImageFormats();
     formats.removeAll("PBM"); // remove non-raw PPM
     if (image.depth()!=32) {
@@ -814,9 +746,9 @@ void Q3ImageDrag::setImage(QImage image)
         format = format.toLower();
         if (format == "image/pbmraw")
             format = "image/ppm";
-        d->ofmts.append(format);
+        ofmts.append(format);
     }
-    d->ofmts.append("application/x-qt-image");
+    ofmts.append("application/x-qt-image");
 }
 
 /*!
@@ -824,8 +756,7 @@ void Q3ImageDrag::setImage(QImage image)
 */
 const char * Q3ImageDrag::format(int i) const
 {
-    Q_D(const Q3ImageDrag);
-    return i < d->ofmts.count() ? d->ofmts.at(i).data() : 0;
+    return i < ofmts.count() ? ofmts.at(i).data() : 0;
 }
 
 /*!
@@ -833,7 +764,6 @@ const char * Q3ImageDrag::format(int i) const
 */
 QByteArray Q3ImageDrag::encodedData(const char* fmt) const
 {
-    Q_D(const Q3ImageDrag);
     QString imgFormat(fmt);
     if (imgFormat == QLatin1String("application/x-qt-image"))
         imgFormat = QLatin1String("image/PNG");
@@ -844,7 +774,7 @@ QByteArray Q3ImageDrag::encodedData(const char* fmt) const
         QBuffer w(&dat);
         w.open(QIODevice::WriteOnly);
         QImageWriter writer(&w, f.toUpper());
-        if (!writer.write(d->img))
+        if (!writer.write(img))
             return QByteArray();
         w.close();
         return dat;
@@ -944,18 +874,10 @@ bool Q3ImageDrag::decode(const QMimeSource* e, QPixmap& pm)
     The data will be unset. Use setEncodedData() to set it.
 */
 Q3StoredDrag::Q3StoredDrag(const char* mimeType, QWidget * dragSource, const char * name) :
-    Q3DragObject(*new Q3StoredDragPrivate, dragSource)
+    Q3DragObject(dragSource)
 {
-    Q_D(Q3StoredDrag);
     setObjectName(QLatin1String(name));
-    d->fmt = qstrdup(mimeType);
-}
-
-/*! \internal */
-Q3StoredDrag::Q3StoredDrag(Q3StoredDragPrivate &dd, const char* mimeType, QWidget * dragSource)
-    : Q3DragObject(dd, dragSource)
-{
-    d_func()->fmt = qstrdup(mimeType);
+    fmt = qstrdup(mimeType);
 }
 
 /*!
@@ -963,7 +885,7 @@ Q3StoredDrag::Q3StoredDrag(Q3StoredDragPrivate &dd, const char* mimeType, QWidge
 */
 Q3StoredDrag::~Q3StoredDrag()
 {
-    delete [] (char*)d_func()->fmt;
+    delete [] (char*)fmt;
 }
 
 /*!
@@ -972,7 +894,7 @@ Q3StoredDrag::~Q3StoredDrag()
 const char * Q3StoredDrag::format(int i) const
 {
     if (i==0)
-        return d_func()->fmt;
+        return fmt;
     else
         return 0;
 }
@@ -991,7 +913,7 @@ const char * Q3StoredDrag::format(int i) const
 
 void Q3StoredDrag::setEncodedData(const QByteArray & encodedData)
 {
-    d_func()->enc = encodedData;
+    enc = encodedData;
 }
 
 /*!
@@ -1003,8 +925,8 @@ void Q3StoredDrag::setEncodedData(const QByteArray & encodedData)
 */
 QByteArray Q3StoredDrag::encodedData(const char* m) const
 {
-    if (!qstricmp(m, d_func()->fmt))
-        return d_func()->enc;
+    if (!qstricmp(m, fmt))
+        return enc;
     else
         return QByteArray();
 }
