@@ -103,6 +103,83 @@ static const char * const check_list_controller_xpm[] = {
 Q_GLOBAL_STATIC_WITH_ARGS(QBitmap, globalVerticalLine, (1, 129))
 Q_GLOBAL_STATIC_WITH_ARGS(QBitmap, globalHorizontalLine, (128, 1))
 
+class QStyleOptionQ3ListViewItem : public QStyleOption
+{
+public:
+    enum StyleOptionType { Type = SO_CustomBase + 1 };
+    enum StyleOptionVersion { Version = 1 };
+
+    enum Q3ListViewItemFeature { None = 0x00, Expandable = 0x01, MultiLine = 0x02, Visible = 0x04,
+                                 ParentControl = 0x08 };
+    Q_DECLARE_FLAGS(Q3ListViewItemFeatures, Q3ListViewItemFeature)
+
+    Q3ListViewItemFeatures features;
+    int height;
+    int totalHeight;
+    int itemY;
+    int childCount;
+
+    QStyleOptionQ3ListViewItem();
+    QStyleOptionQ3ListViewItem(const QStyleOptionQ3ListViewItem &other) : QStyleOption(Version, Type) { *this = other; }
+    QStyleOptionQ3ListViewItem& operator=(const QStyleOptionQ3ListViewItem&) = default;
+
+protected:
+    QStyleOptionQ3ListViewItem(int version);
+};
+
+Q_DECLARE_OPERATORS_FOR_FLAGS(QStyleOptionQ3ListViewItem::Q3ListViewItemFeatures)
+
+QStyleOptionQ3ListViewItem::QStyleOptionQ3ListViewItem()
+    : QStyleOption(Version, Type), features(None), height(0), totalHeight(0),
+      itemY(0), childCount(0)
+{
+}
+
+QStyleOptionQ3ListViewItem::QStyleOptionQ3ListViewItem(int version)
+    : QStyleOption(version, Type), features(None), height(0), totalHeight(0),
+      itemY(0), childCount(0)
+{
+}
+
+class QStyleOptionQ3ListView : public QStyleOptionComplex
+{
+public:
+    enum StyleOptionType { Type = SO_ComplexCustomBase + 1 };
+    enum StyleOptionVersion { Version = 1 };
+
+    QList<QStyleOptionQ3ListViewItem> items;
+    QPalette viewportPalette;
+    QPalette::ColorRole viewportBGRole;
+    int sortColumn;
+    int itemMargin;
+    int treeStepSize;
+    bool rootIsDecorated;
+
+    QStyleOptionQ3ListView();
+    QStyleOptionQ3ListView(const QStyleOptionQ3ListView &other) : QStyleOptionComplex(Version, Type) { *this = other; }
+    QStyleOptionQ3ListView& operator=(const QStyleOptionQ3ListView&) = default;
+
+protected:
+    QStyleOptionQ3ListView(int version);
+};
+
+QStyleOptionQ3ListView::QStyleOptionQ3ListView()
+    : QStyleOptionComplex(Version, Type), viewportBGRole(QPalette::Base),
+      sortColumn(0), itemMargin(0), treeStepSize(0), rootIsDecorated(false)
+{
+}
+
+QStyleOptionQ3ListView::QStyleOptionQ3ListView(int version)
+    : QStyleOptionComplex(version, Type),  viewportBGRole(QPalette::Base),
+      sortColumn(0), itemMargin(0), treeStepSize(0), rootIsDecorated(false)
+{
+}
+
+inline int pixelMetric()
+{
+    return 16;
+}
+
 void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
 {
     int i;
@@ -4550,7 +4627,7 @@ void Q3ListView::contentsMousePressEventEx(QMouseEvent * e)
             x1 -= treeStepSize() * (it.l - 1);
             QStyle::SubControl ctrl = hitTestComplexControl(&opt,QPoint(x1, e->pos().y()));
             if (ctrl == static_cast<QStyle::SubControl>(SC_Q3ListViewExpand) &&
-                e->type() == style()->styleHint(QStyle::SH_Q3ListViewExpand_SelectMouseType, 0,
+                e->type() == style()->styleHint(QStyle::SH_ListViewExpand_SelectMouseType, 0,
                                                this)) {
                 d->buttonDown = false;
                 if (e->button() == Qt::LeftButton) {
@@ -4750,7 +4827,7 @@ void Q3ListView::contentsMouseReleaseEventEx(QMouseEvent * e)
 
     if (i && i == d->pressedItem && (i->isExpandable() || i->childCount()) &&
          !d->h->mapToLogical(d->h->cellAt(vp.x())) && e->button() == Qt::LeftButton &&
-         e->type() == style()->styleHint(QStyle::SH_Q3ListViewExpand_SelectMouseType, 0, this)) {
+         e->type() == style()->styleHint(QStyle::SH_ListViewExpand_SelectMouseType, 0, this)) {
         int draw = 0;
         for (; draw < d->drawables.size(); ++draw)
             if (d->drawables.at(draw).i == i)
@@ -6633,7 +6710,7 @@ void Q3CheckListItem::activate()
         return;
 
     QPoint pos;
-    int boxsize = lv->style()->pixelMetric(QStyle::PM_CheckListButtonSize, 0, lv);
+    int boxsize = pixelMetric();
     if (activatedPos(pos)) {
         bool parentControl = false;
         if (parent() && parent()->rtti() == 1  &&
@@ -6844,8 +6921,7 @@ void Q3CheckListItem::setup()
     int h = height();
     Q3ListView *lv = listView();
     if (lv)
-        h = qMax(lv->style()->pixelMetric(QStyle::PM_CheckListButtonSize, 0, lv),
-                  h);
+        h = qMax(pixelMetric(), h);
     h = qMax(h, QApplication::globalStrut().height());
     setHeight(h);
 }
@@ -6862,7 +6938,7 @@ int Q3CheckListItem::width(const QFontMetrics& fm, const Q3ListView* lv, int col
         if (myType == RadioButtonController && pixmap(0)) {
             //             r += 0;
         } else {
-            r +=  lv->style()->pixelMetric(QStyle::PM_CheckListButtonSize, 0, lv) + 4;
+            r +=  pixelMetric() + 4;
         }
     }
     return qMax(r, QApplication::globalStrut().width());
@@ -6901,8 +6977,7 @@ void Q3CheckListItem::paintCell(QPainter * p, const QPalette & cg,
         parentControl = true;
 
     QFontMetrics fm(lv->fontMetrics());
-    int boxsize = lv->style()->pixelMetric(myType == RadioButtonController ? QStyle::PM_CheckListControllerSize :
-                                           QStyle::PM_CheckListButtonSize, 0, lv);
+    int boxsize = pixelMetric();
     int marg = lv->itemMargin();
     int r = marg;
 
@@ -6988,7 +7063,7 @@ void Q3CheckListItem::paintFocus(QPainter *p, const QPalette & cg,
          (lv->rootIsDecorated() || myType == RadioButton ||
           (myType == CheckBox && parentControl))) {
         QRect rect;
-        int boxsize = lv->style()->pixelMetric(QStyle::PM_CheckListButtonSize, 0, lv);
+        int boxsize = pixelMetric();
         if (lv->columnAlignment(0) == Qt::AlignCenter) {
             QFontMetrics fm(lv->font());
             int bx = (lv->columnWidth(0) - (boxsize + fm.width(text())))/2 + boxsize;

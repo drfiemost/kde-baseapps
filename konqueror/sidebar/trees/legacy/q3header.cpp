@@ -1291,8 +1291,7 @@ QSize Q3Header::sizeHint() const
             height += d->sizes[i];
     }
     QStyleOptionHeader opt = getStyleOption(this, 0);
-    return style()->sizeFromContents(QStyle::CT_Q3Header, &opt, QSize(width, height),
-                                    this).expandedTo(QApplication::globalStrut());
+    return QSize(width, height).expandedTo(QApplication::globalStrut());
 }
 
 /*!
