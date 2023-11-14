@@ -37,7 +37,7 @@ class KUrl;
 class KFileItemList;
 class KonqOperations;
 class QActionGroup;
-class QStyleOptionViewItemV4;
+class QStyleOptionViewItem;
 class ToolTipWidget;
 class Animator;
 
@@ -186,8 +186,8 @@ protected:
 
     void finishedScrolling();
 
-    QSize itemSize(const QStyleOptionViewItemV4 &option, const QModelIndex &index) const;
-    void paintItem(QPainter *painter, const QStyleOptionViewItemV4 &option, const QModelIndex &index) const;
+    QSize itemSize(const QStyleOptionViewItem &option, const QModelIndex &index) const;
+    void paintItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const;
 
 public slots:
     void renameSelectedIcon();
@@ -229,7 +229,7 @@ private:
     void updateRubberband();
     void updateActionButtons();
     void createDropActions(const KUrl::List &urls, QActionGroup *actions);
-    QStyleOptionViewItemV4 viewOptions() const;
+    QStyleOptionViewItem viewOptions() const;
     void selectIcon(QModelIndex index);
     void selectFirstOrLastIcon(bool firstIcon);        //Useful to select first or last icon when view is unsorted
     void selectIconsInArea(const QRect &area, const QPoint &finalPos);            //Selects all icons in the specified rectangular area

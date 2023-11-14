@@ -444,7 +444,7 @@ void IconView::rowsInserted(const QModelIndex &parent, int first, int last)
         m_delayedLayoutTimer.start(10, this);
         emit busy(true);
     } else {
-        const QStyleOptionViewItemV4 option = viewOptions();
+        const QStyleOptionViewItem option = viewOptions();
         const QRect cr = contentsRect().toRect();
         const QSize grid = gridSize();
         QPoint pos = QPoint();
@@ -541,7 +541,7 @@ void IconView::layoutChanged()
 
 void IconView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
-    const QStyleOptionViewItemV4 option = viewOptions();
+    const QStyleOptionViewItem option = viewOptions();
     const QSize grid = gridSize();
     m_regionCache.clear();
 
@@ -720,7 +720,7 @@ QPoint IconView::findNextEmptyPosition(const QPoint &prevPos, const QSize &gridS
 
 void IconView::layoutItems()
 {
-    QStyleOptionViewItemV4 option = viewOptions();
+    QStyleOptionViewItem option = viewOptions();
     m_items.resize(m_model->rowCount());
     m_regionCache.clear();
 
@@ -1061,7 +1061,7 @@ void IconView::finishedScrolling()
     }
 }
 
-QSize IconView::itemSize(const QStyleOptionViewItemV4 &option, const QModelIndex &index) const
+QSize IconView::itemSize(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QSize size = option.decorationSize;
     QSize grid = gridSize();
@@ -1092,7 +1092,7 @@ QSize IconView::itemSize(const QStyleOptionViewItemV4 &option, const QModelIndex
     return size;
 }
 
-void IconView::paintItem(QPainter *painter, const QStyleOptionViewItemV4 &option, const QModelIndex &index) const
+void IconView::paintItem(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     // Draw the item background
     // ========================
@@ -1249,7 +1249,7 @@ void IconView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, 
     // Update the dirty region in the backbuffer
     // =========================================
     if (!m_dirtyRegion.isEmpty()) {
-        QStyleOptionViewItemV4 opt = viewOptions();
+        QStyleOptionViewItem opt = viewOptions();
         QSize oldDecorationSize;
 
         QPainter p(&m_pixmap);
@@ -1401,7 +1401,7 @@ QRegion IconView::visualRegion(const QModelIndex &index) const
         return *region;
     }
 
-    QStyleOptionViewItemV4 option = viewOptions();
+    QStyleOptionViewItem option = viewOptions();
     option.rect = m_items[index.row()].rect;
 
     qreal left, top, right, bottom;
@@ -1454,7 +1454,7 @@ void IconView::updateScrollBarGeometry()
 
 void IconView::updateEditorGeometry()
 {
-    QStyleOptionViewItemV4 option = viewOptions();
+    QStyleOptionViewItem option = viewOptions();
     option.rect = visualRect(m_editorIndex);
 
     const int frameWidth = m_editor->nativeWidget()->frameWidth();
@@ -1480,7 +1480,7 @@ void IconView::renameSelectedIcon()
         return;
     }
 
-    QStyleOptionViewItemV4 option = viewOptions();
+    QStyleOptionViewItem option = viewOptions();
     option.rect = rect;
 
     m_editorIndex = index;
@@ -2587,7 +2587,7 @@ void IconView::startDrag(const QPointF &pos, QWidget *widget)
     QPixmap pixmap(boundingRect.size());
     pixmap.fill(Qt::transparent);
 
-    QStyleOptionViewItemV4 option = viewOptions();
+    QStyleOptionViewItem option = viewOptions();
     // ### We can't draw the items as selected or hovered since Qt doesn't
     //     use an ARGB window for the drag pixmap.
     //option.state |= QStyle::State_Selected;
@@ -2630,9 +2630,9 @@ void IconView::startDrag(const QPointF &pos, QWidget *widget)
     markAreaDirty(boundingRect);
 }
 
-QStyleOptionViewItemV4 IconView::viewOptions() const
+QStyleOptionViewItem IconView::viewOptions() const
 {
-    QStyleOptionViewItemV4 option;
+    QStyleOptionViewItem option;
     initStyleOption(&option);
 
     option.font                = font();
@@ -2643,10 +2643,10 @@ QStyleOptionViewItemV4 IconView::viewOptions() const
     option.textElideMode       = Qt::ElideRight;
     option.locale              = QLocale::system();
     option.widget              = m_styleWidget;
-    option.viewItemPosition    = QStyleOptionViewItemV4::OnlyOne;
+    option.viewItemPosition    = QStyleOptionViewItem::OnlyOne;
 
     if (m_wordWrap) {
-        option.features = QStyleOptionViewItemV2::WrapText;
+        option.features = QStyleOptionViewItem::WrapText;
     }
 
     return option;
