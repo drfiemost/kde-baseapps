@@ -6734,7 +6734,7 @@ void Q3CheckListItem::activate()
             return;
     }
     if ((myType == CheckBox) || (myType == CheckBoxController))  {
-        lv->d->startEdit = FALSE;
+        lv->d->startEdit = false;
         switch (internalState()) {
         case On:
             setState(Off);
