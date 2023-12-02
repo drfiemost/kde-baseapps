@@ -45,6 +45,8 @@
 #include <QSortFilterProxyModel>
 #include <QShowEvent>
 
+#include <algorithm>
+
 namespace
 {
     const bool ShowDeleteDefault = false;
@@ -79,7 +81,7 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     m_listView->setVerticalScrollMode(QListView::ScrollPerPixel);
     connect(m_listView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(changed()));
     m_enabledVcsPlugins = VersionControlSettings::enabledPlugins();
-    qSort(m_enabledVcsPlugins);
+    std::sort(m_enabledVcsPlugins.begin(), m_enabledVcsPlugins.end());
 }
 
 ServicesSettingsPage::~ServicesSettingsPage()

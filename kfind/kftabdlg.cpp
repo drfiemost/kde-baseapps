@@ -46,6 +46,9 @@
 
 #include "kdatecombo.h"
 #include "kquery.h"
+
+#include <algorithm>
+
 // Static utility functions
 static void save_pattern(KComboBox *, const QString &, const QString &);
 
@@ -486,7 +489,7 @@ void KfindTabWidget::initMimeTypes()
            && (!type->name().startsWith( QString("all/") )) )
         sortedList.append(type);
     }
-    qSort( sortedList.begin(), sortedList.end(), LessMimeType_ByComment() );
+    std::sort( sortedList.begin(), sortedList.end(), LessMimeType_ByComment() );
     m_types += sortedList;
 }
 

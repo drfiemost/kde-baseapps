@@ -33,6 +33,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QMimeData>
 
+#include <algorithm>
+
 class KBookmarkModel::Private
 {
 public:
@@ -370,7 +372,7 @@ bool KBookmarkModel::dropMimeData(const QMimeData * data, Qt::DropAction action,
         if (data->hasFormat(s_mime_bookmark_addresses)) {
             KBookmark::List bookmarks;
             QList<QByteArray> addresses = data->data(s_mime_bookmark_addresses).split(';');
-            qSort(addresses);
+            std::sort(addresses.begin(), addresses.end());
             Q_FOREACH(const QByteArray& address, addresses) {
                 KBookmark bk = bookmarkManager()->findByAddress(QString::fromLatin1(address));
                 kDebug() << "Extracted bookmark:" << bk.address();

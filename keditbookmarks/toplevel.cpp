@@ -53,8 +53,10 @@
 #include <kmessagebox.h>
 #include <kstandardaction.h>
 
-
 #include <QtDBus/QDBusConnection>
+
+#include <algorithm>
+
 KEBApp *KEBApp::s_topLevel = 0;
 
 KEBApp::KEBApp(
@@ -369,7 +371,7 @@ KBookmark::List KEBApp::selectedBookmarks() const
 	  if(bk.address() != GlobalBookmarkManager::self()->root().address())
               bookmarks.push_back( bk );
       }
-      qSort(bookmarks.begin(), bookmarks.end(), lessBookmark);
+      std::sort(bookmarks.begin(), bookmarks.end(), lessBookmark);
     } else {
         bookmarks.push_back(firstSelected());
     }

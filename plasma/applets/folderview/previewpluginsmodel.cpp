@@ -23,6 +23,8 @@
 
 #include <KServiceTypeTrader>
 
+#include <algorithm>
+
 static bool lessThan(const KService::Ptr &a, const KService::Ptr &b)
 {
     return QString::localeAwareCompare(a->name(), b->name()) < 0;
@@ -35,7 +37,7 @@ PreviewPluginsModel::PreviewPluginsModel(QObject *parent)
     checkedRows = QVector<bool>(plugins.size(), false);
 
     // Sort the list alphabetially
-    qStableSort(plugins.begin(), plugins.end(), lessThan);
+    std::stable_sort(plugins.begin(), plugins.end(), lessThan);
 }
 
 PreviewPluginsModel::~PreviewPluginsModel()
