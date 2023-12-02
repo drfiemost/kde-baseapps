@@ -475,7 +475,7 @@ void KItemListWidget::slotHoverAnimationFinished()
 {
     if (!m_hovered && m_selectionToggle) {
         m_selectionToggle->deleteLater();
-        m_selectionToggle = 0;
+        m_selectionToggle = nullptr;
     }
 }
 
@@ -503,7 +503,7 @@ void KItemListWidget::setHoverOpacity(qreal opacity)
 
     if (m_hoverOpacity <= 0.0) {
         delete m_hoverCache;
-        m_hoverCache = 0;
+        m_hoverCache = nullptr;
     }
 
     update();
@@ -512,15 +512,15 @@ void KItemListWidget::setHoverOpacity(qreal opacity)
 void KItemListWidget::clearHoverCache()
 {
     delete m_hoverCache;
-    m_hoverCache = 0;
+    m_hoverCache = nullptr;
 }
 
 void KItemListWidget::drawItemStyleOption(QPainter* painter, QWidget* widget, QStyle::State styleState)
 {
-    QStyleOptionViewItemV4 viewItemOption;
+    QStyleOptionViewItem viewItemOption;
     viewItemOption.initFrom(widget);
     viewItemOption.state = styleState;
-    viewItemOption.viewItemPosition = QStyleOptionViewItemV4::OnlyOne;
+    viewItemOption.viewItemPosition = QStyleOptionViewItem::OnlyOne;
     viewItemOption.showDecorationSelected = true;
     viewItemOption.rect = selectionRect().toRect();
     widget->style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &viewItemOption, painter, widget);
