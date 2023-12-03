@@ -31,6 +31,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 
+#include <algorithm>
+
 
 KonqUndoManager::KonqUndoManager(QWidget* parent)
     : QObject(parent)
@@ -177,7 +179,7 @@ void KonqUndoManager::slotRemoveClosedWindowItem(KonqUndoManager *real_sender, c
 
     populate();
 
-    QList<KonqClosedItem *>::iterator it = qFind(m_closedItemList.begin(), m_closedItemList.end(), closedWindowItem);
+    QList<KonqClosedItem *>::iterator it = std::find(m_closedItemList.begin(), m_closedItemList.end(), closedWindowItem);
 
     // If the item was found, remove it from the list
     if(it != m_closedItemList.end()) {

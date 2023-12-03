@@ -42,7 +42,7 @@
 #ifndef Q3TL_H
 #define Q3TL_H
 
-#include <QtCore/qalgorithms.h>
+#include <algorithm>
 
 QT_BEGIN_HEADER
 
@@ -56,18 +56,18 @@ Q_OUTOFLINE_TEMPLATE void qHeapSortPushDown(T *heap, int first, int last, LessTh
         if (last == 2 * r) {
             // node r has only one child
             if (lessThan(heap[2 * r], heap[r]))
-                qSwap(heap[r], heap[2 * r]);
+                std::swap(heap[r], heap[2 * r]);
             r = last;
         } else {
             // node r has two children
             if (lessThan(heap[2 * r], heap[r]) && !lessThan(heap[2 * r + 1], heap[2 * r])) {
                 // swap with left child
-                qSwap(heap[r], heap[2 * r]);
+                std::swap(heap[r], heap[2 * r]);
                 r *= 2;
             } else if (lessThan(heap[2 * r + 1], heap[r])
                        && lessThan(heap[2 * r + 1], heap[2 * r])) {
                 // swap with right child
-                qSwap(heap[r], heap[2 * r + 1]);
+                std::swap(heap[r], heap[2 * r + 1]);
                 r = 2 * r + 1;
             } else {
                 r = last;
@@ -97,7 +97,7 @@ Q_OUTOFLINE_TEMPLATE void qHeapSortHelper(BiIterator begin, BiIterator end, cons
         heap[++size] = *insert;
         int i = size;
         while (i > 1 && lessThan(heap[i], heap[i / 2])) {
-            qSwap(heap[i], heap[i / 2]);
+            std::swap(heap[i], heap[i / 2]);
             i /= 2;
         }
     }
@@ -117,7 +117,7 @@ Q_OUTOFLINE_TEMPLATE void qHeapSortHelper(BiIterator begin, BiIterator end, cons
 template <typename BiIterator, typename T>
 inline void qHeapSortHelper(BiIterator begin, BiIterator end, const T &dummy)
 {
-    qHeapSortHelper(begin, end, dummy, qLess<T>());
+    qHeapSortHelper(begin, end, dummy, std::less<T>());
 }
 
 template <typename BiIterator, typename LessThan>

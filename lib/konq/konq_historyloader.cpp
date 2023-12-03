@@ -25,6 +25,8 @@
 #include "konq_historyentry.h"
 #include <zlib.h> // for crc32
 
+#include <algorithm>
+
 class KonqHistoryLoaderPrivate
 {
 public:
@@ -126,7 +128,7 @@ bool KonqHistoryLoader::loadHistory()
 
 	//kDebug(1202) << "loaded:" << m_history.count() << "entries.";
 
-	qSort(d->m_history.begin(), d->m_history.end(), lastVisitedOrder);
+	std::sort(d->m_history.begin(), d->m_history.end(), lastVisitedOrder);
     }
 
     // Theoretically, we should emit update() here, but as we only ever

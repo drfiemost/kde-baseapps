@@ -34,6 +34,8 @@
 #include <kconfig.h>
 #include <unistd.h> // getpid
 
+#include <algorithm>
+
 Q_DECLARE_METATYPE(QList<QVariant>)
 
 class KonqClosedWindowsManagerPrivate
@@ -135,7 +137,7 @@ void KonqClosedWindowsManager::removeClosedWindowItem(KonqUndoManager
 *real_sender, const KonqClosedWindowItem *closedWindowItem, bool propagate)
 {
     readConfig();
-    QList<KonqClosedWindowItem *>::iterator it = qFind(m_closedWindowItemList.begin(),
+    QList<KonqClosedWindowItem *>::iterator it = std::find(m_closedWindowItemList.begin(),
     m_closedWindowItemList.end(), closedWindowItem);
 
     // If the item was found, remove it from the list
