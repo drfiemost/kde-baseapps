@@ -1334,7 +1334,7 @@ bool Q3UriDrag::decodeLocalFiles(const QMimeSource* e, QStringList& l)
         return false;
 
     l.clear();
-    for (uint i = 0; i < u.count(); ++i) {
+    for (int i = 0; i < u.count(); ++i) {
         QString lf = uriToLocalFile(u.at(i));
         if (!lf.isEmpty())
             l.append(lf);
@@ -1359,7 +1359,7 @@ bool Q3UriDrag::decodeToUnicodeUris(const QMimeSource* e, QStringList& l)
         return false;
 
     l.clear();
-    for (uint i = 0; i < u.count(); ++i)
+    for (int i = 0; i < u.count(); ++i)
         l.append(uriToUnicodeUri(u.at(i)));
 
     return true;
