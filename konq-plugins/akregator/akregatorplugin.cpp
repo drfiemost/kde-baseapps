@@ -30,7 +30,7 @@
 #include <klocale.h>
 #include <konq_popupmenu.h>
 #include <kmenu.h>
-#include <kgenericfactory.h>
+#include <kpluginfactory.h>
 #include <kurl.h>
 #include <khtml_part.h>
 #include <khtmlview.h>
@@ -43,7 +43,7 @@
 
 using namespace Akregator;
 
-typedef KGenericFactory<AkregatorMenu, KonqPopupMenu> AkregatorMenuFactory;
+K_PLUGIN_FACTORY(AkregatorMenuFactory, registerPlugin<AkregatorMenu>();)
 K_EXPORT_PLUGIN(AkregatorMenuFactory("akregatorkonqplugin"))
 
 AkregatorMenu::AkregatorMenu( KonqPopupMenu * popupmenu, const QStringList& /* list */ )
