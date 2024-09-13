@@ -122,7 +122,7 @@ bool KonqFeedIcon::feedFound()
             doc += "<link ";
             Q_FOREACH(const QString& attrName, element.attributeNames()) {
                 doc += attrName + "=\"";
-                doc += Qt::escape( element.attribute(attrName) ).replace("\"", "&quot;");
+                doc += element.attribute(attrName).toHtmlEscaped().replace("\"", "&quot;");
                 doc += "\" ";
             }
             doc += "/>";
