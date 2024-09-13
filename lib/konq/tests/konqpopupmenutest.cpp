@@ -25,7 +25,7 @@
 #include "qtest_kde.h"
 #include <QDir>
 #include <kparts/browserextension.h>
-#include <knewmenu.h>
+#include <knewfilemenu.h>
 #include <kdebug.h>
 #include <kfileitemlistproperties.h>
 
