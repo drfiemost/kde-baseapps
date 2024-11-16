@@ -1106,7 +1106,7 @@ void ArchiveDialog::saveHTMLPartLower(const DOM::Node &pNode, int level, Recurse
             } else {
                 if (pNode.nodeType() == DOM::Node::COMMENT_NODE) {
                     text = "<!--";
-                    text += Qt::escape(nodeValue);  // No need to escape " as well
+                    text += nodeValue.toHtmlEscaped();  // No need to escape " as well
                     text += "-->";
                 } else {
                     text = escapeHTML(nodeValue);
@@ -1346,7 +1346,7 @@ bool ArchiveDialog::urlCheckFailed(KHTMLPart *part, const KUrl &fullURL) {
 
 
 QString ArchiveDialog::escapeHTML(QString in) {
-    return Qt::escape(in).replace('"', "&quot;");
+    return in.toHtmlEscaped().replace('"', "&quot;");
 }
 
 QString ArchiveDialog::appendMimeTypeSuffix(QString filename, const QString &mimetype) {
