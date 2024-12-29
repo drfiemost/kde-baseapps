@@ -211,7 +211,7 @@ void KonqStatusBarMessageLabel::paintEvent(QPaintEvent* /* event */)
         // window color (bg only) seems to be wrong (always black)
         KColorScheme scheme(palette().currentColorGroup(), KColorScheme::Window);
         QColor backgroundColor = scheme.background(KColorScheme::NegativeBackground).color();
-        backgroundColor.setAlpha(qMin(255, d->m_illumination * 2));
+        backgroundColor.setAlpha(std::min(255, d->m_illumination * 2));
         painter.setBrush(backgroundColor);
         painter.setPen(Qt::NoPen);
         painter.drawRect(QRect(0, 0, width(), height()));

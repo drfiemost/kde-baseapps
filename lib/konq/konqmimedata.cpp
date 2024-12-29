@@ -35,7 +35,7 @@ void KonqMimeData::populateMimeData( QMimeData* mimeData,
 
     // for compatibility reasons
     QString application_x_qiconlist;
-    int items=qMax(kdeURLs.count(),mostLocalURLs.count());
+    int items=std::max(kdeURLs.count(),mostLocalURLs.count());
     for (int i=0;i<items;i++) {
 	int offset=i*16;
 	QString tmp("%1$@@$%2$@@$32$@@$32$@@$%3$@@$%4$@@$32$@@$16$@@$no data$@@$");

@@ -171,19 +171,19 @@ KItemSet KItemSet::operator+(const KItemSet& other) const
             }
         } else {
             // Find the beginning of the next range.
-            int index = qMin(it1->index, it2->index);
+            int index = std::min(it1->index, it2->index);
             int count = 0;
 
             do {
                 if (it1 != end1 && it1->index <= index + count) {
                     // The next range from 'this' overlaps with the current range in the sum.
-                    count = qMax(count, it1->index + it1->count - index);
+                    count = std::max(count, it1->index + it1->count - index);
                     ++it1;
                 }
 
                 if (it2 != end2 && it2->index <= index + count) {
                     // The next range from 'other' overlaps with the current range in the sum.
-                    count = qMax(count, it2->index + it2->count - index);
+                    count = std::max(count, it2->index + it2->count - index);
                     ++it2;
                 }
             } while ((it1 != end1 && it1->index <= index + count)

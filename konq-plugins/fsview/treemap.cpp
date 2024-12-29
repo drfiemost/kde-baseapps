@@ -371,7 +371,7 @@ int findBreak(int& breakPos, QString text, QFontMetrics* fm, int maxWidth)
 	// now lower breakPos until best position is found.
 	// first by binary search, resulting in a position a little bit too large
 	int bottomPos = 0;
-	while(qAbs(maxWidth - usedWidth) > 3 * fm->maxWidth()) {
+	while(std::abs(maxWidth - usedWidth) > 3 * fm->maxWidth()) {
 		int halfPos = (bottomPos + breakPos)/2;
 		int halfWidth = fm->width(text, halfPos);
 		if (halfWidth < maxWidth)
@@ -429,7 +429,7 @@ int findBreakBackwards(int& breakPos, QString text, QFontMetrics* fm, int maxWid
 	// now raise breakPos until best position is found.
 	// first by binary search, resulting in a position a little bit too small
 	int topPos = text.length();
-	while(qAbs(maxWidth - usedWidth) > 3 * fm->maxWidth()) {
+	while(std::abs(maxWidth - usedWidth) > 3 * fm->maxWidth()) {
 		int halfPos = (breakPos + topPos)/2;
 		int halfWidth = fm->width(text.mid(halfPos));
 		if (halfWidth < maxWidth) {

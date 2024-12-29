@@ -675,7 +675,7 @@ bool KonqCombo::hasSufficientContrast(const QColor &c1, const QColor &c2)
     c1.getHsv(&h1,&s1,&v1);
     c2.getHsv(&h2,&s2,&v2);
     if(h1!=-1 && h2!=-1) { // grey values have no hue
-        hdist = qAbs(h1-h2);
+        hdist = std::abs(h1-h2);
         if (hdist > 180) hdist = 360-hdist;
         if (hdist < HUE_DISTANCE) {
             hdist -= HUE_DISTANCE;
@@ -687,9 +687,9 @@ bool KonqCombo::hasSufficientContrast(const QColor &c1, const QColor &c2)
             else if (!hk1 && !hk2)
                 hdist = (7*hdist)/4;
         }
-        hdist = qMin(hdist, HUE_DISTANCE*2);
+        hdist = std::min(hdist, HUE_DISTANCE*2);
     }
-    return hdist + (qAbs(s1-s2)*128)/(160+qMin(s1,s2)) + qAbs(v1-v2) > CONTRAST_DISTANCE;
+    return hdist + (std::abs(s1-s2)*128)/(160+std::min(s1,s2)) + std::abs(v1-v2) > CONTRAST_DISTANCE;
 }
 
 void KonqCombo::slotReturnPressed()
@@ -764,7 +764,7 @@ QSize KonqComboItemDelegate::sizeHint( const QStyleOptionViewItem &option,
     Q_UNUSED(index);
     int vMargin = QApplication::style()->pixelMetric( QStyle::PM_FocusFrameVMargin );
 
-    QSize size( 1, qMax( option.fontMetrics.lineSpacing(), option.decorationSize.height() ) );
+    QSize size( 1, std::max( option.fontMetrics.lineSpacing(), option.decorationSize.height() ) );
     size.rheight() += vMargin * 2;
 
     return size.expandedTo( QApplication::globalStrut() );

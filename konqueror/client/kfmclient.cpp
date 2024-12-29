@@ -88,27 +88,27 @@ extern "C" KDE_EXPORT int kdemain( int argc, char **argv )
   if (argc == 1 || args->isSet("commands") )
   {
     KCmdLineArgs::enable_i18n();
-    puts(i18n("\nSyntax:\n").toLocal8Bit());
-    puts(i18n("  kfmclient openURL 'url' ['mimetype']\n"
+    puts(qPrintable(i18n("\nSyntax:\n")));
+    puts(qPrintable(i18n("  kfmclient openURL 'url' ['mimetype']\n"
                 "            # Opens a window showing 'url'.\n"
                 "            #  'url' may be a relative path\n"
                 "            #   or file name, such as . or subdir/\n"
-                "            #   If 'url' is omitted, $HOME is used instead.\n\n").toLocal8Bit());
-    puts(i18n("            # If 'mimetype' is specified, it will be used to determine the\n"
+                "            #   If 'url' is omitted, $HOME is used instead.\n\n")));
+    puts(qPrintable(i18n("            # If 'mimetype' is specified, it will be used to determine the\n"
                 "            #   component that Konqueror should use. For instance, set it to\n"
-                "            #   text/html for a web page, to make it appear faster\n\n").toLocal8Bit());
+                "            #   text/html for a web page, to make it appear faster\n\n")));
 
-    puts(i18n("  kfmclient newTab 'url' ['mimetype']\n"
+    puts(qPrintable(i18n("  kfmclient newTab 'url' ['mimetype']\n"
                 "            # Same as above but opens a new tab with 'url' in an existing Konqueror\n"
-                "            #   window on the current active desktop if possible.\n\n").toLocal8Bit());
+                "            #   window on the current active desktop if possible.\n\n")));
 
-    puts(i18n("  kfmclient openProfile 'profile' ['url']\n"
+    puts(qPrintable(i18n("  kfmclient openProfile 'profile' ['url']\n"
                 "            # Opens a window using the given profile.\n"
                 "            #   'profile' is a file under ~/.kde/share/apps/konqueror/profiles.\n"
-                "            #   'url' is an optional URL to open.\n\n").toLocal8Bit());
+                "            #   'url' is an optional URL to open.\n\n")));
 
-    puts(i18n("  kfmclient exec is deprecated and kept for compatibility with KDE 3. \n"
-                "            # See kioclient exec for more information.\n").toLocal8Bit());
+    puts(qPrintable(i18n("  kfmclient exec is deprecated and kept for compatibility with KDE 3. \n"
+                "            # See kioclient exec for more information.\n")));
 
 
     return 0;
@@ -503,12 +503,12 @@ static void checkArgumentCount(int count, int min, int max)
 {
    if (count < min)
    {
-      fputs( i18n("Syntax Error: Not enough arguments\n").toLocal8Bit(), stderr );
+      fputs( qPrintable(i18n("Syntax Error: Not enough arguments\n")), stderr );
       ::exit(1);
    }
    if (max && (count > max))
    {
-      fputs( i18n("Syntax Error: Too many arguments\n").toLocal8Bit(), stderr );
+      fputs( qPrintable(i18n("Syntax Error: Too many arguments\n")), stderr );
       ::exit(1);
    }
 }

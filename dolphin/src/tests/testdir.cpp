@@ -48,7 +48,7 @@ static void setTimeStamp(const QString& path, const QDateTime& mtime)
     struct utimbuf utbuf;
     utbuf.actime = mtime.toTime_t();
     utbuf.modtime = utbuf.actime;
-    utime(QFile::encodeName(path), &utbuf);
+    utime(QFile::encodeName(path).constData(), &utbuf);
 #elif defined(Q_OS_WIN)
     struct _utimbuf utbuf;
     utbuf.actime = mtime.toTime_t();

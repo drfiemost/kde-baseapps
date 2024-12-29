@@ -104,7 +104,7 @@ void KStandardItemListGroupHeader::updateCache()
         m_text = QString(); // krazy:exlude=nullstrassign
 
         const qreal height = styleOption().fontMetrics.ascent();
-        const QSizeF pixmapSize(qMin(height * 5, maxWidth), height);
+        const QSizeF pixmapSize(std::min(height * 5, maxWidth), height);
 
         m_pixmap = QPixmap(pixmapSize.toSize());
         m_pixmap.fill(Qt::transparent);

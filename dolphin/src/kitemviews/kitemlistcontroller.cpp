@@ -309,10 +309,10 @@ bool KItemListController::keyPressEvent(QKeyEvent* event)
     case Qt::Key_PageUp:
         if (m_view->scrollOrientation() == Qt::Horizontal) {
             // The new current index should correspond to the first item in the current column.
-            int newIndex = qMax(index - 1, 0);
+            int newIndex = std::max(index - 1, 0);
             while (newIndex != index && m_view->itemRect(newIndex).topLeft().y() < m_view->itemRect(index).topLeft().y()) {
                 index = newIndex;
-                newIndex = qMax(index - 1, 0);
+                newIndex = std::max(index - 1, 0);
             }
             m_keyboardAnchorIndex = index;
             m_keyboardAnchorPos = keyboardAnchorPos(index);
@@ -337,10 +337,10 @@ bool KItemListController::keyPressEvent(QKeyEvent* event)
     case Qt::Key_PageDown:
         if (m_view->scrollOrientation() == Qt::Horizontal) {
             // The new current index should correspond to the last item in the current column.
-            int newIndex = qMin(index + 1, m_model->count() - 1);
+            int newIndex = std::min(index + 1, m_model->count() - 1);
             while (newIndex != index && m_view->itemRect(newIndex).topLeft().y() > m_view->itemRect(index).topLeft().y()) {
                 index = newIndex;
-                newIndex = qMin(index + 1, m_model->count() - 1);
+                newIndex = std::min(index + 1, m_model->count() - 1);
             }
             m_keyboardAnchorIndex = index;
             m_keyboardAnchorPos = keyboardAnchorPos(index);
@@ -1243,10 +1243,10 @@ int KItemListController::nextRowIndex(int index) const
     // that is below the current index
     int nextRowIndex = lastColumnIndex + 1;
     int searchIndex = nextRowIndex;
-    qreal minDiff = qAbs(m_keyboardAnchorPos - keyboardAnchorPos(nextRowIndex));
+    qreal minDiff = std::abs(m_keyboardAnchorPos - keyboardAnchorPos(nextRowIndex));
     while (searchIndex < maxIndex && keyboardAnchorPos(searchIndex + 1) > keyboardAnchorPos(searchIndex)) {
         ++searchIndex;
-        const qreal searchDiff = qAbs(m_keyboardAnchorPos - keyboardAnchorPos(searchIndex));
+        const qreal searchDiff = std::abs(m_keyboardAnchorPos - keyboardAnchorPos(searchIndex));
         if (searchDiff < minDiff) {
             minDiff = searchDiff;
             nextRowIndex = searchIndex;
@@ -1275,10 +1275,10 @@ int KItemListController::previousRowIndex(int index) const
     // that is above the current index
     int previousRowIndex = firstColumnIndex - 1;
     int searchIndex = previousRowIndex;
-    qreal minDiff = qAbs(m_keyboardAnchorPos - keyboardAnchorPos(previousRowIndex));
+    qreal minDiff = std::abs(m_keyboardAnchorPos - keyboardAnchorPos(previousRowIndex));
     while (searchIndex > 0 && keyboardAnchorPos(searchIndex - 1) < keyboardAnchorPos(searchIndex)) {
         --searchIndex;
-        const qreal searchDiff = qAbs(m_keyboardAnchorPos - keyboardAnchorPos(searchIndex));
+        const qreal searchDiff = std::abs(m_keyboardAnchorPos - keyboardAnchorPos(searchIndex));
         if (searchDiff < minDiff) {
             minDiff = searchDiff;
             previousRowIndex = searchIndex;

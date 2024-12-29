@@ -94,28 +94,28 @@ void KSaveIOConfig::reparseConfiguration ()
 void KSaveIOConfig::setReadTimeout( int _timeout )
 {
   KConfigGroup cfg (config(), QString());
-  cfg.writeEntry("ReadTimeout", qMax(MIN_TIMEOUT_VALUE,_timeout));
+  cfg.writeEntry("ReadTimeout", std::max(MIN_TIMEOUT_VALUE,_timeout));
   cfg.sync();
 }
 
 void KSaveIOConfig::setConnectTimeout( int _timeout )
 {
   KConfigGroup cfg (config(), QString());
-  cfg.writeEntry("ConnectTimeout", qMax(MIN_TIMEOUT_VALUE,_timeout));
+  cfg.writeEntry("ConnectTimeout", std::max(MIN_TIMEOUT_VALUE,_timeout));
   cfg.sync();
 }
 
 void KSaveIOConfig::setProxyConnectTimeout( int _timeout )
 {
   KConfigGroup cfg (config(), QString());
-  cfg.writeEntry("ProxyConnectTimeout", qMax(MIN_TIMEOUT_VALUE,_timeout));
+  cfg.writeEntry("ProxyConnectTimeout", std::max(MIN_TIMEOUT_VALUE,_timeout));
   cfg.sync();
 }
 
 void KSaveIOConfig::setResponseTimeout( int _timeout )
 {
   KConfigGroup cfg (config(), QString());
-  cfg.writeEntry("ResponseTimeout", qMax(MIN_TIMEOUT_VALUE,_timeout));
+  cfg.writeEntry("ResponseTimeout", std::max(MIN_TIMEOUT_VALUE,_timeout));
   cfg.sync();
 }
 

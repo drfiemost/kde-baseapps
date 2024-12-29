@@ -188,7 +188,7 @@ void KCharSelectDia::toClipUTF8()
   QString str = lined->text();
   if (str.isEmpty())
     str = vChr;
-  cb->setText(QLatin1String( str.toUtf8() ));
+  cb->setText(QLatin1String( str.toUtf8().constData() ));
 }
 
 //==================================================================

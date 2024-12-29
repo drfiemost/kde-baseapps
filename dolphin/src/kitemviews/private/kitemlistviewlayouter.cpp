@@ -389,7 +389,7 @@ void KItemListViewLayouter::doLayout()
 
         m_columnWidth = itemSize.width() + itemMargin.width();
         const qreal widthForColumns = size.width() - itemMargin.width();
-        m_columnCount = qMax(1, int(widthForColumns / m_columnWidth));
+        m_columnCount = std::max(1, int(widthForColumns / m_columnWidth));
         m_xPosInc = itemMargin.width();
 
         const int itemCount = m_model->count();
@@ -492,7 +492,7 @@ void KItemListViewLayouter::doLayout()
                     }
                 }
 
-                maxItemHeight = qMax(maxItemHeight, requiredItemHeight);
+                maxItemHeight = std::max(maxItemHeight, requiredItemHeight);
                 ++index;
                 ++column;
 

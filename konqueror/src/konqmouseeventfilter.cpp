@@ -72,13 +72,13 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
                 return true;
             }
             break;
-        case Qt::XButton2: // Qt::ForwardButton
+        case Qt::ForwardButton:
             if (auto window = parentWindow(qobject_cast<QWidget*>(obj))) {
                 window->slotForward();
                 return true;
             }
             break;
-        case Qt::XButton1: // Qt::BackButton
+        case Qt::BackButton:
             if (auto window = parentWindow(qobject_cast<QWidget*>(obj))) {
                 window->slotBack();
                 return true;

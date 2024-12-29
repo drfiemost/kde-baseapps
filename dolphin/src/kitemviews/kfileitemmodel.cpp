@@ -285,7 +285,7 @@ QMimeData* KFileItemModel::createMimeData(const KItemSet& indexes) const
 
 int KFileItemModel::indexForKeyboardSearch(const QString& text, int startFromIndex) const
 {
-    startFromIndex = qMax(0, startFromIndex);
+    startFromIndex = std::max(0, startFromIndex);
     for (int i = startFromIndex; i < count(); ++i) {
         if (fileItem(i).text().startsWith(text, Qt::CaseInsensitive)) {
             return i;
@@ -385,7 +385,7 @@ int KFileItemModel::index(const KUrl& url) const
         // unlike calling qHash for the URLs, trigger a parsing of the URLs
         // which costs both CPU cycles and memory.
         const int blockSize = 1000;
-        const int currentBlockEnd = qMin(itemsInHash + blockSize, itemCount);
+        const int currentBlockEnd = std::min(itemsInHash + blockSize, itemCount);
         for (int i = itemsInHash; i < currentBlockEnd; ++i) {
             const KUrl nextUrl = m_itemData.at(i)->item.url();
             m_items.insert(nextUrl, i);

@@ -86,7 +86,7 @@ void KItemListSmoothScroller::scrollContentsBy(qreal distance)
     }
 
     const QByteArray name = propertyName();
-    const qreal currentOffset = target->property(name).toReal();
+    const qreal currentOffset = target->property(name.constData()).toReal();
     if (static_cast<int>(currentOffset) == m_scrollBar->value()) {
         // The current offset is already synchronous to the scrollbar
         return;
@@ -111,9 +111,9 @@ void KItemListSmoothScroller::scrollContentsBy(qreal distance)
             // within a very short timeslots.
             startOffset += (endOffset - currentOffset) * 1000 / (m_animation->duration() * 60);
             if (currentOffset < endOffset) {
-                startOffset = qMin(startOffset, endOffset);
+                startOffset = std::min(startOffset, endOffset);
             } else {
-                startOffset = qMax(startOffset, endOffset);
+                startOffset = std::max(startOffset, endOffset);
             }
         }
 
@@ -122,9 +122,9 @@ void KItemListSmoothScroller::scrollContentsBy(qreal distance)
         m_animation->setEndValue(endOffset);
         m_animation->setEasingCurve(animRunning ? QEasingCurve::OutQuad : QEasingCurve::InOutQuad);
         m_animation->start();
-        target->setProperty(name, startOffset);
+        target->setProperty(name.constData(), startOffset);
     } else {
-        target->setProperty(name, endOffset);
+        target->setProperty(name.constData(), endOffset);
     }
 }
 

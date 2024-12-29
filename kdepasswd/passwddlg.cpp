@@ -44,7 +44,7 @@ void KDEpasswd1Dialog::accept()
 {
     PasswdProcess proc(0);
 
-    int ret = proc.checkCurrent(password().toLocal8Bit());
+    int ret = proc.checkCurrent(qPrintable(password()));
     switch (ret)
     {
         case -1:
@@ -146,7 +146,7 @@ void  KDEpasswd2Dialog::accept()
         }
     }
 
-    int ret = proc.exec(m_Pass, p.toLocal8Bit());
+    int ret = proc.exec(m_Pass, qPrintable(p));
     switch (ret)
     {
         case 0:

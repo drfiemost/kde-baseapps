@@ -193,7 +193,7 @@ void DolphinItemListView::updateGridSize()
             // of a 1:1 ratio to avoid wasting too much vertical space when
             // showing photos.
             const int minWidth = iconSize * 3 / 2;
-            itemWidth = qMax(itemWidth, minWidth);
+            itemWidth = std::max(itemWidth, minWidth);
         }
 
         if (itemWidth < iconSize + padding * 2) {
@@ -210,7 +210,7 @@ void DolphinItemListView::updateGridSize()
     case KFileItemListView::CompactLayout: {
         itemWidth = padding * 4 + iconSize + option.fontMetrics.height() * 5;
         const int textLinesCount = visibleRoles().count();
-        itemHeight = padding * 2 + qMax(iconSize, textLinesCount * option.fontMetrics.lineSpacing());
+        itemHeight = padding * 2 + std::max(iconSize, textLinesCount * option.fontMetrics.lineSpacing());
 
         if (CompactModeSettings::maximumTextWidthIndex() > 0) {
             // A restriction is given for the maximum width of the text (0 means
@@ -223,7 +223,7 @@ void DolphinItemListView::updateGridSize()
     }
     case KFileItemListView::DetailsLayout: {
         itemWidth = -1;
-        itemHeight = padding * 2 + qMax(iconSize, option.fontMetrics.lineSpacing());
+        itemHeight = padding * 2 + std::max(iconSize, option.fontMetrics.lineSpacing());
         break;
     }
     default:

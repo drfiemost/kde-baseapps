@@ -226,7 +226,7 @@ void drawComplexControl(const QStyleOptionQ3ListView *opt, QPainter *p)
                         lh = child.height;
                     else
                         lh = p->fontMetrics().height() + 2 * opt->itemMargin;
-                    lh = qMax(lh, QApplication::globalStrut().height());
+                    lh = std::max(lh, QApplication::globalStrut().height());
                     if (lh % 2 > 0)
                         ++lh;
                     linebot = y + lh / 2;
@@ -1222,7 +1222,7 @@ void Q3ListViewItem::startRename(int col)
     QRect r = lv->itemRect(this);
     r = QRect(lv->viewportToContents(r.topLeft()), r.size());
     r.setLeft(lv->header()->sectionPos(col));
-    r.setWidth(qMin(lv->header()->sectionSize(col) - 1,
+    r.setWidth(std::min(lv->header()->sectionSize(col) - 1,
                     lv->contentsX() + lv->visibleWidth() - r.left()));
     if (col == 0)
         r.setLeft(r.left() + lv->itemMargin() + (depth() + (lv->rootIsDecorated() ? 1 : 0)) * lv->treeStepSize() - 1);
@@ -1916,7 +1916,7 @@ void Q3ListViewItem::setup()
     if (lv) {
         for (int i = 0; i < lv->d->column.size(); ++i) {
             if (pixmap(i))
-                ph = qMax(ph, pixmap(i)->height());
+                ph = std::max(ph, pixmap(i)->height());
         }
 
         if (mlenabled) {
@@ -1925,15 +1925,15 @@ void Q3ListViewItem::setup()
                 int lines = text(c).count(QLatin1Char('\n')) + 1;
                 int tmph = lv->d->fontMetricsHeight
                            + lv->fontMetrics().lineSpacing() * (lines - 1);
-                h = qMax(h, tmph);
+                h = std::max(h, tmph);
             }
             h += 2*lv->itemMargin();
         } else {
-            h = qMax(lv->d->fontMetricsHeight, ph) + 2*lv->itemMargin();
+            h = std::max(lv->d->fontMetricsHeight, ph) + 2*lv->itemMargin();
         }
     }
 
-    h = qMax(h, QApplication::globalStrut().height());
+    h = std::max(h, QApplication::globalStrut().height());
 
     if (h % 2 > 0)
         h++;
@@ -2503,7 +2503,7 @@ void Q3ListViewItem::paintCell(QPainter * p, const QPalette & cg,
 #endif
     if (isSelected() &&
          (column == 0 || lv->allColumnsShowFocus())) {
-        p->fillRect(r - marg, 0, qMax(0, width - r + marg), height(),
+        p->fillRect(r - marg, 0, std::max(0, width - r + marg), height(),
                     pal.brush(QPalette::Highlight));
         if (enabled || !lv)
             p->setPen(pal.highlightedText().color());
@@ -2568,7 +2568,7 @@ void Q3ListViewItem::paintCell(QPainter * p, const QPalette & cg,
 
     if (mlenabled && column == 0 && isOpen() && childCount()) {
         int textheight = fm.size(align, t).height() + 2 * lv->itemMargin();
-        textheight = qMax(textheight, QApplication::globalStrut().height());
+        textheight = std::max(textheight, QApplication::globalStrut().height());
         if (textheight % 2 > 0)
             textheight++;
         if (textheight < height()) {
@@ -2608,7 +2608,7 @@ int Q3ListViewItem::width(const QFontMetrics& fm,
     const QPixmap * pm = pixmap(c);
     if (pm)
         w += pm->width() + lv->itemMargin(); // ### correct margin stuff?
-    return qMax(w, QApplication::globalStrut().width());
+    return std::max(w, QApplication::globalStrut().width());
 }
 
 
@@ -3327,11 +3327,11 @@ void Q3ListView::drawContentsOffset(QPainter * p, int ox, int oy,
 
             r.setRect(x, current.y - oy, w, ih);
             if (d->h->mapToActual(0) == 0 || (current.l == 0 && !rootIsDecorated())) {
-                int offsetx = qMin(current.l * treeStepSize(), d->h->cellSize(cell));
+                int offsetx = std::min(current.l * treeStepSize(), d->h->cellSize(cell));
                 r.setLeft(r.left() + offsetx);
                 current.i->paintFocus(p, palette(), r);
             } else {
-                int xdepth = qMin(treeStepSize() * (current.i->depth() + (rootIsDecorated() ? 1 : 0))
+                int xdepth = std::min(treeStepSize() * (current.i->depth() + (rootIsDecorated() ? 1 : 0))
                              + itemMargin(), d->h->cellSize(cell));
                 xdepth += d->h->cellPos(cell);
                 QRect r1(r);
@@ -3361,10 +3361,10 @@ void Q3ListView::drawContentsOffset(QPainter * p, int ox, int oy,
             int rleft = tx + current.l*treeStepSize();
             int rright = rleft + treeStepSize();
 
-            int crtop = qMax(rtop, cy);
-            int crbottom = qMin(rbottom, cy+ch);
-            int crleft = qMax(rleft, cx);
-            int crright = qMin(rright, cx+cw);
+            int crtop = std::max(rtop, cy);
+            int crbottom = std::min(rbottom, cy+ch);
+            int crleft = std::max(rleft, cx);
+            int crright = std::min(rright, cx+cw);
 
             r.setRect(crleft-ox, crtop-oy,
                        crright-crleft, crbottom-crtop);
@@ -4768,8 +4768,8 @@ void Q3ListView::contentsContextMenuEvent(QContextMenuEvent *e)
                 p += QPoint(width() / 2, (r.height() / 2));
             else
                 p += QPoint(columnWidth(0) / 2, (r.height() / 2));
-            p.rx() = qMax(0, p.x());
-            p.rx() = qMin(visibleWidth(), p.x());
+            p.rx() = std::max(0, p.x());
+            p.rx() = std::min(visibleWidth(), p.x());
             emit contextMenuRequested(item, viewport()->mapToGlobal(p), -1);
         }
     } else {
@@ -6135,7 +6135,7 @@ void Q3ListView::widthChanged(const Q3ListViewItem* item, int c)
             if (showSortIndicator()) {
                 int tw = d->h->sectionSizeHint( col, fm ).width();
                 tw += 40; //add space for the sort indicator
-                w = qMax(w, tw);
+                w = std::max(w, tw);
             }
             if (col == 0) {
                 int indent = treeStepSize() * item->depth();
@@ -6921,8 +6921,8 @@ void Q3CheckListItem::setup()
     int h = height();
     Q3ListView *lv = listView();
     if (lv)
-        h = qMax(pixelMetric(), h);
-    h = qMax(h, QApplication::globalStrut().height());
+        h = std::max(pixelMetric(), h);
+    h = std::max(h, QApplication::globalStrut().height());
     setHeight(h);
 }
 
@@ -6941,7 +6941,7 @@ int Q3CheckListItem::width(const QFontMetrics& fm, const Q3ListView* lv, int col
             r +=  pixelMetric() + 4;
         }
     }
-    return qMax(r, QApplication::globalStrut().width());
+    return std::max(r, QApplication::globalStrut().width());
 }
 
 /*!
@@ -8318,7 +8318,7 @@ void Q3ListView::adjustColumn(int col)
     int w = d->h->sectionSizeHint(col, fontMetrics()).width();
     if (d->h->iconSet(col))
         w += d->h->iconSet(col)->pixmap(22).width();
-    w = qMax(w, 20);
+    w = std::max(w, 20);
     QFontMetrics fm(fontMetrics());
     Q3ListViewItem* item = firstChild();
     int rootDepth = rootIsDecorated() ? treeStepSize() : 0;
@@ -8326,10 +8326,10 @@ void Q3ListView::adjustColumn(int col)
         int iw = item->width(fm, this, col);
         if (0 == col)
             iw += itemMargin() + rootDepth + item->depth()*treeStepSize() - 1;
-        w = qMax(w, iw);
+        w = std::max(w, iw);
         item = item->itemBelow();
     }
-    w = qMax(w, QApplication::globalStrut().width());
+    w = std::max(w, QApplication::globalStrut().width());
 
     d->h->adjustHeaderSize(oldw - w);
     if (oldw != w) {

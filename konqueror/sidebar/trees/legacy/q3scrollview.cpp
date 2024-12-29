@@ -355,7 +355,7 @@ void Q3ScrollViewData::viewportResized(int w, int h)
         if (r) {
             QSize sh = r->child->sizeHint();
             sh = sh.boundedTo(r->child->maximumSize());
-            r->child->resize(qMax(w,sh.width()), qMax(h,sh.height()));
+            r->child->resize(std::max(w,sh.width()), std::max(h,sh.height()));
         }
 
     }
@@ -955,7 +955,7 @@ void Q3ScrollView::updateScrollBars()
         d->vbar->setRange(0, 0);
     }
     if (needh) {
-        d->hbar->setRange(0, qMax(0, d->contentsWidth()-portw));
+        d->hbar->setRange(0, std::max(0, d->contentsWidth()-portw));
         d->hbar->setSingleStep(Q3ScrollView::d->hbar->singleStep());
         d->hbar->setPageStep(portw);
     } else {
@@ -1046,16 +1046,16 @@ void Q3ScrollView::updateScrollBars()
         int x;
 #if 0
         if (reverse)
-            x =qMin(0,d->contentsWidth()-visibleWidth());
+            x =std::min(0,d->contentsWidth()-visibleWidth());
         else
 #endif
-            x =qMax(0,d->contentsWidth()-visibleWidth());
+            x =std::max(0,d->contentsWidth()-visibleWidth());
         d->hbar->setValue(x);
         // Do it even if it is recursive
         moveContents(-x, -d->contentsY());
     }
     if (d->contentsY()+visibleHeight() > contentsHeight()) {
-        int y=qMax(0,contentsHeight()-visibleHeight());
+        int y=std::max(0,contentsHeight()-visibleHeight());
         d->vbar->setValue(y);
         // Do it even if it is recursive
         moveContents(-d->contentsX(), -y);
@@ -2124,7 +2124,7 @@ void Q3ScrollView::setContentsPos(int x, int y)
 */
 void Q3ScrollView::scrollBy(int dx, int dy)
 {
-    setContentsPos(qMax(d->contentsX()+dx, 0), qMax(d->contentsY()+dy, 0));
+    setContentsPos(std::max(d->contentsX()+dx, 0), std::max(d->contentsY()+dy, 0));
 }
 
 /*!
@@ -2175,12 +2175,12 @@ void Q3ScrollView::moveContents(int x, int y)
     if (-x+visibleWidth() > d->contentsWidth())
 #if 0
         if(QApplication::reverseLayout())
-            x=qMax(0,-d->contentsWidth()+visibleWidth());
+            x=std::max(0,-d->contentsWidth()+visibleWidth());
         else
 #endif
-            x=qMin(0,-d->contentsWidth()+visibleWidth());
+            x=std::min(0,-d->contentsWidth()+visibleWidth());
     if (-y+visibleHeight() > contentsHeight())
-        y=qMin(0,-contentsHeight()+visibleHeight());
+        y=std::min(0,-contentsHeight()+visibleHeight());
 
     int dx = x - d->vx;
     int dy = y - d->vy;
@@ -2197,8 +2197,8 @@ void Q3ScrollView::moveContents(int x, int y)
         // Cheap move (usually)
         d->moveAllBy(dx,dy);
     } else if (/*dx && dy ||*/
-         (qAbs(dy) * 5 > visibleHeight() * 4) ||
-         (qAbs(dx) * 5 > visibleWidth() * 4)
+         (std::abs(dy) * 5 > visibleHeight() * 4) ||
+         (std::abs(dx) * 5 > visibleWidth() * 4)
        )
     {
         // Big move
@@ -2840,7 +2840,7 @@ void Q3ScrollView::doDragAutoScroll()
         d->autoscroll_time--;
         d->autoscroll_timer.start(d->autoscroll_time);
     }
-    int l = qMax(1, (initialScrollTime- d->autoscroll_time));
+    int l = std::max(1, (initialScrollTime- d->autoscroll_time));
 
     int dx = 0, dy = 0;
     if (p.y() < autoscroll_margin) {

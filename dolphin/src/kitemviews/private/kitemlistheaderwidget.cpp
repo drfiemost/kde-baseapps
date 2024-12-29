@@ -292,7 +292,7 @@ void KItemListHeaderWidget::mouseMoveEvent(QGraphicsSceneMouseEvent* event)
         qreal previousWidth = m_columnWidths.value(pressedRole);
         qreal currentWidth = previousWidth;
         currentWidth += event->pos().x() - event->lastPos().x();
-        currentWidth = qMax(minimumColumnWidth(), currentWidth);
+        currentWidth = std::max(minimumColumnWidth(), currentWidth);
 
         m_columnWidths.insert(pressedRole, currentWidth);
         update();

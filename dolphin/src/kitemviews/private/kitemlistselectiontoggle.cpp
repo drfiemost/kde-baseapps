@@ -98,7 +98,7 @@ void KItemListSelectionToggle::updatePixmap()
 
 int KItemListSelectionToggle::iconSize() const
 {
-    const int iconSize = qMin(size().width(), size().height());
+    const int iconSize = std::min(size().width(), size().height());
 
     if (iconSize < KIconLoader::SizeSmallMedium) {
         return KIconLoader::SizeSmall;

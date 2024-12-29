@@ -480,7 +480,7 @@ void KDFWidget::contextMenuRequested( const QPoint &p )
             {
                 cmd += QLatin1Char( ' ' ) + KShell::quoteArg(disk->mountPoint()) + QLatin1String( " &" );
             }
-            system( QFile::encodeName(cmd) );
+            system( QFile::encodeName(cmd).constData() );
         }
     }
 

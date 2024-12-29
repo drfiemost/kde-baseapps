@@ -198,7 +198,7 @@ QSize ListView::itemSize(const QStyleOptionViewItem &option, const QModelIndex &
 
     QSize size;
     size.rwidth() += contentsRect().width();
-    size.rheight() = qMax(option.decorationSize.height(), m_numTextLines * fm.height());
+    size.rheight() = std::max(option.decorationSize.height(), m_numTextLines * fm.height());
     size.rheight() += top + bottom;
 
     return size;

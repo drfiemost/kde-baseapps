@@ -89,12 +89,12 @@ QDragMime::~QDragMime()
 }
 QByteArray QDragMime::data(const QString &mimetype) const
 {
-    return dragObject->encodedData(mimetype.toLatin1());
+    return dragObject->encodedData(mimetype.toLatin1().constData());
 }
 
 bool QDragMime::hasFormat(const QString &mimetype) const
 {
-    return dragObject->provides(mimetype.toLatin1());
+    return dragObject->provides(mimetype.toLatin1().constData());
 }
 
 QStringList QDragMime::formats() const
@@ -1335,7 +1335,7 @@ bool Q3UriDrag::decodeLocalFiles(const QMimeSource* e, QStringList& l)
 
     l.clear();
     for (int i = 0; i < u.count(); ++i) {
-        QString lf = uriToLocalFile(u.at(i));
+        QString lf = uriToLocalFile(u.at(i).constData());
         if (!lf.isEmpty())
             l.append(lf);
     }
@@ -1360,7 +1360,7 @@ bool Q3UriDrag::decodeToUnicodeUris(const QMimeSource* e, QStringList& l)
 
     l.clear();
     for (int i = 0; i < u.count(); ++i)
-        l.append(uriToUnicodeUri(u.at(i)));
+        l.append(uriToUnicodeUri(u.at(i).constData()));
 
     return true;
 }

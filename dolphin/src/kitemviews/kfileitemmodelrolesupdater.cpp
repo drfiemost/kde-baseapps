@@ -158,7 +158,7 @@ void KFileItemModelRolesUpdater::setVisibleIndexRange(int index, int count)
     }
 
     m_firstVisibleIndex = index;
-    m_lastVisibleIndex = qMin(index + count - 1, m_model->count() - 1);
+    m_lastVisibleIndex = std::min(index + count - 1, m_model->count() - 1);
 
     startUpdating();
 }
@@ -719,9 +719,9 @@ void KFileItemModelRolesUpdater::updateVisibleIcons()
     if (lastVisibleIndex <= 0) {
         // Guess a reasonable value for the last visible index if the view
         // has not told us about the real value yet.
-        lastVisibleIndex = qMin(m_firstVisibleIndex + m_maximumVisibleItems, m_model->count() - 1);
+        lastVisibleIndex = std::min(m_firstVisibleIndex + m_maximumVisibleItems, m_model->count() - 1);
         if (lastVisibleIndex <= 0) {
-            lastVisibleIndex = qMin(200, m_model->count() - 1);
+            lastVisibleIndex = std::min(200, m_model->count() - 1);
         }
     }
 
@@ -1011,28 +1011,28 @@ QList<int> KFileItemModelRolesUpdater::indexesToResolve() const
     // We need a reasonable upper limit for number of items to resolve after
     // and before the visible range. m_maximumVisibleItems can be quite large
     // when using Compace View.
-    const int readAheadItems = qMin(ReadAheadPages * m_maximumVisibleItems, ResolveAllItemsLimit / 2);
+    const int readAheadItems = std::min(ReadAheadPages * m_maximumVisibleItems, ResolveAllItemsLimit / 2);
 
     // Add items after the visible range.
-    const int endExtendedVisibleRange = qMin(m_lastVisibleIndex + readAheadItems, count - 1);
+    const int endExtendedVisibleRange = std::min(m_lastVisibleIndex + readAheadItems, count - 1);
     for (int i = m_lastVisibleIndex + 1; i <= endExtendedVisibleRange; ++i) {
         result.append(i);
     }
 
     // Add items before the visible range in reverse order.
-    const int beginExtendedVisibleRange = qMax(0, m_firstVisibleIndex - readAheadItems);
+    const int beginExtendedVisibleRange = std::max(0, m_firstVisibleIndex - readAheadItems);
     for (int i = m_firstVisibleIndex - 1; i >= beginExtendedVisibleRange; --i) {
         result.append(i);
     }
 
     // Add items on the last page.
-    const int beginLastPage = qMax(qMin(endExtendedVisibleRange + 1, count - 1), count - m_maximumVisibleItems);
+    const int beginLastPage = std::max(std::min(endExtendedVisibleRange + 1, count - 1), count - m_maximumVisibleItems);
     for (int i = beginLastPage; i < count; ++i) {
         result.append(i);
     }
 
     // Add items on the first page.
-    const int endFirstPage = qMin(qMax(beginExtendedVisibleRange - 1, 0), m_maximumVisibleItems);
+    const int endFirstPage = std::min(std::max(beginExtendedVisibleRange - 1, 0), m_maximumVisibleItems);
     for (int i = 0; i <= endFirstPage; ++i) {
         result.append(i);
     }

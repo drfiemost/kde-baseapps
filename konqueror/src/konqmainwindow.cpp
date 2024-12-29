@@ -4948,7 +4948,7 @@ void KonqMainWindow::updateOpenWithActions()
   KService::List::ConstIterator it = services.constBegin();
   const KService::List::ConstIterator end = services.constEnd();
 
-  const int baseOpenWithItems = qMax(KonqSettings::openWithItems(), 0);
+  const int baseOpenWithItems = std::max(KonqSettings::openWithItems(), 0);
 
   int idxService = 0;
   for (; it != end; ++it, ++idxService)
@@ -5428,7 +5428,7 @@ static void hp_removeDupe( KCompletionMatches& l, const QString& dupe,
     KCompletionMatches::Iterator it = it_orig + 1;
     while (it != l.end()) {
         if( (*it).value() == dupe ) {
-            (*it_orig).first = qMax( (*it_orig).first, (*it).key());
+            (*it_orig).first = std::max( (*it_orig).first, (*it).key());
             it = l.erase( it );
             continue;
         }

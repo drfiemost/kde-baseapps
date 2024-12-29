@@ -185,7 +185,7 @@ QRect AbstractItemView::scrollBackBuffer()
     const int delta = m_lastScrollValue - value;
     m_lastScrollValue = value;
 
-    if (qAbs(delta) >= m_pixmap.height()) {
+    if (std::abs(delta) >= m_pixmap.height()) {
         return visibleArea();
     }
 
@@ -355,13 +355,13 @@ QSize AbstractItemView::doTextLayout(QTextLayout &layout, const QSize &constrain
             line.setLineWidth(INT_MAX);
             if (line.naturalTextWidth() < constraints.width()) {
                 line.setLineWidth(constraints.width());
-                widthUsed = qMax(widthUsed, line.naturalTextWidth());
+                widthUsed = std::max(widthUsed, line.naturalTextWidth());
             } else {
                 widthUsed = constraints.width();
             }
         } else {
             line.setLineWidth(constraints.width());
-            widthUsed = qMax(widthUsed, line.naturalTextWidth());
+            widthUsed = std::max(widthUsed, line.naturalTextWidth());
         }
         line.setPosition(QPointF(0, height));
         height += line.height() + leading;
@@ -466,7 +466,7 @@ void AbstractItemView::drawTextLayout(QPainter *painter, const QTextLayout &layo
             // Make the shadow twice as dark
             quint32 * const pixels = reinterpret_cast<quint32*>(shadow.bits());
             for (int i = 0; i < shadow.width() * shadow.height(); i++) {
-                pixels[i] = qMin(255, qAlpha(pixels[i]) * 2) << 24;
+                pixels[i] = std::min(255, qAlpha(pixels[i]) * 2) << 24;
             }
 
             painter->drawImage(rect.topLeft() + QPoint(1, 1), shadow);
@@ -598,9 +598,9 @@ void AbstractItemView::timerEvent(QTimerEvent *event)
         m_autoScrollTime.restart();
 
         if (m_scrollDirection == ScrollUp && m_scrollBar->value() > m_scrollBar->minimum()) {
-            m_scrollBar->setValue(qMax(m_scrollBar->minimum(), m_scrollBar->value() + step));
+            m_scrollBar->setValue(std::max(m_scrollBar->minimum(), m_scrollBar->value() + step));
         } else if (m_scrollDirection == ScrollDown && m_scrollBar->value() < m_scrollBar->maximum()) {
-            m_scrollBar->setValue(qMin(m_scrollBar->maximum(), m_scrollBar->value() + step));
+            m_scrollBar->setValue(std::min(m_scrollBar->maximum(), m_scrollBar->value() + step));
         } else {
             m_autoScrollSetSpeed = 0;
             m_autoScrollSpeed = 0;
@@ -611,17 +611,17 @@ void AbstractItemView::timerEvent(QTimerEvent *event)
             if (m_autoScrollSpeed >= 0) {
                 delta = qBound(2, m_autoScrollSpeed * 2, 30);
             } else {
-                delta = qBound(2, qAbs(m_autoScrollSpeed) / 2, 30);
+                delta = qBound(2, std::abs(m_autoScrollSpeed) / 2, 30);
             }
-            m_autoScrollSpeed = qMin(m_autoScrollSpeed + delta, m_autoScrollSetSpeed);
+            m_autoScrollSpeed = std::min(m_autoScrollSpeed + delta, m_autoScrollSetSpeed);
         } else if (m_autoScrollSetSpeed < m_autoScrollSpeed) {
             int delta;
             if (m_autoScrollSpeed >= 0) {
                 delta = qBound(2, m_autoScrollSpeed / 2, 30);
             } else {
-                delta = qBound(2, qAbs(m_autoScrollSpeed * 2), 30);
+                delta = qBound(2, std::abs(m_autoScrollSpeed * 2), 30);
             }
-            m_autoScrollSpeed = qMax(m_autoScrollSetSpeed, m_autoScrollSpeed - delta);
+            m_autoScrollSpeed = std::max(m_autoScrollSetSpeed, m_autoScrollSpeed - delta);
         }
 
         if (m_autoScrollSpeed == 0 && m_autoScrollSetSpeed == 0) {
@@ -661,14 +661,14 @@ void AbstractItemView::smoothScroll(int dx, int dy)
     m_ddx = (m_dx*16)/(steps+1);
     m_ddy = (m_dy*16)/(steps+1);
 
-    if (qAbs(m_ddx) < 64 && qAbs(m_ddy) < 64) {
+    if (std::abs(m_ddx) < 64 && std::abs(m_ddy) < 64) {
         // Don't move slower than average 4px/step in minimum one direction
-        if (m_ddx > 0) m_ddx = qMax(m_ddx, 64);
-        if (m_ddy > 0) m_ddy = qMax(m_ddy, 64);
-        if (m_ddx < 0) m_ddx = qMin(m_ddx, -64);
-        if (m_ddy < 0) m_ddy = qMin(m_ddy, -64);
+        if (m_ddx > 0) m_ddx = std::max(m_ddx, 64);
+        if (m_ddy > 0) m_ddy = std::max(m_ddy, 64);
+        if (m_ddx < 0) m_ddx = std::min(m_ddx, -64);
+        if (m_ddy < 0) m_ddy = std::min(m_ddy, -64);
         // This means fewer than normal steps
-        steps = qMax(m_ddx ? (m_dx*16)/m_ddx : 0, m_ddy ? (m_dy*16)/m_ddy : 0);
+        steps = std::max(m_ddx ? (m_dx*16)/m_ddx : 0, m_ddy ? (m_dy*16)/m_ddy : 0);
         if (steps < 1) steps = 1;
         m_ddx = (m_dx*16)/(steps+1);
         m_ddy = (m_dy*16)/(steps+1);
@@ -713,8 +713,8 @@ void AbstractItemView::scrollTick() {
     m_rdy = tddy % 16;
 
     // limit step to requested scrolling distance
-    if (qAbs(ddx) > qAbs(m_dx)) ddx = m_dx;
-    if (qAbs(ddy) > qAbs(m_dy)) ddy = m_dy;
+    if (std::abs(ddx) > std::abs(m_dx)) ddx = m_dx;
+    if (std::abs(ddy) > std::abs(m_dy)) ddy = m_dy;
 
     // Don't stop if deaccelerated too fast
     if (!ddx) ddx = m_dx;

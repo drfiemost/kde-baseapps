@@ -101,7 +101,7 @@ qreal KStandardItemListWidgetInformant::preferredRoleColumnWidth(const QByteArra
             if (view->supportsItemExpanding()) {
                 // Increase the width by the expansion-toggle and the current expansion level
                 const int expandedParentsCount = values.value("expandedParentsCount", 0).toInt();
-                const qreal height = option.padding * 2 + qMax(option.iconSize, fontMetrics.height());
+                const qreal height = option.padding * 2 + std::max(option.iconSize, fontMetrics.height());
                 width += (expandedParentsCount + 1) * height;
             }
 
@@ -143,7 +143,7 @@ void KStandardItemListWidgetInformant::calculateIconsLayoutItemSizeHints(QVector
 {
     const KItemListStyleOption& option = view->styleOption();
     const QFont& normalFont = option.font;
-    const int additionalRolesCount = qMax(view->visibleRoles().count() - 1, 0);
+    const int additionalRolesCount = std::max(view->visibleRoles().count() - 1, 0);
 
     const qreal itemWidth = view->itemSize().width();
     const qreal maxWidth = itemWidth - 2 * option.padding;
@@ -197,13 +197,13 @@ void KStandardItemListWidgetInformant::calculateCompactLayoutItemSizeHints(QVect
 {
     const KItemListStyleOption& option = view->styleOption();
     const QFontMetrics& normalFontMetrics = option.fontMetrics;
-    const int additionalRolesCount = qMax(view->visibleRoles().count() - 1, 0);
+    const int additionalRolesCount = std::max(view->visibleRoles().count() - 1, 0);
 
     const QList<QByteArray>& visibleRoles = view->visibleRoles();
     const bool showOnlyTextRole = (visibleRoles.count() == 1) && (visibleRoles.first() == "text");
     const qreal maxWidth = option.maxTextWidth;
     const qreal paddingAndIconWidth = option.padding * 4 + option.iconSize;
-    const qreal height = option.padding * 2 + qMax(option.iconSize, (1 + additionalRolesCount) * normalFontMetrics.lineSpacing());
+    const qreal height = option.padding * 2 + std::max(option.iconSize, (1 + additionalRolesCount) * normalFontMetrics.lineSpacing());
 
     const QFontMetrics linkFontMetrics(customizedFontForLinks(option.font));
 
@@ -226,7 +226,7 @@ void KStandardItemListWidgetInformant::calculateCompactLayoutItemSizeHints(QVect
             foreach (const QByteArray& role, visibleRoles) {
                 const QString& text = roleText(role, values);
                 const qreal requiredWidth = fontMetrics.width(text);
-                maximumRequiredWidth = qMax(maximumRequiredWidth, requiredWidth);
+                maximumRequiredWidth = std::max(maximumRequiredWidth, requiredWidth);
             }
         }
 
@@ -244,7 +244,7 @@ void KStandardItemListWidgetInformant::calculateCompactLayoutItemSizeHints(QVect
 void KStandardItemListWidgetInformant::calculateDetailsLayoutItemSizeHints(QVector<qreal>& logicalHeightHints, qreal& logicalWidthHint, const KItemListView* view) const
 {
     const KItemListStyleOption& option = view->styleOption();
-    const qreal height = option.padding * 2 + qMax(option.iconSize, option.fontMetrics.height());
+    const qreal height = option.padding * 2 + std::max(option.iconSize, option.fontMetrics.height());
     logicalHeightHints.fill(height);
     logicalWidthHint = -1.0;
 }
@@ -1127,7 +1127,7 @@ void KStandardItemListWidget::updateIconsLayoutTextCache()
     int nameLineIndex = 0;
     while ((line = layout.createLine()).isValid()) {
         line.setLineWidth(maxWidth);
-        nameWidth = qMax(nameWidth, line.naturalTextWidth());
+        nameWidth = std::max(nameWidth, line.naturalTextWidth());
         nameHeight += line.height();
 
         ++nameLineIndex;
@@ -1155,7 +1155,7 @@ void KStandardItemListWidget::updateIconsLayoutTextCache()
                     elidingWidth -= 1.0;
                 } while (lastLineWidth > maxWidth);
 
-                nameWidth = qMax(nameWidth, lastLineWidth);
+                nameWidth = std::max(nameWidth, lastLineWidth);
             }
             break;
         }
@@ -1163,7 +1163,7 @@ void KStandardItemListWidget::updateIconsLayoutTextCache()
     layout.endLayout();
 
     // Use one line for each additional information
-    const int additionalRolesCount = qMax(visibleRoles().count() - 1, 0);
+    const int additionalRolesCount = std::max(visibleRoles().count() - 1, 0);
     nameTextInfo->staticText.setTextWidth(maxWidth);
     nameTextInfo->pos = QPointF(padding, widgetHeight -
                                          nameHeight -
@@ -1232,7 +1232,7 @@ void KStandardItemListWidget::updateCompactLayoutTextCache()
     const KItemListStyleOption& option = styleOption();
     const qreal widgetHeight = size().height();
     const qreal lineSpacing = m_customizedFontMetrics.lineSpacing();
-    const qreal textLinesHeight = qMax(visibleRoles().count(), 1) * lineSpacing;
+    const qreal textLinesHeight = std::max(visibleRoles().count(), 1) * lineSpacing;
     const int scaledIconSize = (textLinesHeight < option.iconSize) ? widgetHeight - 2 * option.padding : option.iconSize;
 
     qreal maximumRequiredTextWidth = 0;
@@ -1254,7 +1254,7 @@ void KStandardItemListWidget::updateCompactLayoutTextCache()
         textInfo->pos = QPointF(x, y);
         textInfo->staticText.setTextWidth(maxWidth);
 
-        maximumRequiredTextWidth = qMax(maximumRequiredTextWidth, requiredWidth);
+        maximumRequiredTextWidth = std::max(maximumRequiredTextWidth, requiredWidth);
 
         y += lineSpacing;
     }
@@ -1288,7 +1288,7 @@ void KStandardItemListWidget::updateDetailsLayoutTextCache()
     }
 
     qreal x = firstColumnInc;
-    const qreal y = qMax(qreal(option.padding), (widgetHeight - fontHeight) / 2);
+    const qreal y = std::max(qreal(option.padding), (widgetHeight - fontHeight) / 2);
 
     foreach (const QByteArray& role, m_sortedVisibleRoles) {
         QString text = roleText(role, values);

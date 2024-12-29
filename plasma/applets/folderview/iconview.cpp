@@ -329,10 +329,10 @@ void IconView::updateGridSize()
     m_itemFrame->getMargins(left, top, right, bottom);
 
     QFontMetrics fm(font());
-    int w = qMin(fm.width('x') * 15, m_iconSize.width() * 2);
+    int w = std::min(fm.width('x') * 15, m_iconSize.width() * 2);
 
     QSize size;
-    size.rwidth() = qMax(w, m_iconSize.width()) + left + right;
+    size.rwidth() = std::max(w, m_iconSize.width()) + left + right;
     size.rheight() = top + bottom + m_iconSize.height() + fm.lineSpacing() * textLineCount() + 4;
 
     // Update the minimum size hint
@@ -757,7 +757,7 @@ void IconView::layoutItems()
     QTime time;
     time.start();
     do {
-        const int count = qMin(m_validRows + 50, m_items.size());
+        const int count = std::min(m_validRows + 50, m_items.size());
         if (!m_savedPositions.isEmpty()) {
 
             // Layout with saved icon positions
@@ -847,8 +847,8 @@ QRect IconView::adjustedContentsRect(const QSize &gridSize, int *rowCount, int *
     QRect r = contentsRect().toRect();
 
     const QSize size = gridSize + QSize(10, 10);
-    *colCount = qMax(1, (r.width() - 10) / size.width());
-    *rowCount = qMax(1, (r.height() - 10) / size.height());
+    *colCount = std::max(1, (r.width() - 10) / size.width());
+    *rowCount = std::max(1, (r.height() - 10) / size.height());
     int dx = r.width() - (*colCount * size.width() + 10);
     int dy = r.height() - (*rowCount * size.height() + 10);
     r.setWidth(r.width() - dx);
@@ -941,8 +941,8 @@ bool IconView::doLayoutSanityCheck()
 
     // Make sure no items have negative coordinates
     if (boundingRect.y() < cr.top() || boundingRect.x() < cr.left()) {
-        delta.rx() = qMax(0, cr.left() - boundingRect.x());
-        delta.ry() = qMax(0, cr.top() - boundingRect.y());
+        delta.rx() = std::max(0, cr.left() - boundingRect.x());
+        delta.ry() = std::max(0, cr.top() - boundingRect.y());
     }
 
     // Remove any empty space above the visible area
@@ -962,7 +962,7 @@ bool IconView::doLayoutSanityCheck()
         boundingRect = boundingRect.translated(delta) | cr;
         scrollValue += delta.y();
 
-        m_scrollBar->setRange(0, qMax(boundingRect.height() - cr.height(), scrollValue));
+        m_scrollBar->setRange(0, std::max(boundingRect.height() - cr.height(), scrollValue));
         m_scrollBar->setValue(scrollValue);
 
         if (m_scrollBar->minimum() != m_scrollBar->maximum()) {
@@ -976,7 +976,7 @@ bool IconView::doLayoutSanityCheck()
     }
 
     boundingRect |= cr;
-    m_scrollBar->setRange(0, qMax(boundingRect.height() - cr.height(), scrollValue));
+    m_scrollBar->setRange(0, std::max(boundingRect.height() - cr.height(), scrollValue));
     m_scrollBar->setValue(scrollValue);
 
     if (m_scrollBar->minimum() != m_scrollBar->maximum()) {
@@ -1044,7 +1044,7 @@ void IconView::finishedScrolling()
         // Remove any empty space below the visible area by adjusting the
         // maximum value of the scrollbar.
         boundingRect |= cr;
-        int max = qMax(m_scrollBar->value(), boundingRect.height() - cr.height());
+        int max = std::max(m_scrollBar->value(), boundingRect.height() - cr.height());
         if (m_scrollBar->maximum() > max) {
             m_scrollBar->setRange(0, max);
         }
@@ -1087,7 +1087,7 @@ QSize IconView::itemSize(const QStyleOptionViewItem &option, const QModelIndex &
                                   Qt::AlignHCenter, QTextOption::WrapAtWordBoundaryOrAnywhere);
 
     const int hm = left+right;
-    size.rwidth() = qMax(size.width(), ts.width() + hm);
+    size.rwidth() = std::max(size.width(), ts.width() + hm);
     size.rheight() += ts.height();
     return size;
 }
@@ -1213,7 +1213,7 @@ void IconView::paintMessage(QPainter *painter, const QRect &rect, const QString 
     layout.setFont(font());
 
     const QSize textSize = doTextLayout(layout, textConstraints, Qt::AlignLeft, QTextOption::WordWrap);
-    const QSize size(iconSize.width() + 4 + textSize.width(), qMax(iconSize.height(), textSize.height()));
+    const QSize size(iconSize.width() + 4 + textSize.width(), std::max(iconSize.height(), textSize.height()));
     const QRect r = QStyle::alignedRect(layoutDirection(), Qt::AlignCenter, size, rect);
     const QRect textRect = QStyle::alignedRect(layoutDirection(), Qt::AlignRight | Qt::AlignVCenter,
                                                textSize, r);
@@ -2401,7 +2401,7 @@ void IconView::dropEvent(QGraphicsSceneDragDropEvent *event)
     // to move all of them.
     if (m_alignToGrid) {
         const QSize size = gridSize() + QSize(10, 10);
-        if ((qAbs(delta.x()) < size.width() / 2) && (qAbs(delta.y()) < size.height() / 2)) {
+        if ((std::abs(delta.x()) < size.width() / 2) && (std::abs(delta.y()) < size.height() / 2)) {
             return;
         }
 
@@ -2825,7 +2825,7 @@ bool IconView::showSelectionMarker() const
 bool IconView::overlayEnabled() const
 {
     // Do not let the action overlay cover the icon
-    return gridSize().width() - m_iconSize.width() > 2*qMin(m_actionOverlay->iconSize().width(), m_actionOverlay->iconSize().height());
+    return gridSize().width() - m_iconSize.width() > 2*std::min(m_actionOverlay->iconSize().width(), m_actionOverlay->iconSize().height());
 }
 
 void IconView::timerEvent(QTimerEvent *event)

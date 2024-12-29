@@ -185,8 +185,8 @@ void KItemListGroupHeader::updateCache()
     m_separatorColor = mixedColor(c1, c2, 10);
     m_roleColor = mixedColor(c1, c2, 60);
 
-    const int padding = qMax(1, m_styleOption.padding);
-    const int horizontalMargin = qMax(2, m_styleOption.horizontalMargin);
+    const int padding = std::max(1, m_styleOption.padding);
+    const int horizontalMargin = std::max(2, m_styleOption.horizontalMargin);
 
     const QFontMetrics fontMetrics(m_styleOption.font);
     const qreal roleHeight = fontMetrics.height();

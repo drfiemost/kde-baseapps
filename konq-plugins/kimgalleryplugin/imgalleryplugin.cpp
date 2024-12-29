@@ -508,7 +508,7 @@ bool KImGalleryPlugin::createThumb( const QString& imgName, const QString& sourc
             }
         }
         kDebug(90170) << "Saving thumbnail to: " << thumbDir + imgNameFormat ;
-        if (!img.save(thumbDir + imgNameFormat, imageFormat.toLatin1()))
+        if (!img.save(thumbDir + imgNameFormat, imageFormat.toLatin1().constData()))
         {
             kDebug(90170) << "Saving failed. Aborting.";
             return false;

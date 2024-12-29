@@ -435,7 +435,7 @@ void KonqOperations::asyncDrop( const KFileItem & destItem )
         // Should be a local executable
         // (If this fails, there is a bug in KFileItem::acceptsDrops / KDirModel::flags)
         kDebug(1203) << m_destUrl.path() << "should be an executable";
-        Q_ASSERT ( access( QFile::encodeName(m_destUrl.path()), X_OK ) == 0 );
+        Q_ASSERT ( access( QFile::encodeName(m_destUrl.path()).constData(), X_OK ) == 0 );
         // Launch executable for each of the files
         QStringList args;
         const KUrl::List lst = m_info->urls;

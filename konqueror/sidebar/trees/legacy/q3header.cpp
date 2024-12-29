@@ -253,7 +253,7 @@ void qt_set_null_label_bit(Q3HeaderData *data, int section, bool b)
     parent.
 */
 
-Q3Header::Q3Header(QWidget *parent, const char *name)
+Q3Header::Q3Header(QWidget *parent, const char *)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
@@ -266,7 +266,7 @@ Q3Header::Q3Header(QWidget *parent, const char *name)
     and parent \a parent.
 */
 
-Q3Header::Q3Header(int n, QWidget *parent, const char *name)
+Q3Header::Q3Header(int n, QWidget *parent, const char *)
     : QWidget(parent)
 {
     setAttribute(Qt::WA_StaticContents);
@@ -822,7 +822,7 @@ void Q3Header::mouseMoveEvent(QMouseEvent *e)
     case Blocked:
         break;
     case Pressed:
-        if (qAbs(c - clickPos) > 4 && d->move) {
+        if (std::abs(c - clickPos) > 4 && d->move) {
             state = Moving;
             moveToIdx = -1;
 #ifndef QT_NO_CURSOR
@@ -1142,7 +1142,7 @@ QSize Q3Header::sectionSizeHint(int section, const QFontMetrics& fm) const
             QStringList list = label.split(QLatin1Char('\n'));
             for (int i=0; i < list.count(); ++i) {
                 int tmpw = fm.width(list.at(i));
-                w = qMax(w, tmpw);
+                w = std::max(w, tmpw);
             }
         } else {
             bound.setHeight(fm.height());
@@ -1153,7 +1153,7 @@ QSize Q3Header::sectionSizeHint(int section, const QFontMetrics& fm) const
     int arrowWidth = 0;
     if (d->sortSection == section)
         arrowWidth = ((orient == Qt::Horizontal ? height() : width()) / 2) + 8;
-    int height = qMax(bound.height() + 2, ih) + 4;
+    int height = std::max(bound.height() + 2, ih) + 4;
     int width = bound.width() + style()->pixelMetric(QStyle::PM_HeaderMargin) * 4
         + iw + arrowWidth;
     return QSize(width, height);
@@ -1272,7 +1272,7 @@ QSize Q3Header::sizeHint() const
         for (int i = 0; i < count(); i++) {
             int h = orient == Qt::Horizontal ?
                     sectionSizeHint(i, fm).height() : sectionSizeHint(i, fm).width();
-            d->height = qMax(d->height, h);
+            d->height = std::max(d->height, h);
         }
         d->heightDirty = false;
     }
@@ -1280,13 +1280,13 @@ QSize Q3Header::sizeHint() const
     if (orient == Qt::Horizontal) {
         height = fm.lineSpacing() + 6;
         width = 0;
-        height = qMax(height, d->height);
+        height = std::max(height, d->height);
         for (int i = 0; i < count(); i++)
             width += d->sizes[i];
     } else {
         width = fm.width(QLatin1Char(' '));
         height = 0;
-        width = qMax(width, d->height);
+        width = std::max(width, d->height);
         for (int i = 0; i < count(); i++)
             height += d->sizes[i];
     }

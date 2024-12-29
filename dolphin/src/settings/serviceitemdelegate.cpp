@@ -48,7 +48,7 @@ QSize ServiceItemDelegate::sizeHint(const QStyleOptionViewItem &option,
     const int buttonHeight = style->pixelMetric(QStyle::PM_ButtonMargin) * 2 +
                              style->pixelMetric(QStyle::PM_ButtonIconSize);
     const int fontHeight = option.fontMetrics.height();
-    return QSize(100, qMax(buttonHeight, fontHeight));
+    return QSize(100, std::max(buttonHeight, fontHeight));
 }
 
 void ServiceItemDelegate::paint(QPainter* painter, const QStyleOptionViewItem& option,

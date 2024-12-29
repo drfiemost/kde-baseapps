@@ -257,7 +257,7 @@ void KItemListWidget::setHovered(bool hovered)
     m_hoverAnimation->stop();
 
     if (hovered) {
-        const qreal startValue = qMax(hoverOpacity(), qreal(0.1));
+        const qreal startValue = std::max(hoverOpacity(), qreal(0.1));
         m_hoverAnimation->setStartValue(startValue);
         m_hoverAnimation->setEndValue(1.0);
         if (m_enabledSelectionToggle && !(QApplication::mouseButtons() & Qt::LeftButton)) {

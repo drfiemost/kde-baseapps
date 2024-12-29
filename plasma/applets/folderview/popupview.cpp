@@ -495,7 +495,7 @@ void PopupView::setBusy(bool busy)
 void PopupView::createBusyWidgetIfNeeded()
 {
     if (m_busy && !m_busyWidget) {
-        const int size = qMin(width(), height()) * .3;
+        const int size = std::min(width(), height()) * .3;
         m_busyWidget = new Plasma::BusyWidget;
         m_busyWidget->setGeometry(QStyle::alignedRect(layoutDirection(), Qt::AlignCenter, QSize(size, size), contentsRect()));
         m_scene->addItem(m_busyWidget);

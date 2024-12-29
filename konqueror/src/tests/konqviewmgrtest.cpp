@@ -47,7 +47,7 @@ QTEST_KDEMAIN_WITH_COMPONENTNAME( ViewMgrTest, GUI, "konqueror" )
 #if 0
 // could be used to load dummy parts; or to check that the right parts are being loaded
 // (and to detect the case where a part is loaded and then replacd with another one for no good reason)
-class KonqTestFactory : public KonqAbstractFactory
+class KonqTestFactory : public Konstd::abstractFactory
 {
 public:
     virtual KonqViewFactory createView( const QString &serviceType,
@@ -257,7 +257,7 @@ void ViewMgrTest::testSplitView()
     QVERIFY( frame2->height() > 240 ); // usually 325, but can be 256 with oxygen when three toolbars are shown
     // Both frames should have the same size; well, if the width was odd then there can be an off-by-one...
     QCOMPARE( frame->height(), frame2->height() );
-    QVERIFY( qAbs(frame->width() - frame2->width()) <= 1 ); // e.g. 173 and 172 are "close enough"
+    QVERIFY( std::abs(frame->width() - frame2->width()) <= 1 ); // e.g. 173 and 172 are "close enough"
     //qDebug() << "partWidget geom:" << partWidget->geometry();
     QVERIFY( partWidget->width() > 300 && partWidget->width() < 400 ); // horiz split, so half the mainWindow width
     QVERIFY( partWidget->height() > 220 ); // frame minus statusbar height

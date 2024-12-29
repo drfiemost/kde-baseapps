@@ -84,8 +84,8 @@ KItemSet KItemListSelectionManager::selectedItems() const
     if (m_isAnchoredSelectionActive && m_anchorItem != m_currentItem) {
         Q_ASSERT(m_anchorItem >= 0);
         Q_ASSERT(m_currentItem >= 0);
-        const int from = qMin(m_anchorItem, m_currentItem);
-        const int to = qMax(m_anchorItem, m_currentItem);
+        const int from = std::min(m_anchorItem, m_currentItem);
+        const int to = std::max(m_anchorItem, m_currentItem);
 
         for (int index = from; index <= to; ++index) {
             selectedItems.insert(index);
@@ -104,8 +104,8 @@ bool KItemListSelectionManager::isSelected(int index) const
     if (m_isAnchoredSelectionActive && m_anchorItem != m_currentItem) {
         Q_ASSERT(m_anchorItem >= 0);
         Q_ASSERT(m_currentItem >= 0);
-        const int from = qMin(m_anchorItem, m_currentItem);
-        const int to = qMax(m_anchorItem, m_currentItem);
+        const int from = std::min(m_anchorItem, m_currentItem);
+        const int to = std::max(m_anchorItem, m_currentItem);
 
         if (from <= index && index <= to) {
             return true;
@@ -129,7 +129,7 @@ void KItemListSelectionManager::setSelected(int index, int count, SelectionMode 
     endAnchoredSelection();
     const KItemSet previous = selectedItems();
 
-    count = qMin(count, m_model->count() - index);
+    count = std::min(count, m_model->count() - index);
 
     const int endIndex = index + count -1;
     switch (mode) {
@@ -189,8 +189,8 @@ void KItemListSelectionManager::endAnchoredSelection()
     if (m_isAnchoredSelectionActive && (m_anchorItem != m_currentItem)) {
         Q_ASSERT(m_anchorItem >= 0);
         Q_ASSERT(m_currentItem >= 0);
-        const int from = qMin(m_anchorItem, m_currentItem);
-        const int to = qMax(m_anchorItem, m_currentItem);
+        const int from = std::min(m_anchorItem, m_currentItem);
+        const int to = std::max(m_anchorItem, m_currentItem);
 
         for (int index = from; index <= to; ++index) {
             m_selectedItems.insert(index);

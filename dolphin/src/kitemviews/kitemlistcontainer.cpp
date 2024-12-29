@@ -270,13 +270,13 @@ void KItemListContainer::updateScrollOffsetScrollBar()
         // maximum value of the scroll bar. Note that the view's scrollOffset()
         // refers to the offset of the top part of the view, which might be
         // hidden behind the header.
-        maximum = qMax(0, int(view->maximumScrollOffset() - view->size().height()));
+        maximum = std::max(0, int(view->maximumScrollOffset() - view->size().height()));
     } else {
         smoothScroller = m_horizontalSmoothScroller;
         scrollOffsetScrollBar = horizontalScrollBar();
         singleStep = view->itemSize().width();
         pageStep = view->size().width();
-        maximum = qMax(0, int(view->maximumScrollOffset() - view->size().width()));
+        maximum = std::max(0, int(view->maximumScrollOffset() - view->size().width()));
     }
 
     const int value = view->scrollOffset();
@@ -321,7 +321,7 @@ void KItemListContainer::updateItemOffsetScrollBar()
     }
 
     const int value = view->itemOffset();
-    const int maximum = qMax(0, int(view->maximumItemOffset()) - pageStep);
+    const int maximum = std::max(0, int(view->maximumItemOffset()) - pageStep);
     if (smoothScroller->requestScrollBarUpdate(maximum)) {
         itemOffsetScrollBar->setSingleStep(singleStep);
         itemOffsetScrollBar->setPageStep(pageStep);

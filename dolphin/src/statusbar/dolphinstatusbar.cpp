@@ -107,7 +107,7 @@ DolphinStatusBar::DolphinStatusBar(QWidget* parent) :
     // Initialize top layout and size policies
     const int fontHeight = QFontMetrics(m_label->font()).height();
     const int zoomSliderHeight = m_zoomSlider->minimumSizeHint().height();
-    const int contentHeight = qMax(fontHeight, zoomSliderHeight);
+    const int contentHeight = std::max(fontHeight, zoomSliderHeight);
 
     QFontMetrics fontMetrics(m_label->font());
 

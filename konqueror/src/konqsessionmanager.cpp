@@ -184,7 +184,7 @@ SessionRestoreDialog::SessionRestoreDialog(const QStringList& sessionFilePaths, 
                             item->setData(0, Qt::UserRole, viewIdFor(sessionFile, viewId));
                             item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsUserCheckable);
                             item->setCheckState(0, Qt::Checked);
-                            w = qMax(w, fm.width(displayText));
+                            w = std::max(w, fm.width(displayText));
                             m_sessionItemsCount++;
                         }
                     }

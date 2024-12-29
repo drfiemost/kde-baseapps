@@ -116,7 +116,7 @@ KonqHistoryProviderPrivate::KonqHistoryProviderPrivate(KonqHistoryProvider* qq)
     // defaults
     KConfigGroup cs(konqConfig(), "HistorySettings");
     m_maxCount = cs.readEntry("Maximum of History entries", 500);
-    m_maxCount = qMax(1, m_maxCount);
+    m_maxCount = std::max(1, m_maxCount);
     m_maxAgeDays = cs.readEntry("Maximum age of History entries", 90);
 
     const QString dbusPath = "/KonqHistoryManager";

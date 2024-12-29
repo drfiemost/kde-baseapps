@@ -95,22 +95,22 @@ void Dialog::show(Plasma::Applet *applet)
     {
     case Plasma::BottomEdge:
         borders &= ~Plasma::FrameSvg::BottomBorder;
-        bottom = qMin(bottom, 2);
+        bottom = std::min(bottom, 2);
         break;
 
     case Plasma::TopEdge:
         borders &= ~Plasma::FrameSvg::TopBorder;
-        top = qMin(top, 2);
+        top = std::min(top, 2);
         break;
 
     case Plasma::LeftEdge:
         borders &= ~Plasma::FrameSvg::LeftBorder;
-        left = qMin(left, 2);
+        left = std::min(left, 2);
         break;
 
     case Plasma::RightEdge:
         borders &= ~Plasma::FrameSvg::RightBorder;
-        right = qMin(right, 2);
+        right = std::min(right, 2);
         break;
 
     default:

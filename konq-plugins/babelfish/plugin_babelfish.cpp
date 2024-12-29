@@ -295,7 +295,7 @@ void PluginBabelFish::translateURL(QAction* action)
       return;
     }
   }
-  const QString urlForQuery = QLatin1String(QUrl::toPercentEncoding( url.url() ));
+  const QString urlForQuery = QUrl::toPercentEncoding( url.url() );
 
   // Create URL
   KUrl result;

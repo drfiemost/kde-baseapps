@@ -45,7 +45,7 @@ ToolTipManager::ToolTipManager(QWidget* parent) :
     m_itemRect()
 {
     if (parent) {
-        m_margin = qMax(m_margin, parent->style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth));
+        m_margin = std::max(m_margin, parent->style()->pixelMetric(QStyle::PM_ToolTipLabelFrameWidth));
     }
 
     m_showToolTipTimer = new QTimer(this);
@@ -236,7 +236,7 @@ void ToolTipManager::showToolTip()
 
     int x, y;
     if (hasRoomBelow || hasRoomAbove) {
-        x = qMax(screen.left(), m_itemRect.center().x() - size.width() / 2);
+        x = std::max(screen.left(), m_itemRect.center().x() - size.width() / 2);
         if (x + size.width() >= screen.right()) {
             x = screen.right() - size.width() + 1;
         }

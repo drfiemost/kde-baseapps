@@ -70,7 +70,7 @@ getModule KonqSidebarTree::getPluginFactory(const QString &name)
     {
       // get the create_ function
       QString factory = "create_" + libName;
-      KLibrary::void_function_ptr create    = lib.resolveFunction(QFile::encodeName(factory));
+      KLibrary::void_function_ptr create    = lib.resolveFunction(QFile::encodeName(factory).constData());
       if (create)
       {
         getModule func = (getModule)create;
@@ -717,7 +717,7 @@ void KonqSidebarTree::scanDir( KonqSidebarTreeItem *parent, const QString &path,
                             cp += ' ';
                             cp += KShell::quoteArg(path);
                             kDebug(1201) << "executing " << cp;
-                            ::system( QFile::encodeName(cp) );
+                            ::system( QFile::encodeName(cp).constData() );
                         }
                     }
                 }

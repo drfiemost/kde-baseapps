@@ -365,7 +365,7 @@ void KItemListView::setGeometry(const QRectF& rect)
             applyAutomaticColumnWidths();
         } else {
             const qreal requiredWidth = columnWidthsSum();
-            const QSizeF dynamicItemSize(qMax(newSize.width(), requiredWidth),
+            const QSizeF dynamicItemSize(std::max(newSize.width(), requiredWidth),
                                          m_itemSize.height());
             m_layouter->setItemSize(dynamicItemSize);
         }
@@ -1217,8 +1217,8 @@ void KItemListView::slotItemsMoved(const KItemRange& itemRange, const QList<int>
         m_controller->selectionManager()->itemsMoved(itemRange, movedToIndexes);
     }
 
-    const int firstVisibleMovedIndex = qMax(firstVisibleIndex(), itemRange.index);
-    const int lastVisibleMovedIndex = qMin(lastVisibleIndex(), itemRange.index + itemRange.count - 1);
+    const int firstVisibleMovedIndex = std::max(firstVisibleIndex(), itemRange.index);
+    const int lastVisibleMovedIndex = std::min(lastVisibleIndex(), itemRange.index + itemRange.count - 1);
 
     for (int index = firstVisibleMovedIndex; index <= lastVisibleMovedIndex; ++index) {
         KItemListWidget* widget = m_visibleItems.value(index);
@@ -1492,7 +1492,7 @@ void KItemListView::triggerAutoScrolling()
         const qreal diff = (scrollOrientation() == Qt::Vertical)
                            ? m_rubberBand->endPosition().y() - m_rubberBand->startPosition().y()
                            : m_rubberBand->endPosition().x() - m_rubberBand->startPosition().x();
-        if (qAbs(diff) < minDiff || (m_autoScrollIncrement < 0 && diff > 0) || (m_autoScrollIncrement > 0 && diff < 0)) {
+        if (std::abs(diff) < minDiff || (m_autoScrollIncrement < 0 && diff > 0) || (m_autoScrollIncrement > 0 && diff < 0)) {
             // The rubberband direction is different from the scroll direction (e.g. the rubberband has
             // been moved up although the autoscroll direction might be down)
             m_autoScrollTimer->stop();
@@ -1504,8 +1504,8 @@ void KItemListView::triggerAutoScrolling()
     // the autoscrolling may not get skipped anymore until a new rubberband is created
     m_skipAutoScrollForRubberBand = false;
 
-    const qreal maxVisibleOffset = qMax(qreal(0), maximumScrollOffset() - visibleSize);
-    const qreal newScrollOffset = qMin(scrollOffset() + m_autoScrollIncrement, maxVisibleOffset);
+    const qreal maxVisibleOffset = std::max(qreal(0), maximumScrollOffset() - visibleSize);
+    const qreal newScrollOffset = std::min(scrollOffset() + m_autoScrollIncrement, maxVisibleOffset);
     setScrollOffset(newScrollOffset);
 
     // Trigger the autoscroll timer which will periodically call
@@ -1656,7 +1656,7 @@ void KItemListView::doLayout(LayoutAnimationHint hint, int changedIndex, int cha
     const qreal visibleOffsetRange = (scrollOrientation() == Qt::Horizontal) ? size().width() : size().height();
     const qreal maxOffsetToShowFullRange = maximumScrollOffset() - visibleOffsetRange;
     if (scrollOffset() > maxOffsetToShowFullRange) {
-        m_layouter->setScrollOffset(qMax(qreal(0), maxOffsetToShowFullRange));
+        m_layouter->setScrollOffset(std::max(qreal(0), maxOffsetToShowFullRange));
         firstVisibleIndex = m_layouter->firstVisibleIndex();
     }
 
@@ -2180,7 +2180,7 @@ QHash<QByteArray, qreal> KItemListView::preferredColumnWidths(const KItemRangeLi
             foreach (const QByteArray& visibleRole, visibleRoles()) {
                 qreal maxWidth = widths.value(visibleRole, 0);
                 const qreal width = creator->preferredRoleColumnWidth(visibleRole, i, this);
-                maxWidth = qMax(width, maxWidth);
+                maxWidth = std::max(width, maxWidth);
                 widths.insert(visibleRole, maxWidth);
             }
 
@@ -2205,7 +2205,7 @@ void KItemListView::applyColumnWidthsFromHeader()
 {
     // Apply the new size to the layouter
     const qreal requiredWidth = columnWidthsSum();
-    const QSizeF dynamicItemSize(qMax(size().width(), requiredWidth),
+    const QSizeF dynamicItemSize(std::max(size().width(), requiredWidth),
                                  m_itemSize.height());
     m_layouter->setItemSize(dynamicItemSize);
 
@@ -2313,7 +2313,7 @@ void KItemListView::applyAutomaticColumnWidths()
         // TODO: A proper calculation of the minimum width depends on the implementation
         // of KItemListWidget. Probably a kind of minimum size-hint should be introduced
         // later.
-        const qreal minWidth = qMin(firstColumnWidth, qreal(m_styleOption.iconSize * 2 + 200));
+        const qreal minWidth = std::min(firstColumnWidth, qreal(m_styleOption.iconSize * 2 + 200));
         if (shrinkedFirstColumnWidth < minWidth) {
             shrinkedFirstColumnWidth = minWidth;
         }
@@ -2322,7 +2322,7 @@ void KItemListView::applyAutomaticColumnWidths()
         requiredWidth -= firstColumnWidth - shrinkedFirstColumnWidth;
     }
 
-    dynamicItemSize.rwidth() = qMax(requiredWidth, availableWidth);
+    dynamicItemSize.rwidth() = std::max(requiredWidth, availableWidth);
 
     m_layouter->setItemSize(dynamicItemSize);
 
@@ -2431,7 +2431,7 @@ int KItemListView::showDropIndicator(const QPointF& pos)
         if (mappedPos.y() >= 0 && mappedPos.y() <= rect.height()) {
             if (m_model->supportsDropping(widget->index())) {
                 // Keep 30% of the rectangle as the gap instead of always having a fixed gap
-                const int gap = qMax(4.0, 0.3 * rect.height());
+                const int gap = std::max(4.0, 0.3 * rect.height());
                 if (mappedPos.y() >= gap && mappedPos.y() <= rect.height() - gap) {
                     return -1;
                 }
@@ -2642,13 +2642,13 @@ int KItemListView::calculateAutoScrollingIncrement(int pos, int range, int oldIn
     const int incLimiter = 1;
 
     if (pos < autoScrollBorder) {
-        inc = -minSpeed + qAbs(pos - autoScrollBorder) * (pos - autoScrollBorder) / speedLimiter;
-        inc = qMax(inc, -maxSpeed);
-        inc = qMax(inc, oldInc - incLimiter);
+        inc = -minSpeed + std::abs(pos - autoScrollBorder) * (pos - autoScrollBorder) / speedLimiter;
+        inc = std::max(inc, -maxSpeed);
+        inc = std::max(inc, oldInc - incLimiter);
     } else if (pos > range - autoScrollBorder) {
-        inc = minSpeed + qAbs(pos - range + autoScrollBorder) * (pos - range + autoScrollBorder) / speedLimiter;
-        inc = qMin(inc, maxSpeed);
-        inc = qMin(inc, oldInc + incLimiter);
+        inc = minSpeed + std::abs(pos - range + autoScrollBorder) * (pos - range + autoScrollBorder) / speedLimiter;
+        inc = std::min(inc, maxSpeed);
+        inc = std::min(inc, oldInc + incLimiter);
     }
 
     return inc;
