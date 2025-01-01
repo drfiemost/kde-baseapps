@@ -96,7 +96,7 @@
  <Action name="go_up"/>
  <Action name="reload"/>
  <Action name="stop"/>
- <Action name="go_home_popup"/>
+ <Action name="go_home"/>
  <WeakSeparator/>
  <Merge/>
 </ToolBar>
