@@ -1,4 +1,4 @@
-set(konq_aboutpage_PART_SRCS konq_aboutpage.cc)
+set(konq_aboutpage_PART_SRCS konq_aboutpage.cpp)
 
 kde4_add_plugin(konq_aboutpage ${konq_aboutpage_PART_SRCS})
 
