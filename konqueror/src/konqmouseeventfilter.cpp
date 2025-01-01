@@ -101,7 +101,7 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
         QMouseEvent *ev = static_cast<QMouseEvent*>(e);
         if (m_bBackRightClick && (ev->buttons() & Qt::RightButton)) {
             qApp->removeEventFilter( this );
-            QMouseEvent me( QEvent::MouseButtonPress, ev->pos(), Qt::RightButton, Qt::RightButton, Qt::NoModifier );
+            QMouseEvent me( QEvent::MouseButtonPress, ev->pos(), ev->globalPos(), Qt::RightButton, Qt::RightButton, Qt::NoModifier );
             QApplication::sendEvent( obj, &me );
             QContextMenuEvent ce( QContextMenuEvent::Mouse, ev->pos(), ev->globalPos() );
             QApplication::sendEvent( obj, &ce );
