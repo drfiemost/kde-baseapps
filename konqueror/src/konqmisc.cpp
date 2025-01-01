@@ -218,8 +218,7 @@ KUrl KonqMisc::konqFilteredURL(KonqMainWindow* parent, const QString& _url, cons
 
 QString KonqMisc::defaultProfileName()
 {
-    // By default try to open in webbrowser mode. People can use "konqueror ." to get a filemanager.
-    return "webbrowsing";
+    return "filemanagement";
 }
 
 QString KonqMisc::defaultProfilePath()
