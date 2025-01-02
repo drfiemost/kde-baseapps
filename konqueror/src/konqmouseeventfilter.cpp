@@ -67,11 +67,21 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
     switch(e->type()) {
     case QEvent::MouseButtonPress:
         switch (static_cast<QMouseEvent*>(e)->button()) {
+        case Qt::ForwardButton:
+        case Qt::BackButton:
+            // Handle these on release to avoid an annoying bug
+            return true;
         case Qt::RightButton:
             if (m_bBackRightClick) {
                 return true;
             }
             break;
+        default:
+            break;
+        }
+        break;
+    case QEvent::MouseButtonRelease:
+        switch (static_cast<QMouseEvent*>(e)->button()) {
         case Qt::ForwardButton:
             if (auto window = parentWindow(qobject_cast<QWidget*>(obj))) {
                 window->slotForward();
@@ -84,16 +94,16 @@ bool KonqMouseEventFilter::eventFilter(QObject *obj, QEvent *e)
                 return true;
             }
             break;
+        case Qt::RightButton:
+            if (m_bBackRightClick) {
+                if (auto window = parentWindow(qobject_cast<QWidget*>(obj))) {
+                    window->slotBack();
+                    return true;
+                }
+            }
+            break;
         default:
             break;
-        }
-        break;
-    case QEvent::MouseButtonRelease:
-        if (m_bBackRightClick && (static_cast<QMouseEvent*>(e)->button() == Qt::RightButton)) {
-            if (auto window = parentWindow(qobject_cast<QWidget*>(obj))) {
-                window->slotBack();
-                return true;
-            }
         }
         break;
     case QEvent::MouseMove:
