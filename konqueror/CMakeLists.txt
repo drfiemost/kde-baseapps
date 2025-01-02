@@ -5,6 +5,7 @@ if(Q_WS_X11)
   find_package(X11 REQUIRED) # both subdirs require the X11 libs
 endif(Q_WS_X11)
 
+add_subdirectory( libkonq )
 add_subdirectory( src )
 add_subdirectory( client )
 add_subdirectory( desktop )
