@@ -224,7 +224,7 @@ KonqView* KonqViewManager::addTab(const QString &serviceType, const QString &ser
 
   QString actualServiceName = serviceName;
   if (actualServiceName.isEmpty()) {
-      // Use same part as the current view (e.g. khtml/webkit).
+      // Use same part as the current view (e.g. khtml).
       // This is down here in this central method because it should work for
       // MMB-opens-tab, window.open (createNewWindow), and more.
       KonqView* currentView = m_pMainWindow->currentView();
@@ -241,7 +241,7 @@ KonqView* KonqViewManager::addTab(const QString &serviceType, const QString &ser
   KonqViewFactory newViewFactory = createView( serviceType, actualServiceName, service, partServiceOffers, appServiceOffers, true /*forceAutoEmbed*/ );
 
   if( newViewFactory.isNull() )
-    return 0L; //do not split at all if we can't create the new view
+    return nullptr; //do not split at all if we can't create the new view
 
   KonqView* childView = setupView( tabContainer(), newViewFactory, service, partServiceOffers, appServiceOffers, serviceType, passiveMode, openAfterCurrentPage, pos );
 
@@ -261,13 +261,13 @@ KonqView* KonqViewManager::addTabFromHistory( KonqView* currentView, int steps, 
 
   const HistoryEntry * he = currentView->historyAt(newPos);
   if(!he)
-      return 0L;
+      return nullptr;
 
-  KonqView* newView = 0L;
+  KonqView* newView = nullptr;
   newView  = addTab( he->strServiceType, he->strServiceName, false, openAfterCurrentPage );
 
   if(!newView)
-      return 0;
+      return nullptr;
 
   newView->copyHistory(currentView);
   newView->setHistoryIndex(newPos);
@@ -295,7 +295,7 @@ void KonqViewManager::duplicateTab(int tabIndex, bool openAfterCurrentPage)
   profileGroup.writeEntry( "RootItem", prefix );
   prefix.append( QLatin1Char( '_' ) );
   KonqFrameBase::Options flags = KonqFrameBase::saveHistoryItems;
-  tab->saveConfig( profileGroup, prefix, flags, 0L, 0, 1);
+  tab->saveConfig( profileGroup, prefix, flags, nullptr, 0, 1);
 
   loadRootItem( profileGroup, tabContainer(), KUrl(), true, KUrl(), QString(), openAfterCurrentPage );
 

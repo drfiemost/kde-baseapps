@@ -2749,18 +2749,20 @@ void KonqMainWindow::slotGoHistoryDelayed()
   {
       KonqView * newView = m_pViewManager->addTabFromHistory( m_currentView, m_goBuffer, openAfterCurrentPage );
       if (newView && inFront)
-	  m_pViewManager->showTab( newView );
+        m_pViewManager->showTab( newView );
   }
   else if(m_goMouseState & Qt::MidButton)
   {
       if(mmbOpensTab)
       {
-	  KonqView * newView = m_pViewManager->addTabFromHistory( m_currentView, m_goBuffer, openAfterCurrentPage );
-	  if (newView && inFront)
-	      m_pViewManager->showTab( newView );
+        KonqView * newView = m_pViewManager->addTabFromHistory( m_currentView, m_goBuffer, openAfterCurrentPage );
+        if (newView && inFront)
+          m_pViewManager->showTab( newView );
       }
       else
-	  KonqMisc::newWindowFromHistory(this->currentView(), m_goBuffer);
+      {
+        KonqMisc::newWindowFromHistory(this->currentView(), m_goBuffer);
+      }
   }
   else
   {
