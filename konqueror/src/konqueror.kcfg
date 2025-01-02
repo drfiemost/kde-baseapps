@@ -282,13 +282,6 @@
       <whatsthis></whatsthis>
       <!-- checked -->
     </entry>
-<!-- konqmainwindow.cpp -->
-    <entry name="HtmlAllowed" key="HTMLAllowed" type="Bool">
-      <default>false</default> 
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
 <!-- konqguiclients.cpp -->
     <entry key="ToggableViewsShown" type="StringList">
       <label></label>

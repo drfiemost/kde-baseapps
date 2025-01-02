@@ -112,10 +112,6 @@ public slots:
      * Return length of history
      */
     uint historyLength()const;
-    /*
-     * Return true  if "Use index HTML" is checked
-     */
-    bool allowHTML() const;
 
     /*
      * Move forward in history "-1"

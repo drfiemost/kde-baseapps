@@ -1483,21 +1483,6 @@ void KonqViewManager::setLoading( KonqView *view, bool loading )
     tabContainer()->setLoading(view->frame(), loading);
 }
 
-void KonqViewManager::showHTML(bool b)
-{
-    foreach ( KonqFrameBase* frame, tabContainer()->childFrameList() ) {
-        KonqView* view = frame->activeChildView();
-        if ( view && view != m_pMainWindow->currentView() ) {
-            view->setAllowHTML( b );
-            if( !view->locationBarURL().isEmpty() ) {
-                m_pMainWindow->showHTML( view, b, false );
-            }
-        }
-    }
-}
-
-
-
 ///////////////// Debug stuff ////////////////
 
 #ifndef NDEBUG

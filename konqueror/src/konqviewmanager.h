@@ -302,8 +302,6 @@ public:
 
   void setLoading( KonqView *view, bool loading );
 
-  void showHTML(bool b);
-
     /**
      * Normalize the name of the .rc file to use; this is just
      * for handling compatibility with old profiles mentionning
