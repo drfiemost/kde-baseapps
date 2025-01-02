@@ -44,7 +44,6 @@ add_subdirectory( keditbookmarks )
 add_subdirectory( konqueror )
 add_subdirectory( kfind )
 macro_optional_add_subdirectory( plasma )
-add_subdirectory( konq-plugins )
 add_subdirectory( kcolorchooser )
 add_subdirectory( kcharselect )
 
