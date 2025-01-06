@@ -35,8 +35,7 @@ include_directories (${CMAKE_CURRENT_BINARY_DIR})
 
 add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 add_definitions (-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-#include_directories (${CMAKE_CURRENT_SOURCE_DIR}/lib/konq ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
-include_directories (${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
+include_directories (${CMAKE_CURRENT_SOURCE_DIR}/konqueror/libkonq ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
 add_subdirectory( dolphin )
 add_subdirectory( kdialog )
