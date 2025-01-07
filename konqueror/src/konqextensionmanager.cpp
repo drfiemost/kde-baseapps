@@ -27,7 +27,6 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kcomponentdata.h>
-#include <kparts/componentfactory.h>
 #include <kparts/plugin.h>
 #include <kplugininfo.h>
 #include <kpluginselector.h>
