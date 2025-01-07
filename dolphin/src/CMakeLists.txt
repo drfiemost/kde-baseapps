@@ -124,99 +124,6 @@ install(FILES dolphinpart.desktop DESTINATION ${SERVICES_INSTALL_DIR} )
 install(FILES views/versioncontrol/fileviewversioncontrolplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 ##########################################
-#
-#set(dolphin_SRCS
-#    dolphinapplication.cpp
-#    dolphindockwidget.cpp
-#    dolphinmainwindow.cpp
-#    dolphinviewcontainer.cpp
-#    dolphincontextmenu.cpp
-#    dolphintabbar.cpp
-#    dolphinrecenttabsmenu.cpp
-#    dolphintabpage.cpp
-#    dolphintabwidget.cpp
-#    filterbar/filterbar.cpp
-#    main.cpp
-#    panels/information/filemetadataconfigurationdialog.cpp
-#    panels/information/informationpanel.cpp
-#    panels/information/informationpanelcontent.cpp
-#    panels/information/pixmapviewer.cpp
-#    panels/information/phononwidget.cpp
-#    panels/places/placespanel.cpp
-#    panels/places/placesitem.cpp
-#    panels/places/placesitemeditdialog.cpp
-#    panels/places/placesitemlistgroupheader.cpp
-#    panels/places/placesitemlistwidget.cpp
-#    panels/places/placesitemmodel.cpp
-#    panels/places/placesitemsignalhandler.cpp
-#    panels/places/placesview.cpp
-#    panels/panel.cpp
-#    panels/folders/foldersitemlistwidget.cpp
-#    panels/folders/treeviewcontextmenu.cpp
-#    panels/folders/folderspanel.cpp
-#    search/dolphinfacetswidget.cpp
-#    search/dolphinsearchbox.cpp
-#    settings/general/behaviorsettingspage.cpp
-#    settings/general/configurepreviewplugindialog.cpp
-#    settings/general/confirmationssettingspage.cpp
-#    settings/general/generalsettingspage.cpp
-#    settings/general/previewssettingspage.cpp
-#    settings/general/statusbarsettingspage.cpp
-#    settings/dolphinsettingsdialog.cpp
-#    settings/navigation/navigationsettingspage.cpp
-#    settings/services/servicessettingspage.cpp
-#    settings/settingspagebase.cpp
-#    settings/serviceitemdelegate.cpp
-#    settings/servicemodel.cpp
-#    settings/startup/startupsettingspage.cpp
-#    settings/trash/trashsettingspage.cpp
-#    settings/viewmodes/dolphinfontrequester.cpp
-#    settings/viewmodes/viewsettingspage.cpp
-#    settings/viewmodes/viewmodesettings.cpp
-#    settings/viewmodes/viewsettingstab.cpp
-#    statusbar/dolphinstatusbar.cpp
-#    statusbar/mountpointobserver.cpp
-#    statusbar/mountpointobservercache.cpp
-#    statusbar/spaceinfoobserver.cpp
-#    statusbar/statusbarspaceinfo.cpp
-#    views/zoomlevelinfo.cpp
-#)
-#
-#kde4_add_kcfg_files(dolphin_SRCS
-#    panels/folders/dolphin_folderspanelsettings.kcfgc
-#    panels/information/dolphin_informationpanelsettings.kcfgc
-#    panels/places/dolphin_placespanelsettings.kcfgc
-#    settings/dolphin_compactmodesettings.kcfgc
-#    settings/dolphin_detailsmodesettings.kcfgc
-#    settings/dolphin_generalsettings.kcfgc
-#    settings/dolphin_iconsmodesettings.kcfgc
-#    search/dolphin_searchsettings.kcfgc
-#    settings/dolphin_versioncontrolsettings.kcfgc
-#)
-#
-#if(NOT WIN32)
-#   set(dolphin_SRCS ${dolphin_SRCS} panels/terminal/terminalpanel.cpp)
-#endif(NOT WIN32)
-#
-#kde4_add_app_icon(dolphin_SRCS "${KDE4_ICON_INSTALL_DIR}/oxygen/*/apps/system-file-manager.png")
-#
-#kde4_add_kdeinit_executable(dolphin4 ${dolphin_SRCS})
-#
-#target_link_libraries(kdeinit_dolphin4
-#    ${KDE4_KDEPRINT_LIBS}
-#    ${KDE4_KFILE_LIBS}
-#    ${KDE4_KPARTS_LIBS}
-#    ${KDE4_KCMUTILS_LIBRARY}
-#    konq
-#    dolphinprivate4
-#    ${KDE4_SOLID_LIBS}
-#    ${KDE4_PHONON_LIBS}
-#)
-#
-#install(TARGETS kdeinit_dolphin4 ${INSTALL_TARGETS_DEFAULT_ARGS})
-#install(TARGETS dolphin4 ${INSTALL_TARGETS_DEFAULT_ARGS})
-#
-##########################################
 
 set(kcm_dolphinviewmodes_PART_SRCS
     settings/kcm/kcmdolphinviewmodes.cpp
@@ -291,7 +198,6 @@ install(TARGETS kio_filenamesearch DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-#install( FILES dolphinui.rc DESTINATION ${DATA_INSTALL_DIR}/dolphin )
 install( FILES search/filenamesearch.protocol DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES settings/kcm/kcmdolphinviewmodes.desktop DESTINATION
 ${SERVICES_INSTALL_DIR} )
