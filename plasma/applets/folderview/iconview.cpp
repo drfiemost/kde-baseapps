@@ -369,14 +369,14 @@ void IconView::updateGridSize()
 
                 for (int i = 0; i < m_items.size(); i++) {
                     const QPoint topLeft = m_items[i].rect.topLeft() - QPoint(oldLeftMargin, oldTopMargin);
-                    const int row = qBound(0, topLeft.y() / oldAdjustedGridSize.height(), lastRow);
+                    const int row = std::clamp(topLeft.y() / oldAdjustedGridSize.height(), 0, lastRow);
                     int col = topLeft.x() / oldAdjustedGridSize.width();
 
                     if (m_alignment == Right) {
                         col = lastCol - ((oldColCount - 1) - col);
                     }
 
-                    col = qBound(0, col, lastCol);
+                    col = std::clamp(0, col, lastCol);
 
                     m_items[i].rect = QRect(QPoint(newLeftMargin + col * newAdjustedGridSize.width(),
                         newTopMargin + row * newAdjustedGridSize.height()), size);
@@ -391,8 +391,8 @@ void IconView::updateGridSize()
 
                 for (int i = 0; i < m_items.size(); i++) {
                     const QPoint topLeft = m_items[i].rect.topLeft();
-                    const int y = qBound(topMargin, qRound(scaleY * topLeft.y()),
-                        cr.bottom() - size.height() - margin);
+                    const int y = std::clamp(qRound(scaleY * topLeft.y()),
+                        topMargin, cr.bottom() - size.height() - margin);
                     int x = topLeft.x();
 
                     if (m_alignment == Right) {
@@ -401,7 +401,7 @@ void IconView::updateGridSize()
                         x = scaleX * x;
                     }
 
-                    x = qBound(leftMargin, x, cr.right() - size.width() - margin);
+                    x = std::clamp(x, leftMargin, cr.right() - size.width() - margin);
 
                     m_items[i].rect = QRect(QPoint(x, y), size);
                     m_items[i].needSizeAdjust = true;
@@ -892,8 +892,8 @@ void IconView::alignIconsToGrid()
 
     for (int i = 0; i < m_items.size(); i++) {
         const QPoint center = m_items[i].rect.center();
-        const int col = qBound(0, qRound((center.x() - hOffset) / qreal(size.width())), lastCol);
-        const int row = qBound(0, qRound((center.y() - vOffset) / qreal(size.height())), lastRow);
+        const int col = std::clamp(qRound((center.x() - hOffset) / qreal(size.width())), 0, lastCol);
+        const int row = std::clamp(qRound((center.y() - vOffset) / qreal(size.height())), 0, lastRow);
 
         const QPoint pos(leftMargin + col * size.width(), topMargin + row * size.height());
 
@@ -947,7 +947,7 @@ bool IconView::doLayoutSanityCheck()
 
     // Remove any empty space above the visible area
     if (delta.y() == 0 && scrollValue > 0) {
-        delta.ry() = -qBound(0, boundingRect.top() - cr.top(), scrollValue);
+        delta.ry() = -std::clamp(boundingRect.top() - cr.top(), 0, scrollValue);
     }
 
     if (!delta.isNull()) {
@@ -1027,7 +1027,7 @@ void IconView::finishedScrolling()
 
         // Remove any empty space above the visible area by shifting all the items
         // and adjusting the scrollbar range.
-        int deltaY = qBound(0, boundingRect.top() - cr.top(), m_scrollBar->value());
+        int deltaY = std::clamp(boundingRect.top() - cr.top(), 0, m_scrollBar->value());
         if (deltaY > 0) {
             for (int i = 0; i < m_validRows; i++) {
                 if (m_items[i].layouted) {

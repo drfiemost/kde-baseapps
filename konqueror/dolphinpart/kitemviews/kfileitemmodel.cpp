@@ -2119,7 +2119,7 @@ void KFileItemModel::emitSortProgress(int resolvedCount)
 
         emit directorySortingProgress(100);
     } else if (itemCount > 0) {
-        resolvedCount = qBound(0, resolvedCount, itemCount);
+        resolvedCount = std::clamp(resolvedCount, 0, itemCount);
 
         const int progress = resolvedCount * 100 / itemCount;
         if (m_sortingProgressPercent != progress) {

@@ -609,17 +609,17 @@ void AbstractItemView::timerEvent(QTimerEvent *event)
         if (m_autoScrollSetSpeed > m_autoScrollSpeed) {
             int delta;
             if (m_autoScrollSpeed >= 0) {
-                delta = qBound(2, m_autoScrollSpeed * 2, 30);
+                delta = std::clamp(m_autoScrollSpeed * 2, 2, 30);
             } else {
-                delta = qBound(2, std::abs(m_autoScrollSpeed) / 2, 30);
+                delta = std::clamp(std::abs(m_autoScrollSpeed) / 2, 2, 30);
             }
             m_autoScrollSpeed = std::min(m_autoScrollSpeed + delta, m_autoScrollSetSpeed);
         } else if (m_autoScrollSetSpeed < m_autoScrollSpeed) {
             int delta;
             if (m_autoScrollSpeed >= 0) {
-                delta = qBound(2, m_autoScrollSpeed / 2, 30);
+                delta = std::clamp(m_autoScrollSpeed / 2, 2, 30);
             } else {
-                delta = qBound(2, std::abs(m_autoScrollSpeed * 2), 30);
+                delta = std::clamp(std::abs(m_autoScrollSpeed * 2), 2, 30);
             }
             m_autoScrollSpeed = std::max(m_autoScrollSetSpeed, m_autoScrollSpeed - delta);
         }

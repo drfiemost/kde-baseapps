@@ -227,7 +227,7 @@ void KPluginOptions::load()
   m_widget.dirDown->setEnabled( false );
   enableHTTPOnly->setChecked( cg.readEntry("HTTP URLs Only", false) );
   enableUserDemand->setChecked( cg.readEntry("demandLoad", false) );
-  priority->setValue(100 - qBound(0, cg.readEntry("Nice Level", 0), 19) * 5);
+  priority->setValue(100 - std::clamp(cg.readEntry("Nice Level", 0), 0, 19) * 5);
   updatePLabel(priority->value());
 
   dirLoad( config );

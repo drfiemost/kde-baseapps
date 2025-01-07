@@ -375,7 +375,7 @@ int KItemListSelectionManager::indexAfterRangesRemoving(int index, const KItemRa
                                                         const RangesRemovingBehaviour behaviour) const
 {
     int dec = 0;
-    foreach (const KItemRange& itemRange, itemRanges) {
+    for (const KItemRange& itemRange: itemRanges) {
         if (index < itemRange.index) {
             break;
         }
@@ -394,6 +394,6 @@ int KItemListSelectionManager::indexAfterRangesRemoving(int index, const KItemRa
             }
         }
     }
-    return qBound(-1, index - dec, m_model->count() - 1);
+    return std::clamp(index - dec, -1, m_model->count() - 1);
 }
 #include "kitemlistselectionmanager.moc"

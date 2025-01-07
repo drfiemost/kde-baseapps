@@ -148,7 +148,7 @@ void ViewProperties::setViewMode(DolphinView::Mode mode)
 
 DolphinView::Mode ViewProperties::viewMode() const
 {
-    const int mode = qBound(0, m_node->viewMode(), 2);
+    const int mode = std::clamp(m_node->viewMode(), 0, 2);
     return static_cast<DolphinView::Mode>(mode);
 }
 
