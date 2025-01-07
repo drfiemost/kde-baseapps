@@ -216,7 +216,7 @@ void KItemListControllerTest::testKeyboardNavigation_data()
     groupingEnabledList.append(true);
     groupingEnabledNames[true] = "grouping enabled";
 
-    foreach (const KFileItemListView::ItemLayout& layout, layoutList) {
+    for (const KFileItemListView::ItemLayout& layout: layoutList) {
         // The following settings depend on the layout.
         // Note that 'columns' are actually 'rows' in
         // Compact layout.
@@ -252,11 +252,13 @@ void KItemListControllerTest::testKeyboardNavigation_data()
             nextRowKey = Qt::Key_Down;
             previousRowKey = Qt::Key_Up;
             break;
+        default:
+            Q_UNREACHABLE();
         }
 
-        foreach (int columnCount, columnCountList) {
-            foreach (const KItemListController::SelectionBehavior& selectionBehavior, selectionBehaviorList) {
-                foreach (bool groupingEnabled, groupingEnabledList) { // krazy:exclude=foreach
+        for (int columnCount: columnCountList) {
+            for (const KItemListController::SelectionBehavior& selectionBehavior: selectionBehaviorList) {
+                for (bool groupingEnabled: groupingEnabledList) {
                     QList<QPair<KeyPress, ViewState> > testList;
 
                     // First, key presses which should have the same effect
@@ -507,6 +509,7 @@ void KItemListControllerTest::testKeyboardNavigation()
                 }
                 // No items are selected. Therefore, the current item should be activated.
                 // This is handled by falling through to the NoSelection/SingleSelection case.
+                [[fallthrough]];
             case KItemListController::NoSelection:
             case KItemListController::SingleSelection:
                 // In NoSelection and SingleSelection mode, the current item should be activated.
