@@ -15,6 +15,7 @@ add_subdirectory( sidebar )
 add_subdirectory( preloader )
 add_subdirectory( settings )
 add_subdirectory( plugins )
+add_subdirectory( dolphinpart )
 
 ########### install files ###############
 install( PROGRAMS
