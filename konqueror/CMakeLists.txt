@@ -28,10 +28,7 @@ install(FILES konqueror.appdata.xml DESTINATION ${SHARE_INSTALL_PREFIX}/appdata 
 # This is why konqueror.desktop is installed into services.
 install( FILES konqueror.desktop  DESTINATION  ${SERVICES_INSTALL_DIR} )
 
-install(FILES profile_webbrowsing.desktop    DESTINATION ${DATA_INSTALL_DIR}/konqueror/profiles/ RENAME webbrowsing)
 install(FILES profile_filemanagement.desktop DESTINATION ${DATA_INSTALL_DIR}/konqueror/profiles/ RENAME filemanagement)
-install(FILES profile_tabbedbrowsing.desktop DESTINATION ${DATA_INSTALL_DIR}/konqueror/profiles/ RENAME tabbedbrowsing)
-install(FILES profile_kde_devel.desktop      DESTINATION ${DATA_INSTALL_DIR}/konqueror/profiles/ RENAME kde_devel)
 
 if(NOT WIN32)
    install(FILES profile_midnightcommander.desktop DESTINATION ${DATA_INSTALL_DIR}/konqueror/profiles/ RENAME midnightcommander)
