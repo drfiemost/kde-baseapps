@@ -1162,8 +1162,7 @@ QByteArray Q3UriDrag::unicodeUriToUri(const QString& uuri)
             escutf8 += utf8[i];
         } else {
             // Everything else is escaped as %HH
-            QString s;
-            s.sprintf("%%%02x",(uchar)utf8[i]);
+            QString s = QString::asprintf("%%%02x",(uchar)utf8[i]);
             escutf8 += s.toLatin1();
         }
     }

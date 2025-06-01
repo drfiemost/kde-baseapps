@@ -3644,9 +3644,8 @@ void KonqMainWindow::initActions()
   connect(m_paActivatePrevTab, SIGNAL(triggered()), SLOT(slotActivatePrevTab()));
   m_paActivatePrevTab->setShortcuts(QApplication::isRightToLeft() ? KStandardShortcut::tabNext() : KStandardShortcut::tabPrev());
 
-  QString actionname;
   for (int i=1;i<13;i++) {
-    actionname.sprintf("activate_tab_%02d", i);
+    QString actionname = QString::asprintf("activate_tab_%02d", i);
     QAction *action = actionCollection()->addAction( actionname );
     action->setText( i18n("Activate Tab %1", i) );
     connect(action, SIGNAL(triggered()), SLOT(slotActivateTab()));

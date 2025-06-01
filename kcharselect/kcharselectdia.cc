@@ -200,26 +200,23 @@ void KCharSelectDia::toClipUTF8()
 void KCharSelectDia::toClipHTML()
 {
   QClipboard *cb = QApplication::clipboard();
-  QString input;
   QString html;
-  QString tempstring;
-  QChar   tempchar;
-  int i = 0;
 
-  input = lined->text();
+  QString input = lined->text();
   if (input.isEmpty())
     input = vChr;
   const int inputLength = input.length();
-  for(i=0; i< inputLength; ++i )
+  for(int i=0; i< inputLength; ++i )
     {
-      tempchar = input.at(i);
+      QChar tempchar = input.at(i);
       if(  tempchar.toLatin1() && ((tempchar.unicode() < 128) || (tempchar.unicode() >= 128+32)) )
         {
           html.append(input.at(i));
         }
       else
         {
-          html.append(tempstring.sprintf("&#x%x;", tempchar.unicode()));
+          QString tempstring = QString::asprintf("&#x%x;", tempchar.unicode());
+          html.append(tempstring);
         }
     }
   cb->setText(html);
