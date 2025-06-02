@@ -9,6 +9,12 @@ add_subdirectory( validators )
 add_subdirectory( domtreeviewer )
 add_subdirectory( webarchiver )
 
+macro_optional_add_subdirectory(svn)
+macro_optional_add_subdirectory(git)
+macro_optional_add_subdirectory(hg)
+macro_optional_add_subdirectory(bazaar)
+macro_optional_add_subdirectory(dropbox)
+
 add_subdirectory( kttsplugin )
 
 if(UNIX)
@@ -25,4 +31,3 @@ add_subdirectory( rellinks )
 add_subdirectory( adblock )
 
 add_subdirectory( akregator )
-
