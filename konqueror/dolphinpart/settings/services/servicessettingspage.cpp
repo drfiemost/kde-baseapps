@@ -63,8 +63,6 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     m_listView(0),
     m_enabledVcsPlugins()
 {
-    [[maybe_unused]] QVBoxLayout* topLayout = new QVBoxLayout(this);
-
     QLabel* label = new QLabel(i18nc("@label:textbox",
                                      "Select which services should "
                                      "be shown in the context menu:"), this);
@@ -185,7 +183,7 @@ void ServicesSettingsPage::loadServices()
 
     // Load generic services
     const KService::List entries = KServiceTypeTrader::self()->query("KonqPopupMenu/Plugin");
-    foreach (const KSharedPtr<KService>& service, entries) {
+    for (const KSharedPtr<KService>& service: entries) {
         const QString file = KStandardDirs::locate("services", service->entryPath());
         const QList<KServiceAction> serviceActions =
                                     KDesktopFileActions::userDefinedServices(file, true);
@@ -193,7 +191,7 @@ void ServicesSettingsPage::loadServices()
         KDesktopFile desktopFile(file);
         const QString subMenuName = desktopFile.desktopGroup().readEntry("X-KDE-Submenu");
 
-        foreach (const KServiceAction& action, serviceActions) {
+        for (const KServiceAction& action: serviceActions) {
             const QString serviceName = action.name();
             const bool addService = !action.noDisplay()
                                     && !action.isSeparator()
@@ -211,7 +209,7 @@ void ServicesSettingsPage::loadServices()
 
     // Load service plugins that implement the KFileItemActionPlugin interface
     const KService::List pluginServices = KServiceTypeTrader::self()->query("KFileItemAction/Plugin");
-    foreach (const KSharedPtr<KService>& service, pluginServices) {
+    for (const KSharedPtr<KService>& service: pluginServices) {
         const QString desktopEntryName = service->desktopEntryName();
         if (!isInServicesList(desktopEntryName)) {
             const bool checked = showGroup.readEntry(desktopEntryName, true);
