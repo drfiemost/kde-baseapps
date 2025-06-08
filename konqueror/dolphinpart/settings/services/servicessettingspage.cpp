@@ -63,6 +63,8 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     m_listView(0),
     m_enabledVcsPlugins()
 {
+    QVBoxLayout* topLayout = new QVBoxLayout(this);
+
     QLabel* label = new QLabel(i18nc("@label:textbox",
                                      "Select which services should "
                                      "be shown in the context menu:"), this);
@@ -80,6 +82,9 @@ ServicesSettingsPage::ServicesSettingsPage(QWidget* parent) :
     connect(m_listView, SIGNAL(clicked(QModelIndex)), this, SIGNAL(changed()));
     m_enabledVcsPlugins = VersionControlSettings::enabledPlugins();
     std::sort(m_enabledVcsPlugins.begin(), m_enabledVcsPlugins.end());
+
+    topLayout->addWidget(label);
+    topLayout->addWidget(m_listView);
 }
 
 ServicesSettingsPage::~ServicesSettingsPage()
