@@ -44,14 +44,11 @@ add_subdirectory( kfind )
 macro_optional_add_subdirectory( plasma )
 add_subdirectory( kcolorchooser )
 add_subdirectory( kcharselect )
+add_subdirectory( ksnapshot )
 
 if(UNIX)
   add_subdirectory( kdf )
 endif(UNIX)
-
-if ( Q_WS_MAC )
-  add_subdirectory( kdepasswd )
-endif ( Q_WS_MAC )
 
 if ( Q_WS_X11 )
   add_subdirectory( kdepasswd )
