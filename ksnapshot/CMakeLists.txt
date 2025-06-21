@@ -17,7 +17,6 @@ include(MacroLibrary)
 
 add_definitions (${QT_DEFINITIONS} ${QT_QTDBUS_DEFINITIONS} ${KDE4_DEFINITIONS})
 add_definitions(-DQT_USE_FAST_CONCATENATION -DQT_USE_FAST_OPERATOR_PLUS)
-add_definitions(-DKDE_NO_DEPRECATED)
 
 include_directories (${QDBUS_INCLUDE_DIRS} ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES})
 
@@ -29,7 +28,7 @@ configure_file(config-ksnapshot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ksnap
 
 ########### next target ###############
 
-add_subdirectory( doc )
+macro_optional_add_subdirectory( doc )
 
 set(ksnapshot_file_SRCS
    expblur.cpp
