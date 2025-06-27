@@ -27,7 +27,6 @@
 #include <kpluginfactory.h>
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <klibloader.h>
 #include <kparts/statusbarextension.h>
 #include <khtml_part.h>
 #include <khtml_settings.h>

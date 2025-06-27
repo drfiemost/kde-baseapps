@@ -26,7 +26,6 @@
 #include <qstringlist.h>
 
 #include <kurl.h>
-#include <klibloader.h>
 #include <kparts/plugin.h>
 
 class KHTMLPart;

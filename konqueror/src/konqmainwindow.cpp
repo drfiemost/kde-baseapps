@@ -858,7 +858,7 @@ bool KonqMainWindow::openView( QString mimeType, const KUrl &_url, KonqView *chi
         int attachment = 0;
         if (run) {
             suggestedFileName = run->suggestedFileName();
-            attachment = (run->serverSuggestsSave()) ? KParts::BrowserRun::AttachmentDisposition : KParts::BrowserRun::InlineDisposition;
+            attachment = (run->serverSuggestsSave()) ? KParts::BrowserOpenOrSaveQuestion::AttachmentDisposition : KParts::BrowserOpenOrSaveQuestion::InlineDisposition;
         }
 
         KParts::BrowserOpenOrSaveQuestion dlg(this, url, mimeType);

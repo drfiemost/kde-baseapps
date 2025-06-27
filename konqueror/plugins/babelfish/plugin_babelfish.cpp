@@ -27,6 +27,8 @@
 #include <kparts/part.h>
 #include <kparts/browserextension.h>
 
+#include <kdeversion.h>
+
 #if KDE_IS_VERSION(4, 5, 70)
 #define TEXTEXTENSION_FOUND 1
 #else
