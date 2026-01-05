@@ -7,7 +7,6 @@ set(kcm_konqhtml_PART_SRCS
    generalopts.cpp
    htmlopts.cpp 
    jsopts.cpp 
-   javaopts.cpp 
    pluginopts.cpp 
    appearance.cpp 
    khttpoptdlg.cpp 

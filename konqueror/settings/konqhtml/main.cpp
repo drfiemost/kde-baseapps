@@ -41,7 +41,6 @@
 
 // Local
 #include "jsopts.h"
-#include "javaopts.h"
 #include "pluginopts.h"
 #include "appearance.h"
 #include "htmlopts.h"
@@ -85,11 +84,6 @@ KJSParts::KJSParts(QWidget *parent, const QVariantList&)
   tab = new QTabWidget(this);
   layout->addWidget(tab);
 
-  // ### the groupname is duplicated in KJSParts::save
-  java = new KJavaOptions( mConfig, "Java/JavaScript Settings", componentData(), this );
-  tab->addTab( java, i18n( "&Java" ) );
-  connect( java, SIGNAL(changed(bool)), SIGNAL(changed(bool)) );
-
   javascript = new KJavaScriptOptions( mConfig, "Java/JavaScript Settings", componentData(), this );
   tab->addTab( javascript, i18n( "Java&Script" ) );
   connect( javascript, SIGNAL(changed(bool)), SIGNAL(changed(bool)) );
@@ -98,21 +92,17 @@ KJSParts::KJSParts(QWidget *parent, const QVariantList&)
 void KJSParts::load()
 {
   javascript->load();
-  java->load();
 }
 
 
 void KJSParts::save()
 {
   javascript->save();
-  java->save();
 
   // delete old keys after they have been migrated
-  if (javascript->_removeJavaScriptDomainAdvice
-      || java->_removeJavaScriptDomainAdvice) {
+  if (javascript->_removeJavaScriptDomainAdvice) {
     mConfig->group("Java/JavaScript Settings").deleteEntry("JavaScriptDomainAdvice");
     javascript->_removeJavaScriptDomainAdvice = false;
-    java->_removeJavaScriptDomainAdvice = false;
   }
 
   mConfig->sync();
@@ -128,16 +118,12 @@ void KJSParts::save()
 void KJSParts::defaults()
 {
   javascript->defaults();
-  java->defaults();
 }
 
 QString KJSParts::quickHelp() const
 {
   return i18n("<h2>JavaScript</h2>On this page, you can configure "
               "whether JavaScript programs embedded in web pages should "
-              "be allowed to be executed by Konqueror."
-              "<h2>Java</h2>On this page, you can configure "
-              "whether Java applets embedded in web pages should "
               "be allowed to be executed by Konqueror."
               "<br /><br /><b>Note:</b> Active content is always a "
               "security risk, which is why Konqueror allows you to specify very "

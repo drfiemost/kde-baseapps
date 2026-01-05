@@ -306,64 +306,7 @@
 
   <group name="Java/JavaScript Settings" >
 <!-- javaopts.cpp -->
-    <entry key="ShowJavaConsole" type="Bool">
-      <default>false</default>
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="UseSecurityManager" type="Bool">
-      <default>true</default>
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="UseKio" type="Bool">
-      <default>false</default> 
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="ShutdownAppletServer" type="Bool">
-      <default>true</default> 
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="AppletServerTimeout" type="Int">
-      <default>60</default> 
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="JavaPath" type="Path">
-      <default code="true">
-#if defined(PATH_JAVA)
-PATH_JAVA
-#else
-"java"
-#endif
-      </default>
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="JavaDomains" type="StringList"> <!--KHTML-->
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="JavaDomainSettings" type="StringList">
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
     <entry key="JavaScriptDomainAdvice" type="StringList">
-      <label></label>
-      <whatsthis></whatsthis>
-      <!-- checked -->
-    </entry>
-    <entry key="JavaArgs" type="String">
       <label></label>
       <whatsthis></whatsthis>
       <!-- checked -->

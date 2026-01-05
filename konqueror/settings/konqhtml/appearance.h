@@ -28,6 +28,7 @@ class KFontComboBox;
 class QComboBox;
 class QCheckBox;
 class CSSConfig;
+class KIntNumInput;
 
 
 class KAppearanceOptions : public KCModule
