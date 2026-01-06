@@ -46,7 +46,6 @@
 #include <QtGui/qwidget.h>
 #include <QtCore/qstring.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -214,6 +213,5 @@ extern bool qt_qheader_label_return_null_strings; // needed for professional edi
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // Q3HEADER_H

@@ -45,7 +45,6 @@
 #include <QtGui/qframe.h>
 #include <QtGui/qscrollbar.h>
 
-QT_BEGIN_HEADER
 
 QT_BEGIN_NAMESPACE
 
@@ -261,6 +260,5 @@ public:
 
 QT_END_NAMESPACE
 
-QT_END_HEADER
 
 #endif // Q3SCROLLVIEW_H
