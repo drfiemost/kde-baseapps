@@ -3,7 +3,9 @@ if(KDE4_BUILD_TESTS)
     add_definitions(-DCOMPILING_TESTS)
 endif(KDE4_BUILD_TESTS)
 
-add_subdirectory( tests )
+if(BUILD_TEST)
+    add_subdirectory( tests )
+endif()
 
 check_symbol_exists(mallinfo2       "malloc.h"                 KDE_MALLINFO_MALLOC)
 check_symbol_exists(mallinfo2       "stdlib.h"                 KDE_MALLINFO_STDLIB)

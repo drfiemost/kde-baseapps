@@ -10,7 +10,9 @@ configure_file(config-X11.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-X11.h )
 
 include_directories( ${CMAKE_CURRENT_BINARY_DIR} )
 
-add_subdirectory(tests)
+if(BUILD_TEST)
+    add_subdirectory(tests)
+endif()
 
 ########### next target ###############
 

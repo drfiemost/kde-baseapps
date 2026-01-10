@@ -1,4 +1,7 @@
-add_subdirectory(tests)
+
+if(BUILD_TEST)
+    add_subdirectory(tests)
+endif()
 
 set(kbookmarkmodel_SRCS
   commandhistory.cpp

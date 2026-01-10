@@ -1,7 +1,9 @@
 add_subdirectory( pics )
 add_subdirectory( favicons )
 add_subdirectory( Templates )
-add_subdirectory( tests )
+if(BUILD_TEST)
+    add_subdirectory( tests )
+endif()
 
 ########### libkonq ###############
 
