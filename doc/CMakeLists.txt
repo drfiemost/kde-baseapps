@@ -1,3 +1,6 @@
+add_subdirectory(kcharselect)
+add_subdirectory(kdf)
 add_subdirectory(kfind)
 add_subdirectory(konqueror)
 add_subdirectory(kdepasswd)
+add_subdirectory(ksnapshot)

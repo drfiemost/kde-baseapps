@@ -1,5 +1,4 @@
 
-add_subdirectory(doc)
 add_subdirectory(pics)
 
 ########### next target ###############

@@ -9,8 +9,6 @@ configure_file(config-ksnapshot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-ksnap
 
 ########### next target ###############
 
-macro_optional_add_subdirectory( doc )
-
 set(ksnapshot_file_SRCS
    expblur.cpp
    regiongrabber.cpp

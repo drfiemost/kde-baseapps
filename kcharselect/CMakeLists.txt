@@ -15,4 +15,3 @@ install( PROGRAMS KCharSelect.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kcharselectui.rc  DESTINATION ${DATA_INSTALL_DIR}/kcharselect)
 
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
-macro_optional_add_subdirectory(doc)
