@@ -245,7 +245,7 @@ QMimeData* KFileItemModel::createMimeData(const KItemSet& indexes) const
     KUrl::List urls;
     KUrl::List mostLocalUrls;
     bool canUseMostLocalUrls = true;
-    const ItemData* lastAddedItem = 0;
+    const ItemData* lastAddedItem = nullptr;
 
     foreach (int index, indexes) {
         const ItemData* itemData = m_itemData.at(index);
